@@ -2,9 +2,20 @@ import { PrismaClient } from '@prisma/client';
 
 const prismaClientInstance = new PrismaClient();
 
-export const retrieveAllEvents = async () => {
+export const retrieveAllEvents = async (search?: string, sortBy: string = 'startTime', sortOrder: string = 'asc') => {
+  const queryFilter: any = {};
+  if (search) {
+    queryFilter.OR = [
+      { title: { contains: search } },
+      { description: { contains: search } },
+      { location: { contains: search } },
+      { type: { contains: search } }
+    ];
+  }
+
   return await prismaClientInstance.event.findMany({
-    orderBy: { startTime: 'asc' },
+    where: queryFilter,
+    orderBy: { [sortBy]: sortOrder === 'desc' ? 'desc' : 'asc' },
     include: {
       creator: {
         select: { firstName: true, lastName: true }
@@ -12,6 +23,15 @@ export const retrieveAllEvents = async () => {
       attendees: true
     }
   });
+};
+
+export const retrieveEventById = async (eventId: string) => {
+  const eventResult = await prismaClientInstance.event.findUnique({
+    where: { id: eventId },
+    include: { creator: { select: { firstName: true, lastName: true } }, attendees: true }
+  });
+  if (!eventResult) throw new Error('Event untraceable');
+  return eventResult;
 };
 
 export const createTargetEvent = async (
@@ -71,4 +91,29 @@ export const joinTargetEvent = async (userIdValue: string, eventIdValue: string)
       eventId: eventIdValue
     }
   });
+};
+
+export const updateEventTarget = async (userId: string, eventId: string, userRole: string, newTitle: string, newDescription: string) => {
+  const existingEvent = await prismaClientInstance.event.findUnique({ where: { id: eventId } });
+  if (!existingEvent) throw new Error('Event untraceable');
+  
+  if (existingEvent.creatorId !== userId && userRole !== 'ADMIN') {
+    throw new Error('Unauthorized operational jurisdiction');
+  }
+
+  return await prismaClientInstance.event.update({
+    where: { id: eventId },
+    data: { title: newTitle, description: newDescription }
+  });
+};
+
+export const deleteEventTarget = async (userId: string, eventId: string, userRole: string) => {
+  const existingEvent = await prismaClientInstance.event.findUnique({ where: { id: eventId } });
+  if (!existingEvent) throw new Error('Event untraceable');
+  
+  if (existingEvent.creatorId !== userId && userRole !== 'ADMIN') {
+    throw new Error('Unauthorized operational jurisdiction');
+  }
+
+  return await prismaClientInstance.event.delete({ where: { id: eventId } });
 };

@@ -13,6 +13,15 @@ export const retrievePlatformAnnouncements = async () => {
   });
 };
 
+export const retrieveAnnouncementById = async (announcementId: string) => {
+  const announcementResult = await prismaClientInstance.parkingAnnouncement.findUnique({
+    where: { id: announcementId },
+    include: { publisher: { select: { firstName: true, lastName: true, apartmentNumber: true } }, parkingSlot: true, applications: true }
+  });
+  if (!announcementResult) throw new Error('Parking announcement could not be traced');
+  return announcementResult;
+};
+
 export const createTargetAnnouncement = async (
   publisherIdValue: string,
   parkingSlotIdValue: string,
@@ -100,4 +109,15 @@ export const approveTargetApplication = async (
     where: { id: applicationIdValue },
     data: { status: 'APPROVED' }
   });
+};
+
+export const deleteParkingAnnouncement = async (userId: string, announcementId: string, userRole: string) => {
+  const existingAnnouncement = await prismaClientInstance.parkingAnnouncement.findUnique({ where: { id: announcementId } });
+  if (!existingAnnouncement) throw new Error('Parking announcement could not be traced');
+  
+  if (existingAnnouncement.publisherId !== userId && userRole !== 'ADMIN') {
+    throw new Error('Unauthorized operational jurisdiction');
+  }
+
+  return await prismaClientInstance.parkingAnnouncement.delete({ where: { id: announcementId } });
 };

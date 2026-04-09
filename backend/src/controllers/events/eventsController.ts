@@ -1,13 +1,31 @@
 import { Response } from 'express';
-import { retrieveAllEvents, createTargetEvent, joinTargetEvent } from '../../services/events/eventsService';
+import { retrieveAllEvents, createTargetEvent, joinTargetEvent, updateEventTarget, deleteEventTarget, retrieveEventById } from '../../services/events/eventsService';
 import { AuthenticatedRequest } from '../../middlewares/authMiddleware';
 
 export const getEventsController = async (req: AuthenticatedRequest, res: Response): Promise<void> => {
   try {
-    const executedRetrieval = await retrieveAllEvents();
+    const search = req.query.search as string | undefined;
+    const sortBy = req.query.sortBy as string | undefined;
+    const sortOrder = req.query.sortOrder as string | undefined;
+
+    const executedRetrieval = await retrieveAllEvents(search, sortBy, sortOrder);
     res.status(200).json(executedRetrieval);
   } catch (executionError: unknown) {
     res.status(500).json({ error: 'Failed to retrieve community events' });
+  }
+};
+
+export const getEventByIdController = async (req: AuthenticatedRequest, res: Response): Promise<void> => {
+  const { id } = req.params;
+  try {
+    const executedRetrieval = await retrieveEventById(id as string);
+    res.status(200).json(executedRetrieval);
+  } catch (error: unknown) {
+    if (error instanceof Error && error.message === 'Event untraceable') {
+      res.status(404).json({ error: error.message });
+      return;
+    }
+    res.status(500).json({ error: 'Failed to retrieve isolated event' });
   }
 };
 
@@ -73,5 +91,63 @@ export const joinEventController = async (req: AuthenticatedRequest, res: Respon
       }
     }
     res.status(500).json({ error: 'Failed to join targeted event' });
+  }
+};
+
+export const updateEventController = async (req: AuthenticatedRequest, res: Response): Promise<void> => {
+  if (!req.user?.userId || !req.user?.role) {
+    res.status(401).json({ error: 'Authentication missing' });
+    return;
+  }
+
+  const { id } = req.params;
+  const { title, description } = req.body;
+
+  if (!id || !title || !description) {
+    res.status(400).json({ error: 'Payload configuration missing parameters' });
+    return;
+  }
+
+  try {
+    const executedUpdate = await updateEventTarget(req.user.userId, id as string, req.user.role, title, description);
+    res.status(200).json(executedUpdate);
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      if (error.message === 'Event untraceable') {
+        res.status(404).json({ error: error.message });
+        return;
+      }
+      if (error.message === 'Unauthorized operational jurisdiction') {
+        res.status(403).json({ error: error.message });
+        return;
+      }
+    }
+    res.status(500).json({ error: 'Event synchronization failed' });
+  }
+};
+
+export const deleteEventController = async (req: AuthenticatedRequest, res: Response): Promise<void> => {
+  if (!req.user?.userId || !req.user?.role) {
+    res.status(401).json({ error: 'Authentication missing' });
+    return;
+  }
+
+  const { id } = req.params;
+
+  try {
+    await deleteEventTarget(req.user.userId, id as string, req.user.role);
+    res.status(204).send();
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      if (error.message === 'Event untraceable') {
+        res.status(404).json({ error: error.message });
+        return;
+      }
+      if (error.message === 'Unauthorized operational jurisdiction') {
+        res.status(403).json({ error: error.message });
+        return;
+      }
+    }
+    res.status(500).json({ error: 'Event synchronization failed' });
   }
 };

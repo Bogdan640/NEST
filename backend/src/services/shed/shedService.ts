@@ -2,12 +2,32 @@ import { PrismaClient } from '@prisma/client';
 
 const prismaClientInstance = new PrismaClient();
 
-export const retrievePlatformResources = async () => {
+export const retrievePlatformResources = async (search?: string, sortBy: string = 'createdAt', sortOrder: string = 'desc') => {
+  const queryFilter: any = {};
+  if (search) {
+    queryFilter.OR = [
+      { name: { contains: search } },
+      { description: { contains: search } },
+      { type: { contains: search } }
+    ];
+  }
+
   return await prismaClientInstance.resource.findMany({
+    where: queryFilter,
+    orderBy: { [sortBy]: sortOrder === 'asc' ? 'asc' : 'desc' },
     include: {
       owner: { select: { firstName: true, lastName: true } }
     }
   });
+};
+
+export const retrieveResourceById = async (resourceId: string) => {
+  const resourceResult = await prismaClientInstance.resource.findUnique({
+    where: { id: resourceId },
+    include: { owner: { select: { firstName: true, lastName: true } }, reservations: true }
+  });
+  if (!resourceResult) throw new Error('Resource untraceable');
+  return resourceResult;
 };
 
 export const createTargetResource = async (
@@ -73,4 +93,29 @@ export const reserveTargetResource = async (
       status: 'APPROVED'
     }
   });
+};
+
+export const updateShedResource = async (userId: string, resourceId: string, userRole: string, newName: string, newDescription: string) => {
+  const existingResource = await prismaClientInstance.resource.findUnique({ where: { id: resourceId } });
+  if (!existingResource) throw new Error('Resource untraceable');
+  
+  if (existingResource.ownerId !== userId && userRole !== 'ADMIN') {
+    throw new Error('Unauthorized operational jurisdiction');
+  }
+
+  return await prismaClientInstance.resource.update({
+    where: { id: resourceId },
+    data: { name: newName, description: newDescription }
+  });
+};
+
+export const deleteShedResource = async (userId: string, resourceId: string, userRole: string) => {
+  const existingResource = await prismaClientInstance.resource.findUnique({ where: { id: resourceId } });
+  if (!existingResource) throw new Error('Resource untraceable');
+  
+  if (existingResource.ownerId !== userId && userRole !== 'ADMIN') {
+    throw new Error('Unauthorized operational jurisdiction');
+  }
+
+  return await prismaClientInstance.resource.delete({ where: { id: resourceId } });
 };

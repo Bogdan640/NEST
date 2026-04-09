@@ -1,5 +1,5 @@
 import { Response } from 'express';
-import { retrievePlatformAnnouncements, createTargetAnnouncement, applyForTargetAnnouncement, approveTargetApplication } from '../../services/parking/parkingService';
+import { retrievePlatformAnnouncements, createTargetAnnouncement, applyForTargetAnnouncement, approveTargetApplication, deleteParkingAnnouncement, retrieveAnnouncementById } from '../../services/parking/parkingService';
 import { AuthenticatedRequest } from '../../middlewares/authMiddleware';
 
 export const getAnnouncementsController = async (req: AuthenticatedRequest, res: Response): Promise<void> => {
@@ -8,6 +8,20 @@ export const getAnnouncementsController = async (req: AuthenticatedRequest, res:
     res.status(200).json(executedRetrieval);
   } catch (executionError: unknown) {
     res.status(500).json({ error: 'Failed to retrieve parking announcements' });
+  }
+};
+
+export const getAnnouncementByIdController = async (req: AuthenticatedRequest, res: Response): Promise<void> => {
+  const { id } = req.params;
+  try {
+    const executedRetrieval = await retrieveAnnouncementById(id as string);
+    res.status(200).json(executedRetrieval);
+  } catch (error: unknown) {
+    if (error instanceof Error && error.message === 'Parking announcement could not be traced') {
+      res.status(404).json({ error: error.message });
+      return;
+    }
+    res.status(500).json({ error: 'Failed to retrieve isolated announcement' });
   }
 };
 
@@ -103,5 +117,31 @@ export const approveApplicationController = async (req: AuthenticatedRequest, re
       }
     }
     res.status(500).json({ error: 'Failed to approve application' });
+  }
+};
+
+export const deleteAnnouncementController = async (req: AuthenticatedRequest, res: Response): Promise<void> => {
+  if (!req.user?.userId || !req.user?.role) {
+    res.status(401).json({ error: 'Authentication missing' });
+    return;
+  }
+
+  const { id } = req.params;
+
+  try {
+    await deleteParkingAnnouncement(req.user.userId, id as string, req.user.role);
+    res.status(204).send();
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      if (error.message === 'Parking announcement could not be traced') {
+        res.status(404).json({ error: error.message });
+        return;
+      }
+      if (error.message === 'Unauthorized operational jurisdiction') {
+        res.status(403).json({ error: error.message });
+        return;
+      }
+    }
+    res.status(500).json({ error: 'Parking synchronization failed' });
   }
 };
