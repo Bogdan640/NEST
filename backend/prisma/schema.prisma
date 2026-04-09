@@ -1,0 +1,134 @@
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id                    String                @id @default(uuid())
+  email                 String                @unique
+  passwordHash          String
+  firstName             String
+  lastName              String
+  apartmentNumber       String
+
+  phoneNumber           String?               
+  profileImage          String?
+  headline              String?
+  about                 String?
+
+  preferences           String                @default("{\"theme\": \"light\", \"isPhonePublic\": false}")
+
+  role                  String                @default("RESIDENT")
+  isVerified            Boolean               @default(false)
+  createdAt             DateTime              @default(now())
+  updatedAt             DateTime              @updatedAt
+
+  eventsCreated         Event[]               @relation("EventCreator")
+  eventAttendances      EventAttendee[]
+  posts                 Post[]
+  ownedResources        Resource[]            @relation("ResourceOwner")
+  resourceReservations  ResourceReservation[]
+  parkingSlots          ParkingSlot[]
+  parkingAnnouncements  ParkingAnnouncement[]
+  bookedParking         ParkingApplication[]
+}
+
+model Event {
+  id                    String                @id @default(uuid())
+  title                 String
+  description           String
+  location              String
+  type                  String                
+  startTime             DateTime
+  endTime               DateTime
+  maxParticipants       Int?                  
+  visibility            String                @default("ALL") 
+  creatorId             String
+  creator               User                  @relation("EventCreator", fields: [creatorId], references: [id])
+  attendees             EventAttendee[]
+  createdAt             DateTime              @default(now())
+  updatedAt             DateTime              @updatedAt
+}
+
+model EventAttendee {
+  userId                String
+  eventId               String
+  status                String                @default("JOINED") 
+  user                  User                  @relation(fields: [userId], references: [id])
+  event                 Event                 @relation(fields: [eventId], references: [id])
+
+  @@id([userId, eventId])
+}
+
+model Post {
+  id                    String                @id @default(uuid())
+  content               String
+  imageUrl              String?               
+  authorId              String
+  author                User                  @relation(fields: [authorId], references: [id])
+  createdAt             DateTime              @default(now())
+  updatedAt             DateTime              @updatedAt
+}
+
+model Resource {
+  id                    String                @id @default(uuid())
+  name                  String
+  description           String
+  type                  String                
+  ownerId               String?               
+  owner                 User?                 @relation("ResourceOwner", fields: [ownerId], references: [id])
+  reservations          ResourceReservation[]
+  createdAt             DateTime              @default(now())
+  updatedAt             DateTime              @updatedAt
+}
+
+model ResourceReservation {
+  id                    String                @id @default(uuid())
+  resourceId            String
+  resource              Resource              @relation(fields: [resourceId], references: [id])
+  borrowerId            String
+  borrower              User                  @relation(fields: [borrowerId], references: [id])
+  startTime             DateTime
+  endTime               DateTime
+  status                String                @default("PENDING") 
+  createdAt             DateTime              @default(now())
+  updatedAt             DateTime              @updatedAt
+}
+
+model ParkingSlot {
+  id                    String                @id @default(uuid())
+  identifier            String                @unique
+  ownerId               String
+  owner                 User                  @relation(fields: [ownerId], references: [id])
+  announcements         ParkingAnnouncement[]
+  createdAt             DateTime              @default(now())
+  updatedAt             DateTime              @updatedAt
+}
+
+model ParkingAnnouncement {
+  id                    String                @id @default(uuid())
+  parkingSlotId         String
+  parkingSlot           ParkingSlot           @relation(fields: [parkingSlotId], references: [id])
+  publisherId           String
+  publisher             User                  @relation(fields: [publisherId], references: [id])
+  availableFrom         DateTime
+  availableTo           DateTime              
+  applications          ParkingApplication[]  
+  createdAt             DateTime              @default(now())
+  updatedAt             DateTime              @updatedAt
+}
+
+model ParkingApplication {
+  id                    String                @id @default(uuid())
+  announcementId        String
+  announcement          ParkingAnnouncement   @relation(fields: [announcementId], references: [id])
+  applicantId           String
+  applicant             User                  @relation(fields: [applicantId], references: [id])
+  status                String                @default("PENDING") 
+  createdAt             DateTime              @default(now())
+  updatedAt             DateTime              @updatedAt
+}
