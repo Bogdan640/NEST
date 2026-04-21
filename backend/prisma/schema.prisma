@@ -1,6 +1,6 @@
 datasource db {
   provider = "sqlite"
-  url      = "file:./dev.db"
+  url      = env("DATABASE_URL")
 }
 
 generator client {
@@ -24,6 +24,9 @@ model User {
 
   role                  String                @default("RESIDENT")
   isVerified            Boolean               @default(false)
+  blockId               String?
+  block                 Block?                @relation("BlockResidents", fields: [blockId], references: [id])
+
   createdAt             DateTime              @default(now())
   updatedAt             DateTime              @updatedAt
 
@@ -35,6 +38,34 @@ model User {
   parkingSlots          ParkingSlot[]
   parkingAnnouncements  ParkingAnnouncement[]
   bookedParking         ParkingApplication[]
+  adminOfBlocks         Block[]               @relation("BlockAdmin")
+  joinRequests          JoinRequest[]
+}
+
+model Block {
+  id                    String                @id @default(uuid())
+  name                  String
+  address               String
+  code                  String                @unique
+  adminId               String
+  admin                 User                  @relation("BlockAdmin", fields: [adminId], references: [id])
+  residents             User[]                @relation("BlockResidents")
+  joinRequests          JoinRequest[]
+  createdAt             DateTime              @default(now())
+  updatedAt             DateTime              @updatedAt
+}
+
+model JoinRequest {
+  id                    String                @id @default(uuid())
+  userId                String
+  user                  User                  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  blockId               String
+  block                 Block                 @relation(fields: [blockId], references: [id], onDelete: Cascade)
+  status                String                @default("PENDING")
+  createdAt             DateTime              @default(now())
+  updatedAt             DateTime              @updatedAt
+
+  @@unique([userId, blockId])
 }
 
 model Event {
@@ -58,8 +89,8 @@ model EventAttendee {
   userId                String
   eventId               String
   status                String                @default("JOINED") 
-  user                  User                  @relation(fields: [userId], references: [id])
-  event                 Event                 @relation(fields: [eventId], references: [id])
+  user                  User                  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  event                 Event                 @relation(fields: [eventId], references: [id], onDelete: Cascade)
 
   @@id([userId, eventId])
 }
@@ -69,7 +100,7 @@ model Post {
   content               String
   imageUrl              String?               
   authorId              String
-  author                User                  @relation(fields: [authorId], references: [id])
+  author                User                  @relation(fields: [authorId], references: [id], onDelete: Cascade)
   createdAt             DateTime              @default(now())
   updatedAt             DateTime              @updatedAt
 }
@@ -89,7 +120,7 @@ model Resource {
 model ResourceReservation {
   id                    String                @id @default(uuid())
   resourceId            String
-  resource              Resource              @relation(fields: [resourceId], references: [id])
+  resource              Resource              @relation(fields: [resourceId], references: [id], onDelete: Cascade)
   borrowerId            String
   borrower              User                  @relation(fields: [borrowerId], references: [id])
   startTime             DateTime
@@ -112,7 +143,7 @@ model ParkingSlot {
 model ParkingAnnouncement {
   id                    String                @id @default(uuid())
   parkingSlotId         String
-  parkingSlot           ParkingSlot           @relation(fields: [parkingSlotId], references: [id])
+  parkingSlot           ParkingSlot           @relation(fields: [parkingSlotId], references: [id], onDelete: Cascade)
   publisherId           String
   publisher             User                  @relation(fields: [publisherId], references: [id])
   availableFrom         DateTime
@@ -125,7 +156,7 @@ model ParkingAnnouncement {
 model ParkingApplication {
   id                    String                @id @default(uuid())
   announcementId        String
-  announcement          ParkingAnnouncement   @relation(fields: [announcementId], references: [id])
+  announcement          ParkingAnnouncement   @relation(fields: [announcementId], references: [id], onDelete: Cascade)
   applicantId           String
   applicant             User                  @relation(fields: [applicantId], references: [id])
   status                String                @default("PENDING") 

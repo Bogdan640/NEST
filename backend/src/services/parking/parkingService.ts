@@ -1,24 +1,45 @@
-import { PrismaClient } from '@prisma/client';
+import prisma from '../../config/prisma';
+import { NotFoundError, ConflictError, ForbiddenError } from '../../utils/errors';
+import { assertOwnerOrAdmin } from '../../utils/authHelpers';
 
-const prismaClientInstance = new PrismaClient();
+export const retrievePlatformAnnouncements = async (
+  search?: string,
+  sortBy: string = 'availableFrom',
+  sortOrder: string = 'asc',
+  page: number = 1,
+  limit: number = 20
+) => {
+  const queryFilter: any = {};
+  if (search) {
+    queryFilter.OR = [
+      { parkingSlot: { identifier: { contains: search } } }
+    ];
+  }
 
-export const retrievePlatformAnnouncements = async () => {
-  return await prismaClientInstance.parkingAnnouncement.findMany({
-    orderBy: { availableFrom: 'asc' },
-    include: {
-      publisher: { select: { firstName: true, lastName: true, apartmentNumber: true } },
-      parkingSlot: true,
-      applications: true
-    }
-  });
+  const [data, total] = await Promise.all([
+    prisma.parkingAnnouncement.findMany({
+      where: queryFilter,
+      orderBy: { [sortBy]: sortOrder === 'desc' ? 'desc' : 'asc' },
+      skip: (page - 1) * limit,
+      take: limit,
+      include: {
+        publisher: { select: { firstName: true, lastName: true, apartmentNumber: true } },
+        parkingSlot: true,
+        applications: true
+      }
+    }),
+    prisma.parkingAnnouncement.count({ where: queryFilter })
+  ]);
+
+  return { data, total, page, limit };
 };
 
 export const retrieveAnnouncementById = async (announcementId: string) => {
-  const announcementResult = await prismaClientInstance.parkingAnnouncement.findUnique({
+  const announcementResult = await prisma.parkingAnnouncement.findUnique({
     where: { id: announcementId },
     include: { publisher: { select: { firstName: true, lastName: true, apartmentNumber: true } }, parkingSlot: true, applications: true }
   });
-  if (!announcementResult) throw new Error('Parking announcement could not be traced');
+  if (!announcementResult) throw new NotFoundError('Parking announcement not found');
   return announcementResult;
 };
 
@@ -28,7 +49,7 @@ export const createTargetAnnouncement = async (
   availableFromValue: Date,
   availableToValue: Date
 ) => {
-  return await prismaClientInstance.parkingAnnouncement.create({
+  return await prisma.parkingAnnouncement.create({
     data: {
       publisherId: publisherIdValue,
       parkingSlotId: parkingSlotIdValue,
@@ -42,26 +63,26 @@ export const applyForTargetAnnouncement = async (
   applicantIdValue: string,
   announcementIdValue: string
 ) => {
-  const targetedAnnouncement = await prismaClientInstance.parkingAnnouncement.findUnique({
+  const targetedAnnouncement = await prisma.parkingAnnouncement.findUnique({
     where: { id: announcementIdValue },
     include: { applications: true }
   });
 
   if (!targetedAnnouncement) {
-    throw new Error('Parking announcement could not be traced');
+    throw new NotFoundError('Parking announcement not found');
   }
 
   const existingApproval = targetedAnnouncement.applications.find(app => app.status === 'APPROVED');
   if (existingApproval) {
-    throw new Error('Parking slot definitively claimed by another resident');
+    throw new ConflictError('Parking slot already claimed by another resident');
   }
 
   const existingApplication = targetedAnnouncement.applications.find(app => app.applicantId === applicantIdValue);
   if (existingApplication) {
-    throw new Error('Resident heavily duplicated the application');
+    throw new ConflictError('Already applied for this parking slot');
   }
 
-  return await prismaClientInstance.parkingApplication.create({
+  return await prisma.parkingApplication.create({
     data: {
       applicantId: applicantIdValue,
       announcementId: announcementIdValue
@@ -73,20 +94,20 @@ export const approveTargetApplication = async (
   publisherIdValue: string,
   applicationIdValue: string
 ) => {
-  const targetedApplication = await prismaClientInstance.parkingApplication.findUnique({
+  const targetedApplication = await prisma.parkingApplication.findUnique({
     where: { id: applicationIdValue },
     include: { announcement: true }
   });
 
   if (!targetedApplication) {
-    throw new Error('Parking application firmly unreachable');
+    throw new NotFoundError('Parking application not found');
   }
 
   if (targetedApplication.announcement.publisherId !== publisherIdValue) {
-    throw new Error('Unauthorized authorization attempt registered');
+    throw new ForbiddenError('Only the announcement publisher can approve applications');
   }
 
-  const existingApproval = await prismaClientInstance.parkingApplication.findFirst({
+  const existingApproval = await prisma.parkingApplication.findFirst({
     where: {
       announcementId: targetedApplication.announcementId,
       status: 'APPROVED'
@@ -94,10 +115,10 @@ export const approveTargetApplication = async (
   });
 
   if (existingApproval) {
-    throw new Error('Parking slot definitively claimed by another resident');
+    throw new ConflictError('Parking slot already claimed by another resident');
   }
 
-  await prismaClientInstance.parkingApplication.updateMany({
+  await prisma.parkingApplication.updateMany({
     where: {
       announcementId: targetedApplication.announcementId,
       id: { not: applicationIdValue }
@@ -105,19 +126,39 @@ export const approveTargetApplication = async (
     data: { status: 'REJECTED' }
   });
 
-  return await prismaClientInstance.parkingApplication.update({
+  return await prisma.parkingApplication.update({
     where: { id: applicationIdValue },
     data: { status: 'APPROVED' }
   });
 };
 
 export const deleteParkingAnnouncement = async (userId: string, announcementId: string, userRole: string) => {
-  const existingAnnouncement = await prismaClientInstance.parkingAnnouncement.findUnique({ where: { id: announcementId } });
-  if (!existingAnnouncement) throw new Error('Parking announcement could not be traced');
+  const existingAnnouncement = await prisma.parkingAnnouncement.findUnique({ where: { id: announcementId } });
+  if (!existingAnnouncement) throw new NotFoundError('Parking announcement not found');
   
-  if (existingAnnouncement.publisherId !== userId && userRole !== 'ADMIN') {
-    throw new Error('Unauthorized operational jurisdiction');
+  assertOwnerOrAdmin(existingAnnouncement.publisherId, userId, userRole);
+
+  return await prisma.parkingAnnouncement.delete({ where: { id: announcementId } });
+};
+
+export const getAllParkingSlots = async () => {
+  return await prisma.parkingSlot.findMany({
+    include: {
+      owner: { select: { firstName: true, lastName: true, apartmentNumber: true } }
+    }
+  });
+};
+
+export const createParkingSlot = async (ownerId: string, identifier: string) => {
+  const existingSlot = await prisma.parkingSlot.findUnique({ where: { identifier } });
+  if (existingSlot) {
+    throw new ConflictError('Parking slot identifier already exists');
   }
 
-  return await prismaClientInstance.parkingAnnouncement.delete({ where: { id: announcementId } });
+  return await prisma.parkingSlot.create({
+    data: {
+      ownerId,
+      identifier
+    }
+  });
 };

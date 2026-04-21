@@ -31,7 +31,7 @@ describe('Events Routes Verification', () => {
           title: 'Asociatia de Locatari Meeting',
           description: 'Sedinta de bloc trimestriala',
           location: 'Scara A - parter',
-          type: 'WORK',
+          type: 'MEETING',
           startTime: new Date().toISOString(),
           endTime: new Date(Date.now() + 3600000).toISOString(),
           maxParticipants: 5
@@ -57,11 +57,10 @@ describe('Events Routes Verification', () => {
         .set('Authorization', `Bearer ${validToken}`);
       
       expect(response.status).toBe(409);
-      expect(response.body.error).toBe('Resident heavily duplicated attendance');
+      expect(response.body.error).toBe('Already joined this event');
     });
 
     it('rejects completely maximized capacity', async () => {
-      // Create a small event first
       const smallEventReq = await request(app)
         .post('/api/v1/events')
         .set('Authorization', `Bearer ${validToken}`)
@@ -69,14 +68,13 @@ describe('Events Routes Verification', () => {
           title: 'Small meeting',
           description: 'Sedinta mica',
           location: 'Scara A',
-          type: 'WORK',
+          type: 'MEETING',
           startTime: new Date().toISOString(),
           endTime: new Date(Date.now() + 360000).toISOString(),
           maxParticipants: 1
         });
       const smallEventId = smallEventReq.body.id;
 
-      // Join once
       await request(app)
         .post(`/api/v1/events/${smallEventId}/join`)
         .set('Authorization', `Bearer ${validToken}`);
@@ -107,10 +105,81 @@ describe('Events Routes Verification', () => {
       expect(response.status).toBe(400);
     });
 
-    it('retrieves events happily', async () => {
+    it('retrieves events with pagination', async () => {
       const response = await request(app).get('/api/v1/events').set('Authorization', `Bearer ${validToken}`);
       expect(response.status).toBe(200);
-      expect(Array.isArray(response.body)).toBe(true);
+      expect(Array.isArray(response.body.data)).toBe(true);
+      expect(response.body.total).toBeDefined();
+    });
+  });
+
+  describe('GET /api/v1/events/:id', () => {
+    it('retrieves event by ID', async () => {
+      const response = await request(app)
+        .get(`/api/v1/events/${executionEventId}`)
+        .set('Authorization', `Bearer ${validToken}`);
+      expect(response.status).toBe(200);
+      expect(response.body.id).toBe(executionEventId);
+      expect(response.body.title).toBeDefined();
+    });
+
+    it('returns 404 for non-existent event', async () => {
+      const response = await request(app)
+        .get('/api/v1/events/00000000-0000-0000-0000-000000000000')
+        .set('Authorization', `Bearer ${validToken}`);
+      expect(response.status).toBe(404);
+    });
+  });
+
+  describe('POST /api/v1/events/:id/leave', () => {
+    it('leaves a joined event', async () => {
+      const response = await request(app)
+        .post(`/api/v1/events/${executionEventId}/leave`)
+        .set('Authorization', `Bearer ${validToken}`);
+      expect(response.status).toBe(200);
+    });
+
+    it('returns 404 when not attending', async () => {
+      const response = await request(app)
+        .post(`/api/v1/events/${executionEventId}/leave`)
+        .set('Authorization', `Bearer ${validToken}`);
+      expect(response.status).toBe(404);
+    });
+  });
+
+  describe('PUT /api/v1/events/:id', () => {
+    it('updates own event', async () => {
+      const response = await request(app)
+        .put(`/api/v1/events/${executionEventId}`)
+        .set('Authorization', `Bearer ${validToken}`)
+        .send({ title: 'Updated Title', description: 'Updated Description' });
+      expect(response.status).toBe(200);
+      expect(response.body.title).toBe('Updated Title');
+    });
+
+    it('rejects update with missing fields', async () => {
+      const response = await request(app)
+        .put(`/api/v1/events/${executionEventId}`)
+        .set('Authorization', `Bearer ${validToken}`)
+        .send({});
+      expect(response.status).toBe(400);
+    });
+  });
+
+  describe('DELETE /api/v1/events/:id', () => {
+    it('deletes own event', async () => {
+      const response = await request(app)
+        .delete(`/api/v1/events/${executionEventId}`)
+        .set('Authorization', `Bearer ${validToken}`);
+      expect(response.status).toBe(204);
+    });
+
+    it('returns 404 for already deleted event', async () => {
+      const response = await request(app)
+        .delete(`/api/v1/events/${executionEventId}`)
+        .set('Authorization', `Bearer ${validToken}`);
+      expect(response.status).toBe(404);
     });
   });
 });
+

@@ -1,8 +1,14 @@
-import { PrismaClient } from '@prisma/client';
+import prisma from '../../config/prisma';
+import { NotFoundError, ConflictError } from '../../utils/errors';
+import { assertOwnerOrAdmin } from '../../utils/authHelpers';
 
-const prismaClientInstance = new PrismaClient();
-
-export const retrievePlatformResources = async (search?: string, sortBy: string = 'createdAt', sortOrder: string = 'desc') => {
+export const retrievePlatformResources = async (
+  search?: string,
+  sortBy: string = 'createdAt',
+  sortOrder: string = 'desc',
+  page: number = 1,
+  limit: number = 20
+) => {
   const queryFilter: any = {};
   if (search) {
     queryFilter.OR = [
@@ -12,21 +18,28 @@ export const retrievePlatformResources = async (search?: string, sortBy: string 
     ];
   }
 
-  return await prismaClientInstance.resource.findMany({
-    where: queryFilter,
-    orderBy: { [sortBy]: sortOrder === 'asc' ? 'asc' : 'desc' },
-    include: {
-      owner: { select: { firstName: true, lastName: true } }
-    }
-  });
+  const [data, total] = await Promise.all([
+    prisma.resource.findMany({
+      where: queryFilter,
+      orderBy: { [sortBy]: sortOrder === 'asc' ? 'asc' : 'desc' },
+      skip: (page - 1) * limit,
+      take: limit,
+      include: {
+        owner: { select: { firstName: true, lastName: true } }
+      }
+    }),
+    prisma.resource.count({ where: queryFilter })
+  ]);
+
+  return { data, total, page, limit };
 };
 
 export const retrieveResourceById = async (resourceId: string) => {
-  const resourceResult = await prismaClientInstance.resource.findUnique({
+  const resourceResult = await prisma.resource.findUnique({
     where: { id: resourceId },
     include: { owner: { select: { firstName: true, lastName: true } }, reservations: true }
   });
-  if (!resourceResult) throw new Error('Resource untraceable');
+  if (!resourceResult) throw new NotFoundError('Resource not found');
   return resourceResult;
 };
 
@@ -36,7 +49,7 @@ export const createTargetResource = async (
   typeValue: string,
   ownerIdValue?: string
 ) => {
-  return await prismaClientInstance.resource.create({
+  return await prisma.resource.create({
     data: {
       name: nameValue,
       description: descriptionValue,
@@ -52,7 +65,7 @@ export const reserveTargetResource = async (
   startTimeValue: Date,
   endTimeValue: Date
 ) => {
-  const targetedResource = await prismaClientInstance.resource.findUnique({
+  const targetedResource = await prisma.resource.findUnique({
     where: { id: resourceIdValue },
     include: {
       reservations: {
@@ -63,12 +76,12 @@ export const reserveTargetResource = async (
   });
 
   if (!targetedResource) {
-    throw new Error('Resource utterly untraceable');
+    throw new NotFoundError('Resource not found');
   }
 
   const isEngaged = targetedResource.reservations.some(res => res.status === 'APPROVED' && res.endTime > new Date());
   if (isEngaged) {
-    throw new Error('Resource actively engaged elsewhere');
+    throw new ConflictError('Resource actively engaged elsewhere');
   }
 
   if (targetedResource.type === 'TOOL' && targetedResource.reservations.length > 0) {
@@ -79,12 +92,12 @@ export const reserveTargetResource = async (
       const cooldownExpiration = new Date(previousReservation.updatedAt.getTime() + cooldownMs);
       
       if (new Date() < cooldownExpiration) {
-        throw new Error('Resource experiencing mandatory cooldown phase');
+        throw new ConflictError('Resource experiencing mandatory cooldown phase');
       }
     }
   }
 
-  return await prismaClientInstance.resourceReservation.create({
+  return await prisma.resourceReservation.create({
     data: {
       resourceId: resourceIdValue,
       borrowerId: userIdValue,
@@ -95,27 +108,45 @@ export const reserveTargetResource = async (
   });
 };
 
-export const updateShedResource = async (userId: string, resourceId: string, userRole: string, newName: string, newDescription: string) => {
-  const existingResource = await prismaClientInstance.resource.findUnique({ where: { id: resourceId } });
-  if (!existingResource) throw new Error('Resource untraceable');
-  
-  if (existingResource.ownerId !== userId && userRole !== 'ADMIN') {
-    throw new Error('Unauthorized operational jurisdiction');
+export const returnTargetResource = async (userId: string, resourceId: string) => {
+  const activeReservation = await prisma.resourceReservation.findFirst({
+    where: {
+      resourceId,
+      borrowerId: userId,
+      status: 'APPROVED'
+    }
+  });
+
+  if (!activeReservation) {
+    throw new NotFoundError('No active reservation found for this resource');
   }
 
-  return await prismaClientInstance.resource.update({
+  return await prisma.resourceReservation.update({
+    where: { id: activeReservation.id },
+    data: {
+      status: 'RETURNED',
+      endTime: new Date()
+    }
+  });
+};
+
+export const updateShedResource = async (userId: string, resourceId: string, userRole: string, newName: string, newDescription: string) => {
+  const existingResource = await prisma.resource.findUnique({ where: { id: resourceId } });
+  if (!existingResource) throw new NotFoundError('Resource not found');
+  
+  assertOwnerOrAdmin(existingResource.ownerId, userId, userRole);
+
+  return await prisma.resource.update({
     where: { id: resourceId },
     data: { name: newName, description: newDescription }
   });
 };
 
 export const deleteShedResource = async (userId: string, resourceId: string, userRole: string) => {
-  const existingResource = await prismaClientInstance.resource.findUnique({ where: { id: resourceId } });
-  if (!existingResource) throw new Error('Resource untraceable');
+  const existingResource = await prisma.resource.findUnique({ where: { id: resourceId } });
+  if (!existingResource) throw new NotFoundError('Resource not found');
   
-  if (existingResource.ownerId !== userId && userRole !== 'ADMIN') {
-    throw new Error('Unauthorized operational jurisdiction');
-  }
+  assertOwnerOrAdmin(existingResource.ownerId, userId, userRole);
 
-  return await prismaClientInstance.resource.delete({ where: { id: resourceId } });
+  return await prisma.resource.delete({ where: { id: resourceId } });
 };

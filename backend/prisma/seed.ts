@@ -67,6 +67,34 @@ async function executeSeeding() {
       await prismaClientInstance.user.create({ data: userRecord });
     }
   }
+
+  const adminUser = await prismaClientInstance.user.findUnique({
+    where: { email: 'marius.scrum@nest.local' }
+  });
+
+  if (adminUser) {
+    const existingBlock = await prismaClientInstance.block.findFirst({
+      where: { code: 'NEST-BLOC-A1' }
+    });
+
+    if (!existingBlock) {
+      const block = await prismaClientInstance.block.create({
+        data: {
+          name: 'Bloc A1',
+          address: 'Str. Exemplu Nr. 10, Bloc A1',
+          code: 'NEST-BLOC-A1',
+          adminId: adminUser.id
+        }
+      });
+
+      await prismaClientInstance.user.updateMany({
+        where: {
+          email: { in: predefinedUsers.map(u => u.email) }
+        },
+        data: { blockId: block.id }
+      });
+    }
+  }
 }
 
 executeSeeding()

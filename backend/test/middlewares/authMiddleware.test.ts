@@ -42,13 +42,13 @@ describe('Auth Middleware Validation', () => {
   });
 
   it('admin role guard rejects residents', () => {
-    mockRequest.user = { userId: '123', role: 'RESIDENT', iat: 1, exp: 2 };
+    mockRequest.user = { userId: '123', role: 'RESIDENT', isVerified: true, blockId: 'block1', iat: 1, exp: 2 };
     requireAdminRole(mockRequest as Request, mockResponse as Response, nextFunction);
     expect(mockResponse.status).toHaveBeenCalledWith(403);
   });
 
   it('admin role guard accepts admins', () => {
-    mockRequest.user = { userId: '123', role: 'ADMIN', iat: 1, exp: 2 };
+    mockRequest.user = { userId: '123', role: 'ADMIN', isVerified: true, blockId: 'block1', iat: 1, exp: 2 };
     requireAdminRole(mockRequest as Request, mockResponse as Response, nextFunction);
     expect(nextFunction).toHaveBeenCalled();
   });

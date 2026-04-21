@@ -43,14 +43,16 @@ describe('Feed Routes Verification', () => {
   });
 
   describe('GET /api/v1/feed', () => {
-    it('retrieves feed chronologically', async () => {
+    it('retrieves feed with pagination', async () => {
       const response = await request(app)
         .get('/api/v1/feed')
         .set('Authorization', `Bearer ${validToken}`);
       
       expect(response.status).toBe(200);
-      expect(Array.isArray(response.body)).toBe(true);
-      expect(response.body.length).toBeGreaterThan(0);
+      expect(Array.isArray(response.body.data)).toBe(true);
+      expect(response.body.data.length).toBeGreaterThan(0);
+      expect(response.body.total).toBeDefined();
+      expect(response.body.page).toBe(1);
     });
   });
 
@@ -65,4 +67,69 @@ describe('Feed Routes Verification', () => {
       expect(response.status).toBe(400);
     });
   });
+
+  describe('GET /api/v1/feed/:id', () => {
+    it('retrieves post by ID', async () => {
+      const allPosts = await request(app).get('/api/v1/feed').set('Authorization', `Bearer ${validToken}`);
+      const postId = allPosts.body.data[0].id;
+
+      const response = await request(app)
+        .get(`/api/v1/feed/${postId}`)
+        .set('Authorization', `Bearer ${validToken}`);
+      expect(response.status).toBe(200);
+      expect(response.body.id).toBe(postId);
+    });
+
+    it('returns 404 for non-existent post', async () => {
+      const response = await request(app)
+        .get('/api/v1/feed/00000000-0000-0000-0000-000000000000')
+        .set('Authorization', `Bearer ${validToken}`);
+      expect(response.status).toBe(404);
+    });
+  });
+
+  describe('PUT /api/v1/feed/:id', () => {
+    it('updates own post', async () => {
+      const allPosts = await request(app).get('/api/v1/feed').set('Authorization', `Bearer ${validToken}`);
+      const postId = allPosts.body.data[0].id;
+
+      const response = await request(app)
+        .put(`/api/v1/feed/${postId}`)
+        .set('Authorization', `Bearer ${validToken}`)
+        .send({ content: 'Updated content here' });
+      expect(response.status).toBe(200);
+      expect(response.body.content).toBe('Updated content here');
+    });
+
+    it('rejects update with missing content', async () => {
+      const allPosts = await request(app).get('/api/v1/feed').set('Authorization', `Bearer ${validToken}`);
+      const postId = allPosts.body.data[0].id;
+
+      const response = await request(app)
+        .put(`/api/v1/feed/${postId}`)
+        .set('Authorization', `Bearer ${validToken}`)
+        .send({});
+      expect(response.status).toBe(400);
+    });
+  });
+
+  describe('DELETE /api/v1/feed/:id', () => {
+    it('deletes own post', async () => {
+      const allPosts = await request(app).get('/api/v1/feed').set('Authorization', `Bearer ${validToken}`);
+      const postId = allPosts.body.data[0].id;
+
+      const response = await request(app)
+        .delete(`/api/v1/feed/${postId}`)
+        .set('Authorization', `Bearer ${validToken}`);
+      expect(response.status).toBe(204);
+    });
+
+    it('returns 404 for already deleted post', async () => {
+      const response = await request(app)
+        .delete('/api/v1/feed/00000000-0000-0000-0000-000000000000')
+        .set('Authorization', `Bearer ${validToken}`);
+      expect(response.status).toBe(404);
+    });
+  });
 });
+

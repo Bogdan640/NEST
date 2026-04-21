@@ -1,8 +1,14 @@
-import { PrismaClient } from '@prisma/client';
+import prisma from '../../config/prisma';
+import { NotFoundError, ConflictError } from '../../utils/errors';
+import { assertOwnerOrAdmin } from '../../utils/authHelpers';
 
-const prismaClientInstance = new PrismaClient();
-
-export const retrieveAllEvents = async (search?: string, sortBy: string = 'startTime', sortOrder: string = 'asc') => {
+export const retrieveAllEvents = async (
+  search?: string,
+  sortBy: string = 'startTime',
+  sortOrder: string = 'asc',
+  page: number = 1,
+  limit: number = 20
+) => {
   const queryFilter: any = {};
   if (search) {
     queryFilter.OR = [
@@ -13,24 +19,31 @@ export const retrieveAllEvents = async (search?: string, sortBy: string = 'start
     ];
   }
 
-  return await prismaClientInstance.event.findMany({
-    where: queryFilter,
-    orderBy: { [sortBy]: sortOrder === 'desc' ? 'desc' : 'asc' },
-    include: {
-      creator: {
-        select: { firstName: true, lastName: true }
-      },
-      attendees: true
-    }
-  });
+  const [data, total] = await Promise.all([
+    prisma.event.findMany({
+      where: queryFilter,
+      orderBy: { [sortBy]: sortOrder === 'desc' ? 'desc' : 'asc' },
+      skip: (page - 1) * limit,
+      take: limit,
+      include: {
+        creator: {
+          select: { firstName: true, lastName: true }
+        },
+        attendees: true
+      }
+    }),
+    prisma.event.count({ where: queryFilter })
+  ]);
+
+  return { data, total, page, limit };
 };
 
 export const retrieveEventById = async (eventId: string) => {
-  const eventResult = await prismaClientInstance.event.findUnique({
+  const eventResult = await prisma.event.findUnique({
     where: { id: eventId },
     include: { creator: { select: { firstName: true, lastName: true } }, attendees: true }
   });
-  if (!eventResult) throw new Error('Event untraceable');
+  if (!eventResult) throw new NotFoundError('Event not found');
   return eventResult;
 };
 
@@ -45,7 +58,7 @@ export const createTargetEvent = async (
   maxParticipantsValue?: number,
   visibilityValue?: string
 ) => {
-  return await prismaClientInstance.event.create({
+  return await prisma.event.create({
     data: {
       title: titleValue,
       description: descriptionValue,
@@ -61,20 +74,20 @@ export const createTargetEvent = async (
 };
 
 export const joinTargetEvent = async (userIdValue: string, eventIdValue: string) => {
-  const selectedEvent = await prismaClientInstance.event.findUnique({
+  const selectedEvent = await prisma.event.findUnique({
     where: { id: eventIdValue },
     include: { attendees: true }
   });
 
   if (!selectedEvent) {
-    throw new Error('Event could not be located');
+    throw new NotFoundError('Event not found');
   }
 
   if (selectedEvent.maxParticipants && selectedEvent.attendees.length >= selectedEvent.maxParticipants) {
-    throw new Error('Event capacity completely maximized');
+    throw new ConflictError('Event capacity completely maximized');
   }
 
-  const existingAttendance = await prismaClientInstance.eventAttendee.findFirst({
+  const existingAttendance = await prisma.eventAttendee.findFirst({
     where: {
       userId: userIdValue,
       eventId: eventIdValue
@@ -82,10 +95,10 @@ export const joinTargetEvent = async (userIdValue: string, eventIdValue: string)
   });
 
   if (existingAttendance) {
-    throw new Error('Resident heavily duplicated attendance');
+    throw new ConflictError('Already joined this event');
   }
 
-  return await prismaClientInstance.eventAttendee.create({
+  return await prisma.eventAttendee.create({
     data: {
       userId: userIdValue,
       eventId: eventIdValue
@@ -93,27 +106,53 @@ export const joinTargetEvent = async (userIdValue: string, eventIdValue: string)
   });
 };
 
-export const updateEventTarget = async (userId: string, eventId: string, userRole: string, newTitle: string, newDescription: string) => {
-  const existingEvent = await prismaClientInstance.event.findUnique({ where: { id: eventId } });
-  if (!existingEvent) throw new Error('Event untraceable');
-  
-  if (existingEvent.creatorId !== userId && userRole !== 'ADMIN') {
-    throw new Error('Unauthorized operational jurisdiction');
+export const leaveTargetEvent = async (userIdValue: string, eventIdValue: string) => {
+  const selectedEvent = await prisma.event.findUnique({
+    where: { id: eventIdValue }
+  });
+
+  if (!selectedEvent) {
+    throw new NotFoundError('Event not found');
   }
 
-  return await prismaClientInstance.event.update({
+  const existingAttendance = await prisma.eventAttendee.findFirst({
+    where: {
+      userId: userIdValue,
+      eventId: eventIdValue
+    }
+  });
+
+  if (!existingAttendance) {
+    throw new NotFoundError('Not currently attending this event');
+  }
+
+  return await prisma.eventAttendee.delete({
+    where: {
+      userId_eventId: {
+        userId: userIdValue,
+        eventId: eventIdValue
+      }
+    }
+  });
+};
+
+export const updateEventTarget = async (userId: string, eventId: string, userRole: string, newTitle: string, newDescription: string) => {
+  const existingEvent = await prisma.event.findUnique({ where: { id: eventId } });
+  if (!existingEvent) throw new NotFoundError('Event not found');
+  
+  assertOwnerOrAdmin(existingEvent.creatorId, userId, userRole);
+
+  return await prisma.event.update({
     where: { id: eventId },
     data: { title: newTitle, description: newDescription }
   });
 };
 
 export const deleteEventTarget = async (userId: string, eventId: string, userRole: string) => {
-  const existingEvent = await prismaClientInstance.event.findUnique({ where: { id: eventId } });
-  if (!existingEvent) throw new Error('Event untraceable');
+  const existingEvent = await prisma.event.findUnique({ where: { id: eventId } });
+  if (!existingEvent) throw new NotFoundError('Event not found');
   
-  if (existingEvent.creatorId !== userId && userRole !== 'ADMIN') {
-    throw new Error('Unauthorized operational jurisdiction');
-  }
+  assertOwnerOrAdmin(existingEvent.creatorId, userId, userRole);
 
-  return await prismaClientInstance.event.delete({ where: { id: eventId } });
+  return await prisma.event.delete({ where: { id: eventId } });
 };

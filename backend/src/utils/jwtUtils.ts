@@ -6,6 +6,8 @@ const EXPIRES_IN = '1d';
 export interface UserJwtPayload extends JwtPayload {
   userId: string;
   role: string;
+  isVerified: boolean;
+  blockId: string | null;
 }
 
 export const generateToken = (payload: object): string => {

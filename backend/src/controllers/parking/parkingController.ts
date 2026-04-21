@@ -1,31 +1,32 @@
-import { Response } from 'express';
-import { retrievePlatformAnnouncements, createTargetAnnouncement, applyForTargetAnnouncement, approveTargetApplication, deleteParkingAnnouncement, retrieveAnnouncementById } from '../../services/parking/parkingService';
+import { Response, NextFunction } from 'express';
+import { retrievePlatformAnnouncements, createTargetAnnouncement, applyForTargetAnnouncement, approveTargetApplication, deleteParkingAnnouncement, retrieveAnnouncementById, getAllParkingSlots, createParkingSlot } from '../../services/parking/parkingService';
 import { AuthenticatedRequest } from '../../middlewares/authMiddleware';
 
-export const getAnnouncementsController = async (req: AuthenticatedRequest, res: Response): Promise<void> => {
+export const getAnnouncementsController = async (req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> => {
   try {
-    const executedRetrieval = await retrievePlatformAnnouncements();
-    res.status(200).json(executedRetrieval);
-  } catch (executionError: unknown) {
-    res.status(500).json({ error: 'Failed to retrieve parking announcements' });
+    const search = req.query.search as string | undefined;
+    const sortBy = req.query.sortBy as string | undefined;
+    const sortOrder = req.query.sortOrder as string | undefined;
+    const page = parseInt(req.query.page as string) || 1;
+    const limit = parseInt(req.query.limit as string) || 20;
+
+    const result = await retrievePlatformAnnouncements(search, sortBy, sortOrder, page, limit);
+    res.status(200).json(result);
+  } catch (error) {
+    next(error);
   }
 };
 
-export const getAnnouncementByIdController = async (req: AuthenticatedRequest, res: Response): Promise<void> => {
-  const { id } = req.params;
+export const getAnnouncementByIdController = async (req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> => {
   try {
-    const executedRetrieval = await retrieveAnnouncementById(id as string);
-    res.status(200).json(executedRetrieval);
-  } catch (error: unknown) {
-    if (error instanceof Error && error.message === 'Parking announcement could not be traced') {
-      res.status(404).json({ error: error.message });
-      return;
-    }
-    res.status(500).json({ error: 'Failed to retrieve isolated announcement' });
+    const result = await retrieveAnnouncementById(req.params.id as string);
+    res.status(200).json(result);
+  } catch (error) {
+    next(error);
   }
 };
 
-export const createAnnouncementController = async (req: AuthenticatedRequest, res: Response): Promise<void> => {
+export const createAnnouncementController = async (req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> => {
   if (!req.user?.userId) {
     res.status(401).json({ error: 'Authentication missing' });
     return;
@@ -41,107 +42,81 @@ export const createAnnouncementController = async (req: AuthenticatedRequest, re
   try {
     const parsedStart = new Date(availableFrom);
     const parsedEnd = new Date(availableTo);
-
-    const executedCreation = await createTargetAnnouncement(
-      req.user.userId,
-      parkingSlotId,
-      parsedStart,
-      parsedEnd
-    );
-    res.status(201).json(executedCreation);
-  } catch (executionError: unknown) {
-    res.status(500).json({ error: 'Parking announcement creation failed' });
+    const result = await createTargetAnnouncement(req.user.userId, parkingSlotId, parsedStart, parsedEnd);
+    res.status(201).json(result);
+  } catch (error) {
+    next(error);
   }
 };
 
-export const applyAnnouncementController = async (req: AuthenticatedRequest, res: Response): Promise<void> => {
+export const applyAnnouncementController = async (req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> => {
   if (!req.user?.userId) {
     res.status(401).json({ error: 'Authentication missing' });
     return;
   }
 
-  const { id } = req.params;
-
-  if (!id) {
-    res.status(400).json({ error: 'Announcement ID strictly required' });
-    return;
-  }
-
   try {
-    const executedApplication = await applyForTargetAnnouncement(req.user.userId, id as string);
-    res.status(200).json(executedApplication);
-  } catch (executionError: unknown) {
-    if (executionError instanceof Error) {
-      if (executionError.message === 'Parking slot definitively claimed by another resident' || executionError.message === 'Resident heavily duplicated the application') {
-        res.status(409).json({ error: executionError.message });
-        return;
-      }
-      if (executionError.message === 'Parking announcement could not be traced') {
-        res.status(404).json({ error: executionError.message });
-        return;
-      }
-    }
-    res.status(500).json({ error: 'Failed to process matching application' });
+    const result = await applyForTargetAnnouncement(req.user.userId, req.params.id as string);
+    res.status(200).json(result);
+  } catch (error) {
+    next(error);
   }
 };
 
-export const approveApplicationController = async (req: AuthenticatedRequest, res: Response): Promise<void> => {
+export const approveApplicationController = async (req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> => {
   if (!req.user?.userId) {
     res.status(401).json({ error: 'Authentication missing' });
     return;
   }
 
-  const { applicationId } = req.params;
-
-  if (!applicationId) {
-    res.status(400).json({ error: 'Application ID strictly required' });
-    return;
-  }
-
   try {
-    const executedApproval = await approveTargetApplication(req.user.userId, applicationId as string);
-    res.status(200).json(executedApproval);
-  } catch (executionError: unknown) {
-    if (executionError instanceof Error) {
-      if (executionError.message === 'Unauthorized authorization attempt registered') {
-        res.status(403).json({ error: executionError.message });
-        return;
-      }
-      if (executionError.message === 'Parking slot definitively claimed by another resident') {
-        res.status(409).json({ error: executionError.message });
-        return;
-      }
-      if (executionError.message === 'Parking application firmly unreachable') {
-        res.status(404).json({ error: executionError.message });
-        return;
-      }
-    }
-    res.status(500).json({ error: 'Failed to approve application' });
+    const result = await approveTargetApplication(req.user.userId, req.params.applicationId as string);
+    res.status(200).json(result);
+  } catch (error) {
+    next(error);
   }
 };
 
-export const deleteAnnouncementController = async (req: AuthenticatedRequest, res: Response): Promise<void> => {
+export const deleteAnnouncementController = async (req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> => {
   if (!req.user?.userId || !req.user?.role) {
     res.status(401).json({ error: 'Authentication missing' });
     return;
   }
 
-  const { id } = req.params;
+  try {
+    await deleteParkingAnnouncement(req.user.userId, req.params.id as string, req.user.role);
+    res.status(204).send();
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const getSlotsController = async (req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> => {
+  try {
+    const result = await getAllParkingSlots();
+    res.status(200).json(result);
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const createSlotController = async (req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> => {
+  if (!req.user?.userId) {
+    res.status(401).json({ error: 'Authentication missing' });
+    return;
+  }
+
+  const { identifier } = req.body;
+
+  if (!identifier) {
+    res.status(400).json({ error: 'Parking slot identifier is required' });
+    return;
+  }
 
   try {
-    await deleteParkingAnnouncement(req.user.userId, id as string, req.user.role);
-    res.status(204).send();
-  } catch (error: unknown) {
-    if (error instanceof Error) {
-      if (error.message === 'Parking announcement could not be traced') {
-        res.status(404).json({ error: error.message });
-        return;
-      }
-      if (error.message === 'Unauthorized operational jurisdiction') {
-        res.status(403).json({ error: error.message });
-        return;
-      }
-    }
-    res.status(500).json({ error: 'Parking synchronization failed' });
+    const result = await createParkingSlot(req.user.userId, identifier);
+    res.status(201).json(result);
+  } catch (error) {
+    next(error);
   }
 };

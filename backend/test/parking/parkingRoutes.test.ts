@@ -75,7 +75,7 @@ describe('Parking Routes Verification', () => {
         .set('Authorization', `Bearer ${dorelToken}`);
       
       expect(response.status).toBe(409);
-      expect(response.body.error).toBe('Resident heavily duplicated the application');
+      expect(response.body.error).toBe('Already applied for this parking slot');
     });
   });
 
@@ -86,7 +86,7 @@ describe('Parking Routes Verification', () => {
         .set('Authorization', `Bearer ${dorelToken}`); 
       
       expect(response.status).toBe(403);
-      expect(response.body.error).toBe('Unauthorized authorization attempt registered');
+      expect(response.body.error).toBe('Only the announcement publisher can approve applications');
     });
 
     it('approves application exclusively by publisher', async () => {
@@ -110,7 +110,7 @@ describe('Parking Routes Verification', () => {
         .set('Authorization', `Bearer ${valeriaToken}`);
 
       expect(blockedApp.status).toBe(409);
-      expect(blockedApp.body.error).toBe('Parking slot definitively claimed by another resident');
+      expect(blockedApp.body.error).toBe('Parking slot already claimed by another resident');
     });
   });
 
@@ -125,10 +125,91 @@ describe('Parking Routes Verification', () => {
       expect(response.status).toBe(401);
     });
 
-    it('retrieves announcements happily', async () => {
+    it('retrieves announcements with pagination', async () => {
       const response = await request(app).get('/api/v1/parking').set('Authorization', `Bearer ${magdalenaToken}`);
       expect(response.status).toBe(200);
+      expect(Array.isArray(response.body.data)).toBe(true);
+      expect(response.body.total).toBeDefined();
+    });
+  });
+
+  describe('GET /api/v1/parking/:id', () => {
+    it('retrieves announcement by ID', async () => {
+      const response = await request(app)
+        .get(`/api/v1/parking/${executionAnnouncementId}`)
+        .set('Authorization', `Bearer ${magdalenaToken}`);
+      expect(response.status).toBe(200);
+      expect(response.body.id).toBe(executionAnnouncementId);
+    });
+
+    it('returns 404 for non-existent announcement', async () => {
+      const response = await request(app)
+        .get('/api/v1/parking/00000000-0000-0000-0000-000000000000')
+        .set('Authorization', `Bearer ${magdalenaToken}`);
+      expect(response.status).toBe(404);
+    });
+  });
+
+  describe('GET /api/v1/parking/slots', () => {
+    it('retrieves all parking slots', async () => {
+      const response = await request(app)
+        .get('/api/v1/parking/slots')
+        .set('Authorization', `Bearer ${magdalenaToken}`);
+      expect(response.status).toBe(200);
       expect(Array.isArray(response.body)).toBe(true);
+    });
+  });
+
+  describe('POST /api/v1/parking/slots', () => {
+    it('creates a parking slot', async () => {
+      const slotId = `SLOT-TEST-${Date.now()}`;
+      const response = await request(app)
+        .post('/api/v1/parking/slots')
+        .set('Authorization', `Bearer ${magdalenaToken}`)
+        .send({ identifier: slotId });
+      expect(response.status).toBe(201);
+      expect(response.body.identifier).toBe(slotId);
+    });
+
+    it('rejects duplicate slot identifier', async () => {
+      const response = await request(app)
+        .post('/api/v1/parking/slots')
+        .set('Authorization', `Bearer ${magdalenaToken}`)
+        .send({ identifier: 'SLOT-TEST' });
+      expect(response.status).toBe(409);
+    });
+
+    it('rejects missing identifier', async () => {
+      const response = await request(app)
+        .post('/api/v1/parking/slots')
+        .set('Authorization', `Bearer ${magdalenaToken}`)
+        .send({});
+      expect(response.status).toBe(400);
+    });
+  });
+
+  describe('DELETE /api/v1/parking/:id', () => {
+    it('deletes own announcement', async () => {
+      const newAnn = await request(app)
+        .post('/api/v1/parking')
+        .set('Authorization', `Bearer ${magdalenaToken}`)
+        .send({
+          parkingSlotId: existingSlotId,
+          availableFrom: new Date(Date.now() + 86400000).toISOString(),
+          availableTo: new Date(Date.now() + 172800000).toISOString()
+        });
+
+      const response = await request(app)
+        .delete(`/api/v1/parking/${newAnn.body.id}`)
+        .set('Authorization', `Bearer ${magdalenaToken}`);
+      expect(response.status).toBe(204);
+    });
+
+    it('returns 404 for non-existent announcement', async () => {
+      const response = await request(app)
+        .delete('/api/v1/parking/00000000-0000-0000-0000-000000000000')
+        .set('Authorization', `Bearer ${magdalenaToken}`);
+      expect(response.status).toBe(404);
     });
   });
 });
