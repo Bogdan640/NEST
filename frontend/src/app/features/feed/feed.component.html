@@ -1,0 +1,60 @@
+<div class="feed-page">
+  <div class="feed-header">
+    <h1 class="page-title">Community Feed</h1>
+    <p class="page-subtitle">See what's happening in your building</p>
+  </div>
+
+  <div class="create-post-card">
+    <form [formGroup]="newPostForm" (ngSubmit)="onSubmit()">
+      <textarea
+        formControlName="content"
+        class="post-input"
+        placeholder="Share something with your neighbors..."
+        rows="3"
+      ></textarea>
+      
+      <div class="post-actions">
+        <input
+          type="url"
+          formControlName="imageUrl"
+          class="image-url-input"
+          placeholder="Optional image URL"
+        />
+        <button
+          type="submit"
+          class="btn-primary"
+          [disabled]="newPostForm.invalid || isSubmitting()"
+        >
+          Post
+        </button>
+      </div>
+    </form>
+  </div>
+
+  @if (error()) {
+    <div class="error-message">{{ error() }}</div>
+  }
+
+  @if (isLoading() && posts().length === 0) {
+    <div class="loading-state">
+      <span class="spinner"></span>
+      <p>Loading posts...</p>
+    </div>
+  } @else if (posts().length === 0) {
+    <div class="empty-state">
+      <div class="empty-icon">📭</div>
+      <h3>No posts yet</h3>
+      <p>Be the first to share something with your community!</p>
+    </div>
+  } @else {
+    <div class="posts-list">
+      @for (post of posts(); track post.id) {
+        <app-post-card
+          [post]="post"
+          [canDelete]="canDelete(post.authorId)"
+          (deleteClicked)="onDeletePost($event)"
+        ></app-post-card>
+      }
+    </div>
+  }
+</div>

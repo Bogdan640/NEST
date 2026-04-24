@@ -1,0 +1,97 @@
+<div class="events-page">
+  <div class="events-header">
+    <div>
+      <h1 class="page-title">Community Events</h1>
+      <p class="page-subtitle">Join gatherings and stay informed</p>
+    </div>
+    <button class="btn-primary" (click)="toggleForm()">
+      {{ showCreateForm() ? 'Cancel' : 'Create Event' }}
+    </button>
+  </div>
+
+  @if (showCreateForm()) {
+    <div class="create-event-card">
+      <h3>Create New Event</h3>
+      <form [formGroup]="newEventForm" (ngSubmit)="onSubmit()">
+        <div class="form-grid">
+          <div class="form-group full-width">
+            <label>Title</label>
+            <input type="text" formControlName="title" placeholder="Event title" class="form-control" />
+          </div>
+
+          <div class="form-group full-width">
+            <label>Description</label>
+            <textarea formControlName="description" placeholder="Event details..." class="form-control" rows="3"></textarea>
+          </div>
+
+          <div class="form-group">
+            <label>Location</label>
+            <input type="text" formControlName="location" placeholder="Where is it?" class="form-control" />
+          </div>
+
+          <div class="form-group">
+            <label>Event Type</label>
+            <select formControlName="type" class="form-control">
+              @for (type of eventTypes; track type) {
+                <option [value]="type">{{ type }}</option>
+              }
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>Start Time</label>
+            <input type="datetime-local" formControlName="startTime" class="form-control" />
+          </div>
+
+          <div class="form-group">
+            <label>End Time</label>
+            <input type="datetime-local" formControlName="endTime" class="form-control" />
+          </div>
+
+          <div class="form-group">
+            <label>Max Participants (Optional)</label>
+            <input type="number" formControlName="maxParticipants" placeholder="Leave empty for unlimited" class="form-control" min="1" />
+          </div>
+        </div>
+        
+        <div class="form-actions">
+          <button type="button" class="btn-secondary" (click)="toggleForm()">Cancel</button>
+          <button type="submit" class="btn-primary" [disabled]="newEventForm.invalid || isSubmitting()">
+            Publish Event
+          </button>
+        </div>
+      </form>
+    </div>
+  }
+
+  @if (error()) {
+    <div class="error-message">{{ error() }}</div>
+  }
+
+  @if (isLoading() && events().length === 0) {
+    <div class="loading-state">
+      <span class="spinner"></span>
+      <p>Loading events...</p>
+    </div>
+  } @else if (events().length === 0) {
+    <div class="empty-state">
+      <div class="empty-icon">📅</div>
+      <h3>No upcoming events</h3>
+      <p>Why not host one yourself?</p>
+      <button class="btn-primary mt-4" (click)="showCreateForm.set(true)">Create Event</button>
+    </div>
+  } @else {
+    <div class="events-grid">
+      @for (event of events(); track event.id) {
+        <app-event-card
+          [event]="event"
+          [currentUserId]="currentUser()?.id"
+          [canDelete]="canDelete(event.creatorId)"
+          (joinClicked)="onJoinEvent($event)"
+          (leaveClicked)="onLeaveEvent($event)"
+          (deleteClicked)="onDeleteEvent($event)"
+        ></app-event-card>
+      }
+    </div>
+  }
+</div>

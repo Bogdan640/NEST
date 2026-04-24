@@ -1,0 +1,71 @@
+<div class="parking-card">
+  <div class="parking-header">
+    <div class="slot-badge">
+      Slot {{ announcement.parkingSlot.identifier }}
+    </div>
+    
+    @if (canDelete) {
+      <button class="btn-icon delete-btn" (click)="onDelete()" title="Remove announcement">
+        ✕
+      </button>
+    }
+  </div>
+
+  <div class="availability-info">
+    <div class="time-block">
+      <span class="label">Available From</span>
+      <span class="value">{{ announcement.availableFrom | date:'short' }}</span>
+    </div>
+    <div class="time-separator">→</div>
+    <div class="time-block">
+      <span class="label">Until</span>
+      <span class="value">{{ announcement.availableTo | date:'short' }}</span>
+    </div>
+  </div>
+
+  <div class="status-section">
+    @if (approvedApplication) {
+      <div class="status-badge taken">
+        <span class="dot"></span>
+        Taken by {{ approvedApplication.applicant?.firstName }} {{ approvedApplication.applicant?.lastName }}
+      </div>
+    } @else if (isAvailable) {
+      <div class="status-badge available">
+        <span class="dot"></span>
+        Available Now
+      </div>
+    } @else {
+      <div class="status-badge expired">
+        <span class="dot"></span>
+        Expired
+      </div>
+    }
+  </div>
+
+  @if (isMyAnnouncement && !approvedApplication && announcement.applications?.length) {
+    <div class="applications-list">
+      <h4 class="section-title">Applications ({{ announcement.applications.length }})</h4>
+      @for (app of announcement.applications; track app.id) {
+        <div class="application-item">
+          <span>{{ app.applicant?.firstName }} {{ app.applicant?.lastName }} wants to use this</span>
+          <button class="btn-small btn-success" (click)="onApprove(app.id)">Approve</button>
+        </div>
+      }
+    </div>
+  }
+
+  <div class="parking-footer">
+    <div class="publisher-info">
+      <span class="avatar-small">{{ announcement.publisher?.firstName?.charAt(0) || 'U' }}</span>
+      <span class="publisher-name">Shared by {{ announcement.publisher?.firstName }}</span>
+    </div>
+
+    @if (!isMyAnnouncement && isAvailable) {
+      @if (hasApplied) {
+        <button class="btn-secondary" disabled>Request Sent</button>
+      } @else {
+        <button class="btn-primary" (click)="onApply()">Request Spot</button>
+      }
+    }
+  </div>
+</div>

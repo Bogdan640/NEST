@@ -1,0 +1,54 @@
+<div class="resource-card">
+  <div class="resource-header">
+    <div class="resource-type-badge" [class]="resource.type.toLowerCase()">
+      {{ resource.type }}
+    </div>
+    
+    @if (canDelete) {
+      <button class="btn-icon delete-btn" (click)="onDelete()" title="Delete resource">
+        ✕
+      </button>
+    }
+  </div>
+
+  <h3 class="resource-name">{{ resource.name }}</h3>
+  
+  <p class="resource-description">{{ resource.description }}</p>
+
+  <div class="resource-status">
+    <div class="status-indicator" [class.available]="isAvailable" [class.borrowed]="!isAvailable">
+      <span class="dot"></span>
+      {{ isAvailable ? 'Available' : 'Currently Borrowed' }}
+    </div>
+    
+    @if (!isAvailable && currentBorrower) {
+      <div class="borrower-info">
+        Borrowed by {{ currentBorrower.firstName }} {{ currentBorrower.lastName }}
+      </div>
+    }
+  </div>
+
+  <div class="resource-footer">
+    <div class="owner-info">
+      @if (resource.owner) {
+        <span class="avatar-small">{{ resource.owner.firstName.charAt(0) }}</span>
+        <span class="owner-name">Shared by {{ resource.owner.firstName }}</span>
+      } @else {
+        <span class="avatar-small building-avatar">B</span>
+        <span class="owner-name">Building Resource</span>
+      }
+    </div>
+
+    @if (isBorrowedByMe) {
+      <button class="btn-secondary" (click)="onReturn()">Return Item</button>
+    } @else {
+      <button 
+        class="btn-primary" 
+        (click)="onReserve()" 
+        [disabled]="!isAvailable"
+      >
+        {{ isAvailable ? 'Borrow Item' : 'Unavailable' }}
+      </button>
+    }
+  </div>
+</div>

@@ -1,0 +1,29 @@
+<div class="join-page">
+  <div class="join-content">
+    <div class="join-logo">🐿️</div>
+    <h1 class="join-title">Join Your Building</h1>
+    <p class="join-subtitle">Enter the unique code for your apartment block to connect with your community.</p>
+
+    @if (error()) {
+      <div class="join-error">{{ error() }}</div>
+    }
+
+    <form [formGroup]="joinForm" (ngSubmit)="onSubmit()" class="join-form">
+      <input
+        type="text"
+        formControlName="blockCode"
+        placeholder="e.g. BLK-2023"
+        class="join-input"
+        maxlength="20"
+      />
+
+      <button type="submit" class="btn-accent" [disabled]="joinForm.invalid || isLoading()">
+        @if (isLoading()) {
+          <span class="spinner"></span>
+        } @else {
+          Join Community
+        }
+      </button>
+    </form>
+  </div>
+</div>

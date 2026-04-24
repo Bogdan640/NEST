@@ -210,3 +210,4 @@ Design these as reusable components:
 - **Desktop** (1200px+): Full sidebar + main content
 - **Tablet** (768px–1199px): Collapsed sidebar, full nav
 - **Mobile** (< 768px): Bottom tab navigation, stacked cards, hamburger menu
+generate a design based on the file attached, make it nature themed, a cute and fuzzy design with green nuances, add cute animations and designs that are found in free libraries 

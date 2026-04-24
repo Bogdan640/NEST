@@ -1,0 +1,30 @@
+<div class="profile-page">
+  <div class="profile-header">
+    <h1 class="page-title">My Profile</h1>
+  </div>
+
+  @if (currentUser()) {
+    <div class="profile-card">
+      <div class="avatar-large">{{ currentUser()!.firstName.charAt(0) }}</div>
+      <h2>{{ currentUser()!.firstName }} {{ currentUser()!.lastName }}</h2>
+      <p class="email">{{ currentUser()!.email }}</p>
+      
+      <div class="info-section">
+        <div class="info-item">
+          <span class="label">Apartment</span>
+          <span class="value">{{ currentUser()!.apartmentNumber || 'Not specified' }}</span>
+        </div>
+        <div class="info-item">
+          <span class="label">Role</span>
+          <span class="value badge">{{ currentUser()!.role }}</span>
+        </div>
+        <div class="info-item">
+          <span class="label">Status</span>
+          <span class="value badge success">{{ currentUser()!.isVerified ? 'Verified' : 'Pending' }}</span>
+        </div>
+      </div>
+      
+      <button class="btn-danger" (click)="logout()">Sign Out</button>
+    </div>
+  }
+</div>

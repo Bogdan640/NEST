@@ -1,0 +1,52 @@
+<div class="login-page">
+  <div class="login-card">
+    <div class="login-logo">🪹</div>
+    <h1 class="login-title">Welcome to NEST</h1>
+    <p class="login-subtitle">Your residential community platform</p>
+
+    @if (error()) {
+      <div class="login-error">{{ error() }}</div>
+    }
+
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="login-form">
+      <div class="form-field">
+        <label for="email">Email Address</label>
+        <input
+          id="email"
+          type="email"
+          formControlName="email"
+          placeholder="hello&#64;nest.com"
+          autocomplete="email"
+        />
+      </div>
+
+      <div class="form-field">
+        <label for="password">Password</label>
+        <input
+          id="password"
+          type="password"
+          formControlName="password"
+          placeholder="••••••••"
+          autocomplete="current-password"
+        />
+      </div>
+
+      <button
+        type="submit"
+        class="btn-primary"
+        [disabled]="loginForm.invalid || isLoading()"
+      >
+        @if (isLoading()) {
+          <span class="spinner"></span>
+        } @else {
+          Sign In
+        }
+      </button>
+    </form>
+
+    <p class="login-footer">
+      Don't have an account?
+      <a routerLink="/register" class="link-accent">Register here</a>
+    </p>
+  </div>
+</div>

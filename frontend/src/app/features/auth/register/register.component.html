@@ -1,0 +1,52 @@
+<div class="register-page">
+  <div class="register-card">
+    <div class="register-logo">🌱</div>
+    <h1 class="register-title">Create Account</h1>
+    <p class="register-subtitle">Join your residential community</p>
+
+    @if (error()) {
+      <div class="register-error">{{ error() }}</div>
+    }
+
+    <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="register-form">
+      <div class="form-row">
+        <div class="form-field">
+          <label for="firstName">First Name</label>
+          <input id="firstName" type="text" formControlName="firstName" placeholder="John" />
+        </div>
+        <div class="form-field">
+          <label for="lastName">Last Name</label>
+          <input id="lastName" type="text" formControlName="lastName" placeholder="Doe" />
+        </div>
+      </div>
+
+      <div class="form-field">
+        <label for="regEmail">Email Address</label>
+        <input id="regEmail" type="email" formControlName="email" placeholder="hello&#64;nest.com" autocomplete="email" />
+      </div>
+
+      <div class="form-field">
+        <label for="apartment">Apartment Number</label>
+        <input id="apartment" type="text" formControlName="apartmentNumber" placeholder="e.g. 4B" />
+      </div>
+
+      <div class="form-field">
+        <label for="regPassword">Password</label>
+        <input id="regPassword" type="password" formControlName="password" placeholder="••••••••" autocomplete="new-password" />
+      </div>
+
+      <button type="submit" class="btn-primary" [disabled]="registerForm.invalid || isLoading()">
+        @if (isLoading()) {
+          <span class="spinner"></span>
+        } @else {
+          Create Account
+        }
+      </button>
+    </form>
+
+    <p class="register-footer">
+      Already have an account?
+      <a routerLink="/login" class="link-accent">Login here</a>
+    </p>
+  </div>
+</div>

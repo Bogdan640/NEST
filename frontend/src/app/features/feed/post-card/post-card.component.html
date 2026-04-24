@@ -1,0 +1,24 @@
+<div class="post-card">
+  <div class="post-header">
+    <div class="author-info">
+      <div class="avatar">{{ post.author.firstName.charAt(0) }}</div>
+      <div>
+        <h3 class="author-name">{{ post.author.firstName }} {{ post.author.lastName }}</h3>
+        <span class="post-time">{{ post.createdAt | date:'short' }}</span>
+      </div>
+    </div>
+    
+    @if (canDelete) {
+      <button class="btn-icon delete-btn" (click)="onDelete()" title="Delete post">
+        ✕
+      </button>
+    }
+  </div>
+
+  <div class="post-content">
+    <p>{{ post.content }}</p>
+    @if (post.imageUrl) {
+      <img [src]="post.imageUrl" alt="Post attachment" class="post-image" loading="lazy" />
+    }
+  </div>
+</div>

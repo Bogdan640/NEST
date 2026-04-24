@@ -1,0 +1,56 @@
+<div class="event-card">
+  <div class="event-header">
+    <div class="event-type-badge" [class]="event.type.toLowerCase()">
+      {{ event.type }}
+    </div>
+    
+    @if (canDelete) {
+      <button class="btn-icon delete-btn" (click)="onDelete()" title="Delete event">
+        ✕
+      </button>
+    }
+  </div>
+
+  <h3 class="event-title">{{ event.title }}</h3>
+  
+  <div class="event-details">
+    <div class="detail-row">
+      <span class="icon">📅</span>
+      <span>{{ event.startTime | date:'medium' }}</span>
+    </div>
+    <div class="detail-row">
+      <span class="icon">📍</span>
+      <span>{{ event.location }}</span>
+    </div>
+    <div class="detail-row">
+      <span class="icon">👥</span>
+      <span>
+        {{ attendeeCount }} attending
+        @if (event.maxParticipants) {
+          (max {{ event.maxParticipants }})
+        }
+      </span>
+    </div>
+  </div>
+
+  <p class="event-description">{{ event.description }}</p>
+
+  <div class="event-footer">
+    <div class="creator-info">
+      <span class="avatar-small">{{ event.creator.firstName.charAt(0) }}</span>
+      <span class="creator-name">Organized by {{ event.creator.firstName }}</span>
+    </div>
+
+    @if (isAttending) {
+      <button class="btn-secondary" (click)="onLeave()">Leave Event</button>
+    } @else {
+      <button 
+        class="btn-primary" 
+        (click)="onJoin()" 
+        [disabled]="isFull"
+      >
+        {{ isFull ? 'Event Full' : 'Join Event' }}
+      </button>
+    }
+  </div>
+</div>

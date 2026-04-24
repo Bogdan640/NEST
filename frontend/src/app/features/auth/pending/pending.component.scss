@@ -1,0 +1,67 @@
+.pending-page {
+  min-height: 100dvh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  background-color: #ecfdf5;
+}
+
+.pending-card {
+  max-width: 28rem;
+  width: 100%;
+  background: rgba(255, 255, 255, 0.8);
+  padding: 3rem;
+  border-radius: 3rem;
+  text-align: center;
+  box-shadow: 0 25px 50px -12px rgba(16, 185, 129, 0.25);
+  border: 1px solid #fff;
+}
+
+.pending-logo {
+  font-size: 4rem;
+  margin-bottom: 2rem;
+}
+
+.pending-title {
+  font-size: 1.875rem;
+  font-weight: 800;
+  color: #064e3b;
+  margin: 0 0 1rem;
+  letter-spacing: -0.025em;
+}
+
+.pending-message {
+  color: #059669;
+  font-weight: 500;
+  font-size: 1.125rem;
+  line-height: 1.6;
+  margin: 0 0 1.5rem;
+}
+
+.pending-info {
+  color: #10b981;
+  font-weight: 500;
+  font-size: 0.875rem;
+  background: #ecfdf5;
+  padding: 0.75rem 1rem;
+  border-radius: 1rem;
+  margin: 0 0 2.5rem;
+}
+
+.btn-link {
+  background: none;
+  border: none;
+  color: #6ee7b7;
+  font-weight: 700;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: color 0.2s;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+
+  &:hover {
+    color: #059669;
+  }
+}
