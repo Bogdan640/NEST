@@ -44,34 +44,83 @@
     </div>
   }
 
+  <!-- Tabs -->
+  <div class="tab-bar">
+    <button 
+      class="tab-button" 
+      [class.active]="activeTab() === 'browse'"
+      (click)="setTab('browse')"
+    >
+      🔍 Browse Items
+    </button>
+    <button 
+      class="tab-button" 
+      [class.active]="activeTab() === 'borrowed'"
+      (click)="setTab('borrowed')"
+    >
+      📦 My Borrowed Items
+      @if (myBorrowedItems.length > 0) {
+        <span class="badge">{{ myBorrowedItems.length }}</span>
+      }
+    </button>
+  </div>
+
   @if (error()) {
     <div class="error-message">{{ error() }}</div>
   }
 
-  @if (isLoading() && resources().length === 0) {
-    <div class="loading-state">
-      <span class="spinner"></span>
-      <p>Loading shed items...</p>
-    </div>
-  } @else if (resources().length === 0) {
-    <div class="empty-state">
-      <div class="empty-icon">🛠️</div>
-      <h3>The shed is empty</h3>
-      <p>Share items you don't use every day to help your neighbors.</p>
-      <button class="btn-primary mt-4" (click)="showCreateForm.set(true)">Share Item</button>
-    </div>
-  } @else {
-    <div class="resources-grid">
-      @for (resource of resources(); track resource.id) {
-        <app-resource-card
-          [resource]="resource"
-          [currentUserId]="currentUser()?.id"
-          [canDelete]="canDelete(resource.ownerId)"
-          (reserveClicked)="onReserveResource($event)"
-          (returnClicked)="onReturnResource($event)"
-          (deleteClicked)="onDeleteResource($event)"
-        ></app-resource-card>
-      }
-    </div>
+  <!-- Browse Tab -->
+  @if (activeTab() === 'browse') {
+    @if (isLoading() && browseItems.length === 0) {
+      <div class="loading-state">
+        <span class="spinner"></span>
+        <p>Loading shed items...</p>
+      </div>
+    } @else if (browseItems.length === 0) {
+      <div class="empty-state">
+        <div class="empty-icon">🛠️</div>
+        <h3>The shed is empty</h3>
+        <p>Share items you don't use every day to help your neighbors.</p>
+        <button class="btn-primary mt-4" (click)="showCreateForm.set(true)">Share Item</button>
+      </div>
+    } @else {
+      <div class="resources-grid">
+        @for (resource of browseItems; track resource.id) {
+          <app-resource-card
+            [resource]="resource"
+            [currentUserId]="currentUser()?.id"
+            [canDelete]="canDelete(resource.ownerId)"
+            [borrowedMode]="false"
+            (reserveClicked)="onReserveResource($event)"
+            (returnClicked)="onReturnResource($event)"
+            (deleteClicked)="onDeleteResource($event)"
+          ></app-resource-card>
+        }
+      </div>
+    }
+  }
+
+  <!-- My Borrowed Tab -->
+  @if (activeTab() === 'borrowed') {
+    @if (myBorrowedItems.length === 0) {
+      <div class="empty-state">
+        <div class="empty-icon">📦</div>
+        <h3>No borrowed items</h3>
+        <p>You haven't borrowed anything yet. Browse the shed to find items!</p>
+        <button class="btn-primary mt-4" (click)="setTab('browse')">Browse Shed</button>
+      </div>
+    } @else {
+      <div class="resources-grid">
+        @for (resource of myBorrowedItems; track resource.id) {
+          <app-resource-card
+            [resource]="resource"
+            [currentUserId]="currentUser()?.id"
+            [canDelete]="false"
+            [borrowedMode]="true"
+            (returnClicked)="onReturnResource($event)"
+          ></app-resource-card>
+        }
+      </div>
+    }
   }
 </div>

@@ -2,14 +2,16 @@ import { Injectable, inject } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { EventsActions } from './events.actions';
 import { EventsApiService } from '../../core/api/events-api.service';
-import { catchError, map, mergeMap, of } from 'rxjs';
+import { catchError, map, mergeMap, of, tap } from 'rxjs';
 import { AuthFacade } from '../auth/auth.facade';
+import { ToastService } from '../../shared/services/toast.service';
 
 @Injectable()
 export class EventsEffects {
   private actions$ = inject(Actions);
   private eventsApi = inject(EventsApiService);
   private authFacade = inject(AuthFacade);
+  private toastService = inject(ToastService);
 
   loadEvents$ = createEffect(() =>
     this.actions$.pipe(
@@ -17,9 +19,11 @@ export class EventsEffects {
       mergeMap(({ params }) =>
         this.eventsApi.getEvents(params).pipe(
           map((response) => EventsActions.loadEventsSuccess({ response })),
-          catchError((error) =>
-            of(EventsActions.loadEventsFailure({ error: error.error?.message || 'Failed to load events' }))
-          )
+          catchError((error) => {
+            const msg = error.error?.message || 'Failed to load events';
+            this.toastService.show(msg, 'error');
+            return of(EventsActions.loadEventsFailure({ error: msg }));
+          })
         )
       )
     )
@@ -31,9 +35,11 @@ export class EventsEffects {
       mergeMap(({ request }) =>
         this.eventsApi.createEvent(request).pipe(
           map((event) => EventsActions.createEventSuccess({ event })),
-          catchError((error) =>
-            of(EventsActions.createEventFailure({ error: error.error?.message || 'Failed to create event' }))
-          )
+          catchError((error) => {
+            const msg = error.error?.message || 'Failed to create event';
+            this.toastService.show(msg, 'error');
+            return of(EventsActions.createEventFailure({ error: msg }));
+          })
         )
       )
     )
@@ -45,9 +51,11 @@ export class EventsEffects {
       mergeMap(({ id, request }) =>
         this.eventsApi.updateEvent(id, request).pipe(
           map((event) => EventsActions.updateEventSuccess({ event })),
-          catchError((error) =>
-            of(EventsActions.updateEventFailure({ error: error.error?.message || 'Failed to update event' }))
-          )
+          catchError((error) => {
+            const msg = error.error?.message || 'Failed to update event';
+            this.toastService.show(msg, 'error');
+            return of(EventsActions.updateEventFailure({ error: msg }));
+          })
         )
       )
     )
@@ -59,9 +67,11 @@ export class EventsEffects {
       mergeMap(({ id }) =>
         this.eventsApi.deleteEvent(id).pipe(
           map(() => EventsActions.deleteEventSuccess({ id })),
-          catchError((error) =>
-            of(EventsActions.deleteEventFailure({ error: error.error?.message || 'Failed to delete event' }))
-          )
+          catchError((error) => {
+            const msg = error.error?.message || 'Failed to delete event';
+            this.toastService.show(msg, 'error');
+            return of(EventsActions.deleteEventFailure({ error: msg }));
+          })
         )
       )
     )
@@ -77,9 +87,11 @@ export class EventsEffects {
             const userId = currentUser ? currentUser.id : '';
             return EventsActions.joinEventSuccess({ id, userId });
           }),
-          catchError((error) =>
-            of(EventsActions.joinEventFailure({ error: error.error?.message || 'Failed to join event' }))
-          )
+          catchError((error) => {
+            const msg = error.error?.message || 'Failed to join event';
+            this.toastService.show(msg, 'error');
+            return of(EventsActions.joinEventFailure({ error: msg }));
+          })
         )
       )
     )
@@ -95,9 +107,11 @@ export class EventsEffects {
             const userId = currentUser ? currentUser.id : '';
             return EventsActions.leaveEventSuccess({ id, userId });
           }),
-          catchError((error) =>
-            of(EventsActions.leaveEventFailure({ error: error.error?.message || 'Failed to leave event' }))
-          )
+          catchError((error) => {
+            const msg = error.error?.message || 'Failed to leave event';
+            this.toastService.show(msg, 'error');
+            return of(EventsActions.leaveEventFailure({ error: msg }));
+          })
         )
       )
     )

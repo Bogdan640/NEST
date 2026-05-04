@@ -7,7 +7,7 @@ export const loginResident = async (req: AuthenticatedRequest, res: Response, ne
   const { email, password } = req.body;
 
   if (!email || !password) {
-    res.status(400).json({ error: 'Missing required credentials' });
+    res.status(400).json({ message: 'Missing required credentials' });
     return;
   }
 
@@ -15,7 +15,7 @@ export const loginResident = async (req: AuthenticatedRequest, res: Response, ne
     const authResult = await authenticateResident(email, password);
 
     if (!authResult) {
-      res.status(401).json({ error: 'Invalid email or password' });
+      res.status(401).json({ message: 'Invalid email or password' });
       return;
     }
 
@@ -29,7 +29,7 @@ export const registerResidentController = async (req: AuthenticatedRequest, res:
   const { email, password, firstName, lastName, apartmentNumber } = req.body;
 
   if (!email || !password || !firstName || !lastName || !apartmentNumber) {
-    res.status(400).json({ error: 'Missing required registration fields' });
+    res.status(400).json({ message: 'Missing required registration fields' });
     return;
   }
 
@@ -43,14 +43,14 @@ export const registerResidentController = async (req: AuthenticatedRequest, res:
 
 export const joinBlockController = async (req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> => {
   if (!req.user?.userId) {
-    res.status(401).json({ error: 'Authentication missing' });
+    res.status(401).json({ message: 'Authentication missing' });
     return;
   }
 
   const { blockCode } = req.body;
 
   if (!blockCode) {
-    res.status(400).json({ error: 'Block code is required' });
+    res.status(400).json({ message: 'Block code is required' });
     return;
   }
 
@@ -64,7 +64,7 @@ export const joinBlockController = async (req: AuthenticatedRequest, res: Respon
 
 export const getPermissionsController = async (req: AuthenticatedRequest, res: Response): Promise<void> => {
   if (!req.user) {
-    res.status(401).json({ error: 'Authentication missing' });
+    res.status(401).json({ message: 'Authentication missing' });
     return;
   }
 

@@ -15,18 +15,27 @@
       <form [formGroup]="newEventForm" (ngSubmit)="onSubmit()">
         <div class="form-grid">
           <div class="form-group full-width">
-            <label>Title</label>
+            <label>Title *</label>
             <input type="text" formControlName="title" placeholder="Event title" class="form-control" />
+            @if (newEventForm.get('title')?.invalid && newEventForm.get('title')?.touched) {
+              <span class="field-error">Title is required (max 100 characters)</span>
+            }
           </div>
 
           <div class="form-group full-width">
-            <label>Description</label>
+            <label>Description *</label>
             <textarea formControlName="description" placeholder="Event details..." class="form-control" rows="3"></textarea>
+            @if (newEventForm.get('description')?.invalid && newEventForm.get('description')?.touched) {
+              <span class="field-error">Description is required (max 500 characters)</span>
+            }
           </div>
 
           <div class="form-group">
-            <label>Location</label>
+            <label>Location *</label>
             <input type="text" formControlName="location" placeholder="Where is it?" class="form-control" />
+            @if (newEventForm.get('location')?.invalid && newEventForm.get('location')?.touched) {
+              <span class="field-error">Location is required</span>
+            }
           </div>
 
           <div class="form-group">
@@ -38,15 +47,48 @@
             </select>
           </div>
 
+          <!-- Start Date & Time -->
           <div class="form-group">
-            <label>Start Time</label>
-            <input type="datetime-local" formControlName="startTime" class="form-control" />
+            <label>Start Date *</label>
+            <mat-form-field appearance="outline" class="mat-picker">
+              <mat-label>Pick a date</mat-label>
+              <input matInput [matDatepicker]="startPicker" formControlName="startDate" [matDatepickerFilter]="dateFilter" />
+              <mat-datepicker-toggle matIconSuffix [for]="startPicker"></mat-datepicker-toggle>
+              <mat-datepicker #startPicker></mat-datepicker>
+            </mat-form-field>
           </div>
 
           <div class="form-group">
-            <label>End Time</label>
-            <input type="datetime-local" formControlName="endTime" class="form-control" />
+            <label>Start Time *</label>
+            <input type="time" formControlName="startTimeStr" class="form-control time-input" />
           </div>
+
+          <!-- End Date & Time -->
+          <div class="form-group">
+            <label>End Date *</label>
+            <mat-form-field appearance="outline" class="mat-picker">
+              <mat-label>Pick a date</mat-label>
+              <input matInput [matDatepicker]="endPicker" formControlName="endDate" [matDatepickerFilter]="dateFilter" />
+              <mat-datepicker-toggle matIconSuffix [for]="endPicker"></mat-datepicker-toggle>
+              <mat-datepicker #endPicker></mat-datepicker>
+            </mat-form-field>
+          </div>
+
+          <div class="form-group">
+            <label>End Time *</label>
+            <input type="time" formControlName="endTimeStr" class="form-control time-input" />
+          </div>
+
+          @if (newEventForm.errors?.['dateRangeInvalid']) {
+            <div class="full-width">
+              <span class="field-error">End date/time must be after start date/time</span>
+            </div>
+          }
+          @if (newEventForm.errors?.['startInPast']) {
+            <div class="full-width">
+              <span class="field-error">Start date and time must be in the future</span>
+            </div>
+          }
 
           <div class="form-group">
             <label>Max Participants (Optional)</label>
@@ -56,9 +98,14 @@
         
         <div class="form-actions">
           <button type="button" class="btn-secondary" (click)="toggleForm()">Cancel</button>
-          <button type="submit" class="btn-primary" [disabled]="newEventForm.invalid || isSubmitting()">
-            Publish Event
-          </button>
+          <div
+            [title]="newEventForm.invalid ? formValidationMessage : ''"
+            class="submit-wrapper"
+          >
+            <button type="submit" class="btn-primary" [disabled]="newEventForm.invalid || isSubmitting()">
+              Publish Event
+            </button>
+          </div>
         </div>
       </form>
     </div>

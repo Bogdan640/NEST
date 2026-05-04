@@ -2,12 +2,14 @@ import { Injectable, inject } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { ParkingActions } from './parking.actions';
 import { ParkingApiService } from '../../core/api/parking-api.service';
-import { catchError, map, mergeMap, of } from 'rxjs';
+import { catchError, map, mergeMap, of, tap } from 'rxjs';
+import { ToastService } from '../../shared/services/toast.service';
 
 @Injectable()
 export class ParkingEffects {
   private actions$ = inject(Actions);
   private parkingApi = inject(ParkingApiService);
+  private toastService = inject(ToastService);
 
   loadAnnouncements$ = createEffect(() =>
     this.actions$.pipe(
@@ -15,9 +17,11 @@ export class ParkingEffects {
       mergeMap(({ params }) =>
         this.parkingApi.getAnnouncements(params).pipe(
           map((response) => ParkingActions.loadAnnouncementsSuccess({ response })),
-          catchError((error) =>
-            of(ParkingActions.loadAnnouncementsFailure({ error: error.error?.message || 'Failed to load announcements' }))
-          )
+          catchError((error) => {
+            const msg = error.error?.message || 'Failed to load announcements';
+            this.toastService.show(msg, 'error');
+            return of(ParkingActions.loadAnnouncementsFailure({ error: msg }));
+          })
         )
       )
     )
@@ -29,9 +33,11 @@ export class ParkingEffects {
       mergeMap(({ request }) =>
         this.parkingApi.createAnnouncement(request).pipe(
           map((announcement) => ParkingActions.createAnnouncementSuccess({ announcement })),
-          catchError((error) =>
-            of(ParkingActions.createAnnouncementFailure({ error: error.error?.message || 'Failed to create announcement' }))
-          )
+          catchError((error) => {
+            const msg = error.error?.message || 'Failed to create announcement';
+            this.toastService.show(msg, 'error');
+            return of(ParkingActions.createAnnouncementFailure({ error: msg }));
+          })
         )
       )
     )
@@ -43,9 +49,11 @@ export class ParkingEffects {
       mergeMap(({ id }) =>
         this.parkingApi.deleteAnnouncement(id).pipe(
           map(() => ParkingActions.deleteAnnouncementSuccess({ id })),
-          catchError((error) =>
-            of(ParkingActions.deleteAnnouncementFailure({ error: error.error?.message || 'Failed to delete announcement' }))
-          )
+          catchError((error) => {
+            const msg = error.error?.message || 'Failed to delete announcement';
+            this.toastService.show(msg, 'error');
+            return of(ParkingActions.deleteAnnouncementFailure({ error: msg }));
+          })
         )
       )
     )
@@ -57,9 +65,11 @@ export class ParkingEffects {
       mergeMap(({ id }) =>
         this.parkingApi.applyToAnnouncement(id).pipe(
           map(() => ParkingActions.applyToAnnouncementSuccess({ id })),
-          catchError((error) =>
-            of(ParkingActions.applyToAnnouncementFailure({ error: error.error?.message || 'Failed to apply' }))
-          )
+          catchError((error) => {
+            const msg = error.error?.message || 'Failed to apply';
+            this.toastService.show(msg, 'error');
+            return of(ParkingActions.applyToAnnouncementFailure({ error: msg }));
+          })
         )
       )
     )
@@ -71,9 +81,11 @@ export class ParkingEffects {
       mergeMap(({ applicationId }) =>
         this.parkingApi.approveApplication(applicationId).pipe(
           map(() => ParkingActions.approveApplicationSuccess({ applicationId })),
-          catchError((error) =>
-            of(ParkingActions.approveApplicationFailure({ error: error.error?.message || 'Failed to approve application' }))
-          )
+          catchError((error) => {
+            const msg = error.error?.message || 'Failed to approve application';
+            this.toastService.show(msg, 'error');
+            return of(ParkingActions.approveApplicationFailure({ error: msg }));
+          })
         )
       )
     )
@@ -85,9 +97,11 @@ export class ParkingEffects {
       mergeMap(() =>
         this.parkingApi.getSlots().pipe(
           map((slots) => ParkingActions.loadSlotsSuccess({ slots })),
-          catchError((error) =>
-            of(ParkingActions.loadSlotsFailure({ error: error.error?.message || 'Failed to load slots' }))
-          )
+          catchError((error) => {
+            const msg = error.error?.message || 'Failed to load slots';
+            this.toastService.show(msg, 'error');
+            return of(ParkingActions.loadSlotsFailure({ error: msg }));
+          })
         )
       )
     )
@@ -99,9 +113,11 @@ export class ParkingEffects {
       mergeMap(({ request }) =>
         this.parkingApi.createSlot(request).pipe(
           map((slot) => ParkingActions.createSlotSuccess({ slot })),
-          catchError((error) =>
-            of(ParkingActions.createSlotFailure({ error: error.error?.message || 'Failed to create slot' }))
-          )
+          catchError((error) => {
+            const msg = error.error?.message || 'Failed to create slot';
+            this.toastService.show(msg, 'error');
+            return of(ParkingActions.createSlotFailure({ error: msg }));
+          })
         )
       )
     )

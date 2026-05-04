@@ -1,0 +1,69 @@
+\chapter{Application Design and Architecture}
+\label{chap:app-design-architecture}
+
+To effectively transform the theoretical goals of community engagement into a practical software solution, a rigorous design and architecture phase is essential. This chapter details the technical specifications, architectural patterns, and functional requirements of the NEST application.
+
+\section{System Architecture Overview}
+The NEST platform is built upon a standard Client-Server architectural model. This decoupling of the user interface from the data processing logic ensures that the system is scalable, maintainable, and secure \cite{fowler2002patterns}.
+
+The frontend client, built with Angular, acts as the presentation layer. It handles all user interactions, local state management, and routing. The backend server, built with Node.js and Express, serves as the central data hub. It exposes a RESTful Application Programming Interface (API) that the client consumes to perform CRUD (Create, Read, Update, Delete) operations. 
+
+Data persistence is managed through a relational database, abstracted by the Prisma ORM. Prisma ensures type safety across the database queries, minimizing runtime errors and simplifying the data modeling process.
+
+\textbf{REPLACE HERE WITH: [A system architecture diagram showing the Angular Frontend, the Express Backend (API Layer), and the PostgreSQL Database, connected by REST/HTTP arrows.]}
+
+\section{Requirements Specification}
+Defining clear requirements is crucial for guiding the development process and ensuring the final product meets the needs of the target audience.
+
+\subsection{Functional Requirements}
+The functional requirements outline the specific behaviors and capabilities the system must provide to the users. These are categorized into core modules in Table \ref{tab:functional-requirements}.
+
+\begin{table}[h]
+\centering
+\begin{tabular}{|p{2cm}|p{3.5cm}|p{8.5cm}|}
+\hline
+\textbf{Module} & \textbf{Feature} & \textbf{Description} \\ \hline
+Authentication & User Registration \& Login & Users must be able to securely register with an email and password, and log in to receive an authentication token. \\ \hline
+Community Feed & Post Creation \& Interaction & Residents can create text posts, view a timeline of community updates, and interact (like/comment) with neighbors' posts. \\ \hline
+Shared Shed & Resource Borrowing & Users can list household items (tools, appliances) they are willing to lend, and request to borrow items from others. \\ \hline
+Events & Community Gatherings & Users can organize local events, set dates, and RSVP to events posted by others in the building. \\ \hline
+\end{tabular}
+\caption{Core Functional Requirements of NEST}
+\label{tab:functional-requirements}
+\end{table}
+
+\subsection{Non-Functional Requirements}
+Non-functional requirements dictate how the system should perform under certain conditions:
+\begin{itemize}
+    \item \textbf{Security:} All API endpoints accessing user data must be protected by JSON Web Token (JWT) authorization. Passwords must be hashed using bcrypt before storage.
+    \item \textbf{Performance:} The application must load the initial feed within 2 seconds under normal network conditions.
+    \item \textbf{Responsiveness:} The UI must be fully responsive, providing a native-like experience on both desktop and mobile web browsers.
+\end{itemize}
+
+\section{User Roles and Use Cases}
+The platform currently supports a flat hierarchy for its primary audience to encourage equal participation, with a distinct role for administration:
+
+\begin{itemize}
+    \item \textbf{Resident (Standard User):} Can create posts, list items in the shed, borrow items, RSVP to events, and manage their personal profile.
+    \item \textbf{Administrator:} Possesses the same capabilities as a resident but also has moderation rights to remove inappropriate content or ban malicious users from the community space.
+\end{itemize}
+
+\textbf{Primary Use Case: Borrowing a Tool}
+1. A resident navigates to the "Shared Shed" module.
+2. They browse or search for a specific tool (e.g., a power drill).
+3. Upon finding the tool listed by a neighbor, they click "Request to Borrow".
+4. The system updates the item's status to "Pending" and notifies the owner.
+5. The owner approves the request, and the system provides them with a secure channel to arrange the physical handover.
+
+\section{Database Schema and API Design}
+The relational database schema is designed around the core entities of the application: \texttt{User}, \texttt{Post}, \texttt{Event}, and \texttt{Item}. 
+
+The \texttt{User} entity has one-to-many relationships with all other entities, representing ownership (e.g., a user can author many posts or own many items). The Prisma schema explicitly defines these relations, which allows the backend to perform complex join queries efficiently.
+
+The API design strictly follows REST principles. For instance, interacting with the Shared Shed utilizes predictable endpoints:
+\begin{itemize}
+    \item \texttt{GET /api/shed/items}: Retrieves a list of available items.
+    \item \texttt{POST /api/shed/items}: Creates a new item listing.
+    \item \texttt{PUT /api/shed/items/:id/borrow}: Updates an item's status to borrowed.
+\end{itemize}
+This standardization ensures that the frontend services can easily integrate with the backend without requiring complex custom logic for each action.

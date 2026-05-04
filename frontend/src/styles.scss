@@ -1,1 +1,55 @@
-/* You can add global styles to this file, and also import other style files */
+/* Angular Material Theme */
+@use '@angular/material' as mat;
+
+/* Apply a custom emerald-green Material theme */
+html {
+  @include mat.theme((
+    color: (
+      primary: mat.$green-palette,
+      tertiary: mat.$cyan-palette,
+    ),
+    typography: Roboto,
+    density: 0,
+  ));
+}
+
+/* Global Styles */
+@import 'styles/variables';
+@import 'styles/mixins';
+@import 'styles/typography';
+@import 'styles/animations';
+
+body {
+  margin: 0;
+  background-color: $color-bg;
+  color: $color-text-primary;
+  min-height: 100vh;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+/* Material datepicker overrides for emerald theme */
+.mat-datepicker-content {
+  background: #ffffff !important;
+  border-radius: 1rem !important;
+  box-shadow: 0 20px 60px -15px rgba(0, 0, 0, 0.3) !important;
+}
+
+.mat-calendar-body-selected {
+  background-color: #059669 !important;
+  color: white !important;
+}
+
+.mat-calendar-body-today:not(.mat-calendar-body-selected) {
+  border-color: #10b981 !important;
+}
+
+.mat-calendar-body-cell:hover .mat-calendar-body-cell-content {
+  background-color: rgba(16, 185, 129, 0.15) !important;
+}
+
+.mat-datepicker-toggle-active {
+  color: #059669 !important;
+}

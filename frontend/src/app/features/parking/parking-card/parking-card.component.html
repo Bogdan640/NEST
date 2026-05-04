@@ -42,7 +42,7 @@
     }
   </div>
 
-  @if (isMyAnnouncement && !approvedApplication && announcement.applications?.length) {
+  @if (isMyAnnouncement && !approvedApplication && announcement.applications && announcement.applications.length > 0) {
     <div class="applications-list">
       <h4 class="section-title">Applications ({{ announcement.applications.length }})</h4>
       @for (app of announcement.applications; track app.id) {
@@ -69,3 +69,14 @@
     }
   </div>
 </div>
+
+<app-confirm-dialog
+  [isOpen]="showDeleteConfirm"
+  title="Remove Announcement"
+  message="Are you sure you want to remove this parking announcement?"
+  confirmText="Remove"
+  icon="🅿️"
+  [danger]="true"
+  (confirmed)="confirmDelete()"
+  (cancelled)="cancelDelete()"
+></app-confirm-dialog>

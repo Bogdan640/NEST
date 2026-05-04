@@ -4,8 +4,47 @@
   </div>
   
   <div class="admin-card">
-    <div class="empty-icon">🛡️</div>
-    <h3>Admin Dashboard</h3>
-    <p>User management, building settings, and verification requests will go here.</p>
+    <h3>Pending Verification Requests</h3>
+    
+    @if (isLoading()) {
+      <div class="loading-state">
+        <span class="spinner"></span>
+      </div>
+    } @else if (pendingRequests().length === 0) {
+      <div class="empty-state">
+        <div class="empty-icon">✅</div>
+        <p>No pending requests.</p>
+      </div>
+    } @else {
+      <div class="table-container">
+        <table class="requests-table">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Apartment</th>
+              <th>Block</th>
+              <th>Date</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (req of pendingRequests(); track req.id) {
+              <tr>
+                <td>{{ req.user?.firstName }} {{ req.user?.lastName }}</td>
+                <td>{{ req.user?.email }}</td>
+                <td>{{ req.user?.apartmentNumber || '-' }}</td>
+                <td>{{ req.blockId }}</td>
+                <td>{{ req.createdAt | date:'shortDate' }}</td>
+                <td class="actions">
+                  <button class="btn-primary btn-sm" (click)="approve(req)">Approve</button>
+                  <button class="btn-secondary btn-sm" (click)="reject(req)">Reject</button>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    }
   </div>
 </div>

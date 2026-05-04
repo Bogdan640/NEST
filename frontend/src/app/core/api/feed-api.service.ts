@@ -32,4 +32,8 @@ export class FeedApiService {
   deletePost(id: string): Observable<void> {
     return this.http.delete<void>(API_ENDPOINTS.FEED.BY_ID(id));
   }
+
+  getFeedStatus(): Observable<{remainingPosts: number, nextRefresh: string}> {
+    return this.http.get<{remainingPosts: number, nextRefresh: string}>(API_ENDPOINTS.FEED.STATUS);
+  }
 }

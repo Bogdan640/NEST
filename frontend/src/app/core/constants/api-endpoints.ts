@@ -11,6 +11,7 @@ export const API_ENDPOINTS = {
   },
   FEED: {
     BASE: `${BASE}/feed`,
+    STATUS: `${BASE}/feed/status`,
     BY_ID: (id: string) => `${BASE}/feed/${id}`,
   },
   EVENTS: {

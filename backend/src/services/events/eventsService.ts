@@ -1,5 +1,5 @@
 import prisma from '../../config/prisma';
-import { NotFoundError, ConflictError } from '../../utils/errors';
+import { NotFoundError, ConflictError, BadRequestError } from '../../utils/errors';
 import { assertOwnerOrAdmin } from '../../utils/authHelpers';
 
 export const retrieveAllEvents = async (
@@ -58,6 +58,10 @@ export const createTargetEvent = async (
   maxParticipantsValue?: number,
   visibilityValue?: string
 ) => {
+  if (startTimeValue >= endTimeValue) {
+    throw new BadRequestError('End time must be strictly after start time');
+  }
+
   return await prisma.event.create({
     data: {
       title: titleValue,
@@ -69,6 +73,12 @@ export const createTargetEvent = async (
       maxParticipants: maxParticipantsValue,
       visibility: visibilityValue || 'ALL',
       creatorId: creatorIdValue
+    },
+    include: {
+      creator: {
+        select: { id: true, firstName: true, lastName: true }
+      },
+      attendees: true
     }
   });
 };
@@ -123,7 +133,7 @@ export const leaveTargetEvent = async (userIdValue: string, eventIdValue: string
   });
 
   if (!existingAttendance) {
-    throw new NotFoundError('Not currently attending this event');
+    return selectedEvent; // Return gracefully without error, so frontend doesn't crash on out-of-sync state
   }
 
   return await prisma.eventAttendee.delete({

@@ -1,5 +1,5 @@
 import prisma from '../../config/prisma';
-import { NotFoundError, ConflictError } from '../../utils/errors';
+import { NotFoundError, ConflictError, ForbiddenError, BadRequestError } from '../../utils/errors';
 import { assertOwnerOrAdmin } from '../../utils/authHelpers';
 
 export const retrievePlatformResources = async (
@@ -25,7 +25,12 @@ export const retrievePlatformResources = async (
       skip: (page - 1) * limit,
       take: limit,
       include: {
-        owner: { select: { firstName: true, lastName: true } }
+        owner: { select: { firstName: true, lastName: true } },
+        reservations: {
+          include: {
+            borrower: { select: { id: true, firstName: true, lastName: true } }
+          }
+        }
       }
     }),
     prisma.resource.count({ where: queryFilter })
@@ -69,8 +74,7 @@ export const reserveTargetResource = async (
     where: { id: resourceIdValue },
     include: {
       reservations: {
-        orderBy: { endTime: 'desc' },
-        take: 1
+        orderBy: { endTime: 'desc' }
       }
     }
   });
@@ -79,20 +83,34 @@ export const reserveTargetResource = async (
     throw new NotFoundError('Resource not found');
   }
 
+  // Block the owner from borrowing their own resource
+  if (targetedResource.ownerId === userIdValue) {
+    throw new ForbiddenError('You cannot borrow your own shared resource');
+  }
+
+  // Check if the user already has an active reservation on this resource
+  const userActiveReservation = targetedResource.reservations.find(
+    res => res.borrowerId === userIdValue && res.status === 'APPROVED'
+  );
+  if (userActiveReservation) {
+    throw new ConflictError('You already have an active reservation for this item. Please return it first.');
+  }
+
   const isEngaged = targetedResource.reservations.some(res => res.status === 'APPROVED' && res.endTime > new Date());
   if (isEngaged) {
-    throw new ConflictError('Resource actively engaged elsewhere');
+    throw new ConflictError('This item is already borrowed by someone else');
   }
 
   if (targetedResource.type === 'TOOL' && targetedResource.reservations.length > 0) {
     const previousReservation = targetedResource.reservations[0];
     if (previousReservation && previousReservation.status === 'RETURNED') {
       const borrowedDurationMs = previousReservation.endTime.getTime() - previousReservation.startTime.getTime();
-      const cooldownMs = borrowedDurationMs / 24; 
+      const cooldownMs = borrowedDurationMs / 24;
       const cooldownExpiration = new Date(previousReservation.updatedAt.getTime() + cooldownMs);
-      
+      const minutesLeft = Math.ceil((cooldownExpiration.getTime() - Date.now()) / 60000);
+
       if (new Date() < cooldownExpiration) {
-        throw new ConflictError('Resource experiencing mandatory cooldown phase');
+        throw new ConflictError(`This item is in a mandatory cooldown period. It will be available in approximately ${minutesLeft} minute(s).`);
       }
     }
   }
@@ -109,10 +127,22 @@ export const reserveTargetResource = async (
 };
 
 export const returnTargetResource = async (userId: string, resourceId: string) => {
+  const resource = await prisma.resource.findUnique({
+    where: { id: resourceId }
+  });
+
+  if (!resource) {
+    throw new NotFoundError('Resource not found');
+  }
+
+  // Only the resource owner can mark items as returned
+  if (resource.ownerId !== userId) {
+    throw new ForbiddenError('Only the item owner can mark it as returned');
+  }
+
   const activeReservation = await prisma.resourceReservation.findFirst({
     where: {
       resourceId,
-      borrowerId: userId,
       status: 'APPROVED'
     }
   });

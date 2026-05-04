@@ -28,14 +28,14 @@ export const getAnnouncementByIdController = async (req: AuthenticatedRequest, r
 
 export const createAnnouncementController = async (req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> => {
   if (!req.user?.userId) {
-    res.status(401).json({ error: 'Authentication missing' });
+    res.status(401).json({ message: 'Authentication missing' });
     return;
   }
 
   const { parkingSlotId, availableFrom, availableTo } = req.body;
 
   if (!parkingSlotId || !availableFrom || !availableTo) {
-    res.status(400).json({ error: 'Mandatory announcement fields missing' });
+    res.status(400).json({ message: 'Mandatory announcement fields missing' });
     return;
   }
 
@@ -51,7 +51,7 @@ export const createAnnouncementController = async (req: AuthenticatedRequest, re
 
 export const applyAnnouncementController = async (req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> => {
   if (!req.user?.userId) {
-    res.status(401).json({ error: 'Authentication missing' });
+    res.status(401).json({ message: 'Authentication missing' });
     return;
   }
 
@@ -65,7 +65,7 @@ export const applyAnnouncementController = async (req: AuthenticatedRequest, res
 
 export const approveApplicationController = async (req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> => {
   if (!req.user?.userId) {
-    res.status(401).json({ error: 'Authentication missing' });
+    res.status(401).json({ message: 'Authentication missing' });
     return;
   }
 
@@ -79,7 +79,7 @@ export const approveApplicationController = async (req: AuthenticatedRequest, re
 
 export const deleteAnnouncementController = async (req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> => {
   if (!req.user?.userId || !req.user?.role) {
-    res.status(401).json({ error: 'Authentication missing' });
+    res.status(401).json({ message: 'Authentication missing' });
     return;
   }
 
@@ -102,14 +102,14 @@ export const getSlotsController = async (req: AuthenticatedRequest, res: Respons
 
 export const createSlotController = async (req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> => {
   if (!req.user?.userId) {
-    res.status(401).json({ error: 'Authentication missing' });
+    res.status(401).json({ message: 'Authentication missing' });
     return;
   }
 
   const { identifier } = req.body;
 
   if (!identifier) {
-    res.status(400).json({ error: 'Parking slot identifier is required' });
+    res.status(400).json({ message: 'Parking slot identifier is required' });
     return;
   }
 

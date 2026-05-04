@@ -2,12 +2,14 @@ import { Injectable, inject } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { ShedActions } from './shed.actions';
 import { ShedApiService } from '../../core/api/shed-api.service';
-import { catchError, map, mergeMap, of } from 'rxjs';
+import { catchError, map, mergeMap, of, tap } from 'rxjs';
+import { ToastService } from '../../shared/services/toast.service';
 
 @Injectable()
 export class ShedEffects {
   private actions$ = inject(Actions);
   private shedApi = inject(ShedApiService);
+  private toastService = inject(ToastService);
 
   loadResources$ = createEffect(() =>
     this.actions$.pipe(
@@ -15,9 +17,11 @@ export class ShedEffects {
       mergeMap(({ params }) =>
         this.shedApi.getResources(params).pipe(
           map((response) => ShedActions.loadResourcesSuccess({ response })),
-          catchError((error) =>
-            of(ShedActions.loadResourcesFailure({ error: error.error?.message || 'Failed to load resources' }))
-          )
+          catchError((error) => {
+            const msg = error.error?.message || 'Failed to load resources';
+            this.toastService.show(msg, 'error');
+            return of(ShedActions.loadResourcesFailure({ error: msg }));
+          })
         )
       )
     )
@@ -29,9 +33,11 @@ export class ShedEffects {
       mergeMap(({ request }) =>
         this.shedApi.createResource(request).pipe(
           map((resource) => ShedActions.createResourceSuccess({ resource })),
-          catchError((error) =>
-            of(ShedActions.createResourceFailure({ error: error.error?.message || 'Failed to create resource' }))
-          )
+          catchError((error) => {
+            const msg = error.error?.message || 'Failed to create resource';
+            this.toastService.show(msg, 'error');
+            return of(ShedActions.createResourceFailure({ error: msg }));
+          })
         )
       )
     )
@@ -43,9 +49,11 @@ export class ShedEffects {
       mergeMap(({ id, request }) =>
         this.shedApi.updateResource(id, request).pipe(
           map((resource) => ShedActions.updateResourceSuccess({ resource })),
-          catchError((error) =>
-            of(ShedActions.updateResourceFailure({ error: error.error?.message || 'Failed to update resource' }))
-          )
+          catchError((error) => {
+            const msg = error.error?.message || 'Failed to update resource';
+            this.toastService.show(msg, 'error');
+            return of(ShedActions.updateResourceFailure({ error: msg }));
+          })
         )
       )
     )
@@ -57,9 +65,11 @@ export class ShedEffects {
       mergeMap(({ id }) =>
         this.shedApi.deleteResource(id).pipe(
           map(() => ShedActions.deleteResourceSuccess({ id })),
-          catchError((error) =>
-            of(ShedActions.deleteResourceFailure({ error: error.error?.message || 'Failed to delete resource' }))
-          )
+          catchError((error) => {
+            const msg = error.error?.message || 'Failed to delete resource';
+            this.toastService.show(msg, 'error');
+            return of(ShedActions.deleteResourceFailure({ error: msg }));
+          })
         )
       )
     )
@@ -71,9 +81,11 @@ export class ShedEffects {
       mergeMap(({ id, request }) =>
         this.shedApi.reserveResource(id, request).pipe(
           map(() => ShedActions.reserveResourceSuccess({ id })),
-          catchError((error) =>
-            of(ShedActions.reserveResourceFailure({ error: error.error?.message || 'Failed to reserve resource' }))
-          )
+          catchError((error) => {
+            const msg = error.error?.message || 'Failed to reserve resource';
+            this.toastService.show(msg, 'error');
+            return of(ShedActions.reserveResourceFailure({ error: msg }));
+          })
         )
       )
     )
@@ -85,11 +97,20 @@ export class ShedEffects {
       mergeMap(({ id }) =>
         this.shedApi.returnResource(id).pipe(
           map(() => ShedActions.returnResourceSuccess({ id })),
-          catchError((error) =>
-            of(ShedActions.returnResourceFailure({ error: error.error?.message || 'Failed to return resource' }))
-          )
+          catchError((error) => {
+            const msg = error.error?.message || 'Failed to return resource';
+            this.toastService.show(msg, 'error');
+            return of(ShedActions.returnResourceFailure({ error: msg }));
+          })
         )
       )
+    )
+  );
+
+  reloadOnSuccess$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(ShedActions.reserveResourceSuccess, ShedActions.returnResourceSuccess),
+      map(() => ShedActions.loadResources({ params: { page: 1, limit: 50 } }))
     )
   );
 }

@@ -43,7 +43,7 @@ export const createFeedPost = async (authorIdPayload: string, contentPayload: st
   const currentDate = new Date();
   currentDate.setHours(0, 0, 0, 0);
 
-  const existingPostToday = await prisma.post.findFirst({
+  const postsTodayCount = await prisma.post.count({
     where: {
       authorId: authorIdPayload,
       createdAt: {
@@ -52,8 +52,8 @@ export const createFeedPost = async (authorIdPayload: string, contentPayload: st
     }
   });
 
-  if (existingPostToday) {
-    throw new TooManyRequestsError('Daily post limit exceeded');
+  if (postsTodayCount >= 2) {
+    throw new TooManyRequestsError('Daily post limit of 2 exceeded');
   }
 
   return await prisma.post.create({
@@ -61,6 +61,11 @@ export const createFeedPost = async (authorIdPayload: string, contentPayload: st
       content: contentPayload,
       imageUrl: imageUrlPayload,
       authorId: authorIdPayload
+    },
+    include: {
+      author: {
+        select: { id: true, firstName: true, lastName: true, profileImage: true }
+      }
     }
   });
 };
@@ -84,4 +89,26 @@ export const deleteFeedPost = async (userId: string, postId: string, userRole: s
   assertOwnerOrAdmin(existingPost.authorId, userId, userRole);
 
   return await prisma.post.delete({ where: { id: postId } });
+};
+
+export const getFeedStatus = async (authorIdPayload: string) => {
+  const currentDate = new Date();
+  currentDate.setHours(0, 0, 0, 0);
+
+  const postsTodayCount = await prisma.post.count({
+    where: {
+      authorId: authorIdPayload,
+      createdAt: {
+        gte: currentDate
+      }
+    }
+  });
+
+  const nextRefresh = new Date();
+  nextRefresh.setHours(24, 0, 0, 0);
+
+  return {
+    remainingPosts: Math.max(0, 2 - postsTodayCount),
+    nextRefresh: nextRefresh.toISOString()
+  };
 };

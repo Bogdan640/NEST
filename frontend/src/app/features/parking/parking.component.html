@@ -5,12 +5,33 @@
       <p class="page-subtitle">Share your spot when you're away</p>
     </div>
     
-    @if (mySlots.length > 0) {
-      <button class="btn-primary" (click)="toggleForm()">
-        {{ showCreateForm() ? 'Cancel' : 'Share My Spot' }}
+    <div class="header-actions">
+      <button class="btn-secondary" (click)="toggleSlotForm()">
+        {{ showSlotForm() ? 'Cancel' : '+ Register My Spot' }}
       </button>
-    }
+      @if (mySlots.length > 0) {
+        <button class="btn-primary" (click)="toggleForm()">
+          {{ showCreateForm() ? 'Cancel' : 'Share My Spot' }}
+        </button>
+      }
+    </div>
   </div>
+
+  @if (showSlotForm()) {
+    <div class="create-announcement-card">
+      <h3>Register Your Parking Slot</h3>
+      <form [formGroup]="newSlotForm" (ngSubmit)="onSubmitSlot()">
+        <div class="form-group">
+          <label>Slot Identifier (e.g. A12, 5B)</label>
+          <input type="text" formControlName="identifier" placeholder="Your spot number" class="form-control" />
+        </div>
+        <div class="form-actions">
+          <button type="button" class="btn-secondary" (click)="toggleSlotForm()">Cancel</button>
+          <button type="submit" class="btn-primary" [disabled]="newSlotForm.invalid || isSubmitting()">Register Spot</button>
+        </div>
+      </form>
+    </div>
+  }
 
   @if (showCreateForm() && mySlots.length > 0) {
     <div class="create-announcement-card">
@@ -28,15 +49,42 @@
           </div>
 
           <div class="form-group">
-            <label>Available From</label>
-            <input type="datetime-local" formControlName="availableFrom" class="form-control" />
+            <label>Available From (Date)</label>
+            <mat-form-field appearance="outline" class="mat-picker">
+              <mat-label>Pick a date</mat-label>
+              <input matInput [matDatepicker]="fromPicker" formControlName="fromDate" [matDatepickerFilter]="dateFilter" />
+              <mat-datepicker-toggle matIconSuffix [for]="fromPicker"></mat-datepicker-toggle>
+              <mat-datepicker #fromPicker></mat-datepicker>
+            </mat-form-field>
           </div>
 
           <div class="form-group">
-            <label>Available Until</label>
-            <input type="datetime-local" formControlName="availableTo" class="form-control" />
+            <label>From (Time)</label>
+            <input type="time" formControlName="fromTime" class="form-control time-input" />
+          </div>
+
+          <div class="form-group">
+            <label>Available Until (Date)</label>
+            <mat-form-field appearance="outline" class="mat-picker">
+              <mat-label>Pick a date</mat-label>
+              <input matInput [matDatepicker]="toPicker" formControlName="toDate" [matDatepickerFilter]="dateFilter" />
+              <mat-datepicker-toggle matIconSuffix [for]="toPicker"></mat-datepicker-toggle>
+              <mat-datepicker #toPicker></mat-datepicker>
+            </mat-form-field>
+          </div>
+
+          <div class="form-group">
+            <label>Until (Time)</label>
+            <input type="time" formControlName="toTime" class="form-control time-input" />
           </div>
         </div>
+
+        @if (newAnnouncementForm.errors?.['dateRangeInvalid']) {
+          <span class="field-error">End date/time must be after start date/time</span>
+        }
+        @if (newAnnouncementForm.errors?.['startInPast']) {
+          <span class="field-error">Start date and time must be in the future</span>
+        }
         
         <div class="form-actions">
           <button type="button" class="btn-secondary" (click)="toggleForm()">Cancel</button>

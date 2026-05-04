@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, signal, computed } from '@angular/core';
 import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { ShedFacade } from '../../store/shed/shed.facade';
 import { AuthFacade } from '../../store/auth/auth.facade';
@@ -25,6 +25,7 @@ export class ShedComponent {
 
   showCreateForm = signal(false);
   isSubmitting = signal(false);
+  activeTab = signal<'browse' | 'borrowed'>('browse');
 
   resourceTypes: ResourceType[] = ['TOOL', 'BOOK', 'OTHER'];
 
@@ -33,6 +34,24 @@ export class ShedComponent {
     description: ['', [Validators.required, Validators.maxLength(500)]],
     type: ['TOOL' as ResourceType, [Validators.required]],
   });
+
+  /** Items available for browsing (not owned by me, or all items) */
+  get browseItems() {
+    return this.resources();
+  }
+
+  /** Items I'm currently borrowing (have an APPROVED reservation) */
+  get myBorrowedItems() {
+    const user = this.currentUser();
+    if (!user) return [];
+    return this.resources().filter(r =>
+      r.reservations?.some(res => res.borrowerId === user.id && res.status === 'APPROVED')
+    );
+  }
+
+  setTab(tab: 'browse' | 'borrowed'): void {
+    this.activeTab.set(tab);
+  }
 
   toggleForm(): void {
     this.showCreateForm.update(v => !v);

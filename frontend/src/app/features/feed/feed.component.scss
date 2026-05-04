@@ -136,3 +136,42 @@
 @keyframes spin {
   to { transform: rotate(360deg); }
 }
+
+.quota-exhausted {
+  text-align: center;
+  background: linear-gradient(135deg, #fef3c7 0%, #fffbeb 100%);
+  border: 1px solid #f59e0b;
+  border-radius: 1rem;
+  padding: 2rem;
+  margin-bottom: 2rem;
+
+  h3 {
+    color: #92400e;
+    font-size: 1.125rem;
+    margin: 0.5rem 0;
+  }
+
+  p {
+    color: #78350f;
+    font-size: 0.95rem;
+    margin: 0;
+  }
+
+  strong {
+    color: #d97706;
+  }
+}
+
+.quota-icon {
+  font-size: 2rem;
+  display: block;
+  margin-bottom: 0.25rem;
+}
+
+.quota-hint {
+  font-size: 0.8rem;
+  color: #059669;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  text-align: right;
+}

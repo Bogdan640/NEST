@@ -1,11 +1,12 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { NestEvent } from '../../../core/models/event.model';
+import { ConfirmDialogComponent } from '../../../shared/components/confirm-dialog/confirm-dialog.component';
 
 @Component({
   selector: 'app-event-card',
   standalone: true,
-  imports: [DatePipe],
+  imports: [DatePipe, ConfirmDialogComponent],
   templateUrl: './event-card.component.html',
   styleUrl: './event-card.component.scss',
 })
@@ -18,9 +19,15 @@ export class EventCardComponent {
   @Output() leaveClicked = new EventEmitter<string>();
   @Output() deleteClicked = new EventEmitter<string>();
 
+  showDeleteConfirm = false;
+
   get isAttending(): boolean {
     if (!this.currentUserId || !this.event.attendees) return false;
     return this.event.attendees.some(a => a.userId === this.currentUserId);
+  }
+
+  get isCreator(): boolean {
+    return this.currentUserId === this.event.creatorId;
   }
 
   get attendeeCount(): number {
@@ -41,8 +48,15 @@ export class EventCardComponent {
   }
 
   onDelete(): void {
-    if (confirm('Are you sure you want to delete this event?')) {
-      this.deleteClicked.emit(this.event.id);
-    }
+    this.showDeleteConfirm = true;
+  }
+
+  confirmDelete(): void {
+    this.showDeleteConfirm = false;
+    this.deleteClicked.emit(this.event.id);
+  }
+
+  cancelDelete(): void {
+    this.showDeleteConfirm = false;
   }
 }

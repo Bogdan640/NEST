@@ -1,5 +1,5 @@
 import prisma from '../../config/prisma';
-import * as bcrypt from 'bcrypt';
+import bcrypt from 'bcrypt';
 import { generateToken } from '../../utils/jwtUtils';
 import { getPermissionsForRole } from '../../config/constants';
 import { ConflictError } from '../../utils/errors';

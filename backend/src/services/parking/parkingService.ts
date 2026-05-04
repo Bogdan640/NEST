@@ -55,6 +55,11 @@ export const createTargetAnnouncement = async (
       parkingSlotId: parkingSlotIdValue,
       availableFrom: availableFromValue,
       availableTo: availableToValue
+    },
+    include: {
+      publisher: { select: { firstName: true, lastName: true, apartmentNumber: true } },
+      parkingSlot: true,
+      applications: true
     }
   });
 };
@@ -72,6 +77,16 @@ export const applyForTargetAnnouncement = async (
     throw new NotFoundError('Parking announcement not found');
   }
 
+  // Block the publisher from applying to their own announcement
+  if (targetedAnnouncement.publisherId === applicantIdValue) {
+    throw new ForbiddenError('You cannot request your own parking spot');
+  }
+
+  // Check if the announcement has expired
+  if (new Date(targetedAnnouncement.availableTo) < new Date()) {
+    throw new ConflictError('This parking announcement has expired');
+  }
+
   const existingApproval = targetedAnnouncement.applications.find(app => app.status === 'APPROVED');
   if (existingApproval) {
     throw new ConflictError('Parking slot already claimed by another resident');
@@ -79,13 +94,16 @@ export const applyForTargetAnnouncement = async (
 
   const existingApplication = targetedAnnouncement.applications.find(app => app.applicantId === applicantIdValue);
   if (existingApplication) {
-    throw new ConflictError('Already applied for this parking slot');
+    throw new ConflictError('You have already applied for this parking slot');
   }
 
   return await prisma.parkingApplication.create({
     data: {
       applicantId: applicantIdValue,
       announcementId: announcementIdValue
+    },
+    include: {
+      applicant: { select: { firstName: true, lastName: true } }
     }
   });
 };

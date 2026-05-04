@@ -12,4 +12,5 @@ export const NAV_ITEMS = [
   { path: '/app/events', emoji: '🦉', label: 'Events' },
   { path: '/app/shed', emoji: '🦝', label: 'Shared Shed' },
   { path: '/app/parking', emoji: '🐢', label: 'Parking' },
+  { path: '/app/profile', emoji: '👤', label: 'Profile' },
 ] as const;

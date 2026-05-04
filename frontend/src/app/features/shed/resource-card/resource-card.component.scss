@@ -154,3 +154,41 @@
   
   &:hover { color: #ef4444; }
 }
+
+.owner-badge {
+  background-color: #ecfdf5;
+  color: #059669;
+  padding: 0.5rem 1rem;
+  border-radius: 9999px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  border: 1px solid #a7f3d0;
+}
+
+.borrowed-badge {
+  background-color: #eff6ff;
+  color: #2563eb;
+  padding: 0.5rem 1rem;
+  border-radius: 9999px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  border: 1px solid #bfdbfe;
+}
+
+.btn-return {
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  font-weight: 600;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  border: 2px solid #f59e0b;
+  background: #fffbeb;
+  color: #d97706;
+
+  &:hover {
+    background: #fef3c7;
+    border-color: #d97706;
+  }
+}
+

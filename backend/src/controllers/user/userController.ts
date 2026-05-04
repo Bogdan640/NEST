@@ -4,7 +4,7 @@ import { AuthenticatedRequest } from '../../middlewares/authMiddleware';
 
 export const getMeController = async (req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> => {
   if (!req.user?.userId) {
-    res.status(401).json({ error: 'Authentication missing' });
+    res.status(401).json({ message: 'Authentication missing' });
     return;
   }
 
@@ -27,7 +27,7 @@ export const getUserByIdController = async (req: AuthenticatedRequest, res: Resp
 
 export const updateMeController = async (req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> => {
   if (!req.user?.userId) {
-    res.status(401).json({ error: 'Authentication missing' });
+    res.status(401).json({ message: 'Authentication missing' });
     return;
   }
 
@@ -41,7 +41,7 @@ export const updateMeController = async (req: AuthenticatedRequest, res: Respons
 
 export const updatePreferencesController = async (req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> => {
   if (!req.user?.userId) {
-    res.status(401).json({ error: 'Authentication missing' });
+    res.status(401).json({ message: 'Authentication missing' });
     return;
   }
 

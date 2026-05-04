@@ -1,8 +1,10 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, signal, OnInit } from '@angular/core';
 import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { FeedFacade } from '../../store/feed/feed.facade';
 import { AuthFacade } from '../../store/auth/auth.facade';
 import { PostCardComponent } from './post-card/post-card.component';
+import { FeedApiService } from '../../core/api/feed-api.service';
+import { ToastService } from '../../shared/services/toast.service';
 
 @Component({
   selector: 'app-feed',
@@ -11,10 +13,12 @@ import { PostCardComponent } from './post-card/post-card.component';
   templateUrl: './feed.component.html',
   styleUrl: './feed.component.scss',
 })
-export class FeedComponent {
+export class FeedComponent implements OnInit {
   private fb = inject(FormBuilder);
   private feedFacade = inject(FeedFacade);
   private authFacade = inject(AuthFacade);
+  private feedApi = inject(FeedApiService);
+  private toastService = inject(ToastService);
 
   posts = this.feedFacade.posts;
   isLoading = this.feedFacade.isLoading;
@@ -28,6 +32,31 @@ export class FeedComponent {
   });
 
   isSubmitting = signal(false);
+  remainingPosts = signal(2);
+  nextRefreshTime = signal('');
+
+  ngOnInit(): void {
+    this.feedApi.getFeedStatus().subscribe({
+      next: (status) => {
+        this.remainingPosts.set(status.remainingPosts);
+        const timeToRefresh = new Date(status.nextRefresh).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        this.nextRefreshTime.set(timeToRefresh);
+        if (status.remainingPosts > 0) {
+          this.toastService.show(
+            `You have ${status.remainingPosts} post(s) left today. Refreshes at ${timeToRefresh}.`,
+            'info',
+            8000
+          );
+        } else {
+          this.toastService.show(
+            `You've used all your posts for today! Refreshes at ${timeToRefresh}.`,
+            'error',
+            8000
+          );
+        }
+      }
+    });
+  }
 
   onSubmit(): void {
     if (this.newPostForm.invalid) return;
@@ -37,6 +66,7 @@ export class FeedComponent {
     
     this.feedFacade.createPost({ content, imageUrl: imageUrl || undefined });
     
+    this.remainingPosts.update(v => Math.max(0, v - 1));
     this.newPostForm.reset();
     this.isSubmitting.set(false);
   }

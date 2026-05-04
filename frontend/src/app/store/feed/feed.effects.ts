@@ -2,12 +2,14 @@ import { Injectable, inject } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { FeedActions } from './feed.actions';
 import { FeedApiService } from '../../core/api/feed-api.service';
-import { catchError, map, mergeMap, of } from 'rxjs';
+import { catchError, map, mergeMap, of, tap } from 'rxjs';
+import { ToastService } from '../../shared/services/toast.service';
 
 @Injectable()
 export class FeedEffects {
   private actions$ = inject(Actions);
   private feedApi = inject(FeedApiService);
+  private toastService = inject(ToastService);
 
   loadPosts$ = createEffect(() =>
     this.actions$.pipe(
@@ -15,9 +17,11 @@ export class FeedEffects {
       mergeMap(({ params }) =>
         this.feedApi.getPosts(params).pipe(
           map((response) => FeedActions.loadPostsSuccess({ response })),
-          catchError((error) =>
-            of(FeedActions.loadPostsFailure({ error: error.error?.message || 'Failed to load posts' }))
-          )
+          catchError((error) => {
+            const msg = error.error?.message || 'Failed to load posts';
+            this.toastService.show(msg, 'error');
+            return of(FeedActions.loadPostsFailure({ error: msg }));
+          })
         )
       )
     )
@@ -29,9 +33,11 @@ export class FeedEffects {
       mergeMap(({ request }) =>
         this.feedApi.createPost(request).pipe(
           map((post) => FeedActions.createPostSuccess({ post })),
-          catchError((error) =>
-            of(FeedActions.createPostFailure({ error: error.error?.message || 'Failed to create post' }))
-          )
+          catchError((error) => {
+            const msg = error.error?.message || 'Failed to create post';
+            this.toastService.show(msg, 'error');
+            return of(FeedActions.createPostFailure({ error: msg }));
+          })
         )
       )
     )
@@ -43,9 +49,11 @@ export class FeedEffects {
       mergeMap(({ id, request }) =>
         this.feedApi.updatePost(id, request).pipe(
           map((post) => FeedActions.updatePostSuccess({ post })),
-          catchError((error) =>
-            of(FeedActions.updatePostFailure({ error: error.error?.message || 'Failed to update post' }))
-          )
+          catchError((error) => {
+            const msg = error.error?.message || 'Failed to update post';
+            this.toastService.show(msg, 'error');
+            return of(FeedActions.updatePostFailure({ error: msg }));
+          })
         )
       )
     )
@@ -57,9 +65,11 @@ export class FeedEffects {
       mergeMap(({ id }) =>
         this.feedApi.deletePost(id).pipe(
           map(() => FeedActions.deletePostSuccess({ id })),
-          catchError((error) =>
-            of(FeedActions.deletePostFailure({ error: error.error?.message || 'Failed to delete post' }))
-          )
+          catchError((error) => {
+            const msg = error.error?.message || 'Failed to delete post';
+            this.toastService.show(msg, 'error');
+            return of(FeedActions.deletePostFailure({ error: msg }));
+          })
         )
       )
     )

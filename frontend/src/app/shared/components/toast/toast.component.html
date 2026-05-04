@@ -1,0 +1,23 @@
+<div class="toast-container">
+  @for (toast of toastService.toasts(); track toast.id) {
+    <div 
+      class="toast"
+      [ngClass]="'toast-' + toast.type"
+      (click)="toastService.remove(toast.id)"
+    >
+      <div class="toast-icon">
+        @if (toast.type === 'success') {
+          <i class="fas fa-check-circle"></i>
+        } @else if (toast.type === 'error') {
+          <i class="fas fa-exclamation-circle"></i>
+        } @else {
+          <i class="fas fa-info-circle"></i>
+        }
+      </div>
+      <div class="toast-message">{{ toast.message }}</div>
+      <button class="toast-close" (click)="toastService.remove(toast.id); $event.stopPropagation()">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+  }
+</div>

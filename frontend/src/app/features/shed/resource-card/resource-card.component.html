@@ -39,16 +39,38 @@
       }
     </div>
 
-    @if (isBorrowedByMe) {
-      <button class="btn-secondary" (click)="onReturn()">Return Item</button>
-    } @else {
-      <button 
-        class="btn-primary" 
-        (click)="onReserve()" 
-        [disabled]="!isAvailable"
-      >
-        {{ isAvailable ? 'Borrow Item' : 'Unavailable' }}
-      </button>
+    <!-- Owner sees "Mark as Returned" when their item is borrowed -->
+    @if (isOwner && !isAvailable) {
+      <button class="btn-return" (click)="onReturn()">Mark as Returned</button>
+    } @else if (isOwner) {
+      <span class="owner-badge">Your Item</span>
+    } @else if (borrowedMode && isBorrowedByMe) {
+      <!-- In "My Borrowed" tab, just show info (only owner can mark returned) -->
+      <span class="borrowed-badge">Currently Using</span>
+    } @else if (!borrowedMode && !isOwner) {
+      <!-- In "Browse" tab, non-owners can borrow available items -->
+      @if (isBorrowedByMe) {
+        <span class="borrowed-badge">You are borrowing this</span>
+      } @else {
+        <button 
+          class="btn-primary" 
+          (click)="onReserve()" 
+          [disabled]="!isAvailable"
+        >
+          {{ isAvailable ? 'Borrow Item' : 'Unavailable' }}
+        </button>
+      }
     }
   </div>
 </div>
+
+<app-confirm-dialog
+  [isOpen]="showDeleteConfirm"
+  title="Delete Item"
+  message="Are you sure you want to remove this item from the shared shed?"
+  confirmText="Delete"
+  icon="🗑️"
+  [danger]="true"
+  (confirmed)="confirmDelete()"
+  (cancelled)="cancelDelete()"
+></app-confirm-dialog>

@@ -28,14 +28,14 @@ export const getEventByIdController = async (req: AuthenticatedRequest, res: Res
 
 export const createEventController = async (req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> => {
   if (!req.user?.userId) {
-    res.status(401).json({ error: 'Authentication missing' });
+    res.status(401).json({ message: 'Authentication missing' });
     return;
   }
 
   const { title, description, location, type, startTime, endTime, maxParticipants, visibility } = req.body;
 
   if (!title || !description || !location || !type || !startTime || !endTime) {
-    res.status(400).json({ error: 'Mandatory event fields missing' });
+    res.status(400).json({ message: 'Mandatory event fields missing' });
     return;
   }
 
@@ -55,7 +55,7 @@ export const createEventController = async (req: AuthenticatedRequest, res: Resp
 
 export const joinEventController = async (req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> => {
   if (!req.user?.userId) {
-    res.status(401).json({ error: 'Authentication missing' });
+    res.status(401).json({ message: 'Authentication missing' });
     return;
   }
 
@@ -69,7 +69,7 @@ export const joinEventController = async (req: AuthenticatedRequest, res: Respon
 
 export const leaveEventController = async (req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> => {
   if (!req.user?.userId) {
-    res.status(401).json({ error: 'Authentication missing' });
+    res.status(401).json({ message: 'Authentication missing' });
     return;
   }
 
@@ -83,14 +83,14 @@ export const leaveEventController = async (req: AuthenticatedRequest, res: Respo
 
 export const updateEventController = async (req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> => {
   if (!req.user?.userId || !req.user?.role) {
-    res.status(401).json({ error: 'Authentication missing' });
+    res.status(401).json({ message: 'Authentication missing' });
     return;
   }
 
   const { title, description } = req.body;
 
   if (!title || !description) {
-    res.status(400).json({ error: 'Title and description are required' });
+    res.status(400).json({ message: 'Title and description are required' });
     return;
   }
 
@@ -104,7 +104,7 @@ export const updateEventController = async (req: AuthenticatedRequest, res: Resp
 
 export const deleteEventController = async (req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> => {
   if (!req.user?.userId || !req.user?.role) {
-    res.status(401).json({ error: 'Authentication missing' });
+    res.status(401).json({ message: 'Authentication missing' });
     return;
   }
 

@@ -6,12 +6,14 @@ import { catchError, exhaustMap, map, tap } from 'rxjs/operators';
 import { AuthActions } from './auth.actions';
 import { AuthApiService } from '../../core/api/auth-api.service';
 import { TOKEN_STORAGE_KEY, USER_STORAGE_KEY } from '../../core/constants/ui';
+import { ToastService } from '../../shared/services/toast.service';
 
 @Injectable()
 export class AuthEffects {
   private actions$ = inject(Actions);
   private authApi = inject(AuthApiService);
   private router = inject(Router);
+  private toastService = inject(ToastService);
 
   login$ = createEffect(() =>
     this.actions$.pipe(
@@ -25,9 +27,11 @@ export class AuthEffects {
               permissions: response.permissions,
             })
           ),
-          catchError((error) =>
-            of(AuthActions.loginFailure({ error: error.error?.message || 'Login failed' }))
-          )
+          catchError((error) => {
+            const msg = error.error?.message || 'Login failed';
+            this.toastService.show(msg, 'error');
+            return of(AuthActions.loginFailure({ error: msg }));
+          })
         )
       )
     )
@@ -59,9 +63,11 @@ export class AuthEffects {
           map((response) =>
             AuthActions.registerSuccess({ user: response.user, token: response.token })
           ),
-          catchError((error) =>
-            of(AuthActions.registerFailure({ error: error.error?.message || 'Registration failed' }))
-          )
+          catchError((error) => {
+            const msg = error.error?.message || 'Registration failed';
+            this.toastService.show(msg, 'error');
+            return of(AuthActions.registerFailure({ error: msg }));
+          })
         )
       )
     )
@@ -86,9 +92,11 @@ export class AuthEffects {
       exhaustMap(({ blockCode }) =>
         this.authApi.joinBlock({ blockCode }).pipe(
           map(() => AuthActions.joinBlockSuccess()),
-          catchError((error) =>
-            of(AuthActions.joinBlockFailure({ error: error.error?.message || 'Join block failed' }))
-          )
+          catchError((error) => {
+            const msg = error.error?.message || 'Join block failed';
+            this.toastService.show(msg, 'error');
+            return of(AuthActions.joinBlockFailure({ error: msg }));
+          })
         )
       )
     )

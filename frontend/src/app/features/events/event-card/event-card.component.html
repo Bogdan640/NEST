@@ -37,11 +37,15 @@
 
   <div class="event-footer">
     <div class="creator-info">
-      <span class="avatar-small">{{ event.creator.firstName.charAt(0) }}</span>
-      <span class="creator-name">Organized by {{ event.creator.firstName }}</span>
+      @if (event.creator) {
+        <span class="avatar-small">{{ event.creator.firstName.charAt(0) }}</span>
+        <span class="creator-name">Organized by {{ event.creator.firstName }}</span>
+      }
     </div>
 
-    @if (isAttending) {
+    @if (isCreator) {
+      <span class="host-badge">You are the Host</span>
+    } @else if (isAttending) {
       <button class="btn-secondary" (click)="onLeave()">Leave Event</button>
     } @else {
       <button 
@@ -54,3 +58,14 @@
     }
   </div>
 </div>
+
+<app-confirm-dialog
+  [isOpen]="showDeleteConfirm"
+  title="Delete Event"
+  message="Are you sure you want to delete this event? All attendees will be removed."
+  confirmText="Delete"
+  icon="🗑️"
+  [danger]="true"
+  (confirmed)="confirmDelete()"
+  (cancelled)="cancelDelete()"
+></app-confirm-dialog>

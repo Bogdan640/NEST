@@ -4,32 +4,41 @@
     <p class="page-subtitle">See what's happening in your building</p>
   </div>
 
-  <div class="create-post-card">
-    <form [formGroup]="newPostForm" (ngSubmit)="onSubmit()">
-      <textarea
-        formControlName="content"
-        class="post-input"
-        placeholder="Share something with your neighbors..."
-        rows="3"
-      ></textarea>
-      
-      <div class="post-actions">
-        <input
-          type="url"
-          formControlName="imageUrl"
-          class="image-url-input"
-          placeholder="Optional image URL"
-        />
-        <button
-          type="submit"
-          class="btn-primary"
-          [disabled]="newPostForm.invalid || isSubmitting()"
-        >
-          Post
-        </button>
-      </div>
-    </form>
-  </div>
+  @if (remainingPosts() > 0) {
+    <div class="create-post-card">
+      <div class="quota-hint">{{ remainingPosts() }} post(s) remaining today</div>
+      <form [formGroup]="newPostForm" (ngSubmit)="onSubmit()">
+        <textarea
+          formControlName="content"
+          class="post-input"
+          placeholder="Share something with your neighbors..."
+          rows="3"
+        ></textarea>
+        
+        <div class="post-actions">
+          <input
+            type="url"
+            formControlName="imageUrl"
+            class="image-url-input"
+            placeholder="Optional image URL"
+          />
+          <button
+            type="submit"
+            class="btn-primary"
+            [disabled]="newPostForm.invalid || isSubmitting()"
+          >
+            Post
+          </button>
+        </div>
+      </form>
+    </div>
+  } @else {
+    <div class="quota-exhausted">
+      <span class="quota-icon">✏️</span>
+      <h3>Daily post limit reached</h3>
+      <p>You've used both your posts for today. Your quota refreshes at <strong>{{ nextRefreshTime() }}</strong>.</p>
+    </div>
+  }
 
   @if (error()) {
     <div class="error-message">{{ error() }}</div>

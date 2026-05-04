@@ -1,30 +1,152 @@
 <div class="profile-page">
-  <div class="profile-header">
-    <h1 class="page-title">My Profile</h1>
-  </div>
-
   @if (currentUser()) {
-    <div class="profile-card">
-      <div class="avatar-large">{{ currentUser()!.firstName.charAt(0) }}</div>
-      <h2>{{ currentUser()!.firstName }} {{ currentUser()!.lastName }}</h2>
-      <p class="email">{{ currentUser()!.email }}</p>
-      
-      <div class="info-section">
-        <div class="info-item">
-          <span class="label">Apartment</span>
-          <span class="value">{{ currentUser()!.apartmentNumber || 'Not specified' }}</span>
+    <!-- Profile Banner -->
+    <div class="profile-banner">
+      <div class="banner-gradient"></div>
+      <div class="profile-avatar-wrapper">
+        <div class="profile-avatar">
+          {{ currentUser()!.firstName.charAt(0) }}{{ currentUser()!.lastName.charAt(0) }}
         </div>
-        <div class="info-item">
-          <span class="label">Role</span>
-          <span class="value badge">{{ currentUser()!.role }}</span>
+        <div class="online-dot"></div>
+      </div>
+    </div>
+
+    <!-- Profile Info Card -->
+    <div class="profile-info-card">
+      @if (!isEditing()) {
+        <!-- View Mode -->
+        <div class="profile-name-section">
+          <h1 class="profile-name">{{ currentUser()!.firstName }} {{ currentUser()!.lastName }}</h1>
+          @if (currentUser()!.headline) {
+            <p class="profile-headline">{{ currentUser()!.headline }}</p>
+          }
+          <p class="profile-email">
+            <span class="info-icon">✉️</span>
+            {{ currentUser()!.email }}
+          </p>
         </div>
-        <div class="info-item">
-          <span class="label">Status</span>
-          <span class="value badge success">{{ currentUser()!.isVerified ? 'Verified' : 'Pending' }}</span>
+
+        <div class="info-grid">
+          <div class="info-tile">
+            <span class="tile-icon">🏠</span>
+            <span class="tile-label">Apartment</span>
+            <span class="tile-value">{{ currentUser()!.apartmentNumber || '—' }}</span>
+          </div>
+          <div class="info-tile">
+            <span class="tile-icon">📞</span>
+            <span class="tile-label">Phone</span>
+            <span class="tile-value">{{ currentUser()!.phoneNumber || 'Not set' }}</span>
+          </div>
+          <div class="info-tile">
+            <span class="tile-icon">🏷️</span>
+            <span class="tile-label">Role</span>
+            <span class="tile-value role-badge" [class.admin]="currentUser()!.role === 'ADMIN'">
+              {{ currentUser()!.role }}
+            </span>
+          </div>
+          <div class="info-tile">
+            <span class="tile-icon">📅</span>
+            <span class="tile-label">Member Since</span>
+            <span class="tile-value">{{ memberSince }}</span>
+          </div>
+        </div>
+
+        @if (currentUser()!.about) {
+          <div class="about-section">
+            <h3><span class="section-icon">💬</span> About Me</h3>
+            <p>{{ currentUser()!.about }}</p>
+          </div>
+        }
+
+        <div class="profile-actions">
+          <button class="btn-edit" (click)="startEditing()">
+            <span>✏️</span> Edit Profile
+          </button>
+          <button class="btn-danger" (click)="logout()">
+            <span>🚪</span> Sign Out
+          </button>
+        </div>
+      } @else {
+        <!-- Edit Mode -->
+        <h2 class="edit-title">✏️ Edit Your Profile</h2>
+        <form [formGroup]="profileForm" (ngSubmit)="saveProfile()">
+          <div class="edit-grid">
+            <div class="form-group">
+              <label><span class="field-icon">👤</span> First Name</label>
+              <input type="text" formControlName="firstName" class="form-control" placeholder="Your first name" />
+            </div>
+            <div class="form-group">
+              <label><span class="field-icon">👤</span> Last Name</label>
+              <input type="text" formControlName="lastName" class="form-control" placeholder="Your last name" />
+            </div>
+            <div class="form-group full-width">
+              <label><span class="field-icon">📞</span> Phone Number</label>
+              <input type="tel" formControlName="phoneNumber" class="form-control" placeholder="0712 345 678" />
+            </div>
+            <div class="form-group full-width">
+              <label><span class="field-icon">💡</span> Headline</label>
+              <input type="text" formControlName="headline" class="form-control" placeholder="What describes you? (e.g., Coffee lover & plant parent)" maxlength="120" />
+              <span class="char-count">{{ profileForm.get('headline')?.value?.length || 0 }}/120</span>
+            </div>
+            <div class="form-group full-width">
+              <label><span class="field-icon">💬</span> About Me</label>
+              <textarea formControlName="about" class="form-control" rows="4" placeholder="Tell your neighbors about yourself: hobbies, interests, fun facts..." maxlength="1000"></textarea>
+              <span class="char-count">{{ profileForm.get('about')?.value?.length || 0 }}/1000</span>
+            </div>
+          </div>
+
+          <div class="edit-actions">
+            <button type="button" class="btn-cancel" (click)="cancelEditing()">Cancel</button>
+            <button type="submit" class="btn-save" [disabled]="profileForm.invalid || isSaving()">
+              {{ isSaving() ? 'Saving...' : '💾 Save Changes' }}
+            </button>
+          </div>
+        </form>
+      }
+    </div>
+
+    <!-- Borrowed Tools Section -->
+    <div class="section-card">
+      <h2 class="section-title"><span class="section-icon">🔧</span> My Borrowed Tools</h2>
+      @if (borrowedTools.length === 0) {
+        <div class="empty-mini">
+          <span class="empty-mini-icon">📦</span>
+          <p>You haven't borrowed any tools yet. Visit the <strong>Shared Shed</strong> to find items!</p>
+        </div>
+      } @else {
+        <div class="tools-grid">
+          @for (item of borrowedTools; track item.resource.id) {
+            <div class="tool-card">
+              <div class="tool-type" [class]="item.resource.type.toLowerCase()">{{ item.resource.type }}</div>
+              <h4>{{ item.resource.name }}</h4>
+              <p class="tool-desc">{{ item.resource.description }}</p>
+              <div class="tool-meta">
+                <span class="tool-status approved">Borrowed</span>
+                <span class="tool-date">{{ item.reservation?.startTime | date:'shortDate' }}</span>
+              </div>
+            </div>
+          }
+        </div>
+      }
+    </div>
+
+    <!-- Quick Tips Section -->
+    <div class="section-card tips-card">
+      <h2 class="section-title"><span class="section-icon">🌟</span> Neighbor Tips</h2>
+      <div class="tips-grid">
+        <div class="tip">
+          <span class="tip-icon">🤝</span>
+          <p>Share items you don't use daily to help your community</p>
+        </div>
+        <div class="tip">
+          <span class="tip-icon">🚗</span>
+          <p>Share your parking spot when you're away on vacation</p>
+        </div>
+        <div class="tip">
+          <span class="tip-icon">📣</span>
+          <p>Create events to bring your neighbors together</p>
         </div>
       </div>
-      
-      <button class="btn-danger" (click)="logout()">Sign Out</button>
     </div>
   }
 </div>

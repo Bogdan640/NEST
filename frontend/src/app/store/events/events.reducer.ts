@@ -40,8 +40,34 @@ export const eventsReducer = createReducer(
   on(EventsActions.deleteEventFailure, (state, { error }) => ({ ...state, isLoading: false, error })),
 
   on(EventsActions.joinEvent, (state) => ({ ...state, isLoading: true, error: null })),
+  on(EventsActions.joinEventSuccess, (state, { id, userId }) => ({
+    ...state,
+    isLoading: false,
+    events: state.events.map((e) => {
+      if (e.id === id) {
+        return {
+          ...e,
+          attendees: [...(e.attendees || []), { userId, eventId: id, status: 'ATTENDING' }]
+        };
+      }
+      return e;
+    }),
+  })),
   on(EventsActions.joinEventFailure, (state, { error }) => ({ ...state, isLoading: false, error })),
   
   on(EventsActions.leaveEvent, (state) => ({ ...state, isLoading: true, error: null })),
+  on(EventsActions.leaveEventSuccess, (state, { id, userId }) => ({
+    ...state,
+    isLoading: false,
+    events: state.events.map((e) => {
+      if (e.id === id) {
+        return {
+          ...e,
+          attendees: (e.attendees || []).filter(a => a.userId !== userId)
+        };
+      }
+      return e;
+    }),
+  })),
   on(EventsActions.leaveEventFailure, (state, { error }) => ({ ...state, isLoading: false, error }))
 );

@@ -1,5 +1,5 @@
 import { Response, NextFunction } from 'express';
-import { retrieveAllPosts, createFeedPost, updateFeedPost, deleteFeedPost, retrievePostById } from '../../services/feed/feedService';
+import { retrieveAllPosts, createFeedPost, updateFeedPost, deleteFeedPost, retrievePostById, getFeedStatus } from '../../services/feed/feedService';
 import { AuthenticatedRequest } from '../../middlewares/authMiddleware';
 
 export const getPostsController = async (req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> => {
@@ -26,16 +26,29 @@ export const getPostByIdController = async (req: AuthenticatedRequest, res: Resp
   }
 };
 
+export const getFeedStatusController = async (req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> => {
+  if (!req.user?.userId) {
+    res.status(401).json({ message: 'Authentication missing' });
+    return;
+  }
+  try {
+    const result = await getFeedStatus(req.user.userId);
+    res.status(200).json(result);
+  } catch (error) {
+    next(error);
+  }
+};
+
 export const createPostController = async (req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> => {
   if (!req.user?.userId) {
-    res.status(401).json({ error: 'Authentication missing' });
+    res.status(401).json({ message: 'Authentication missing' });
     return;
   }
 
   const { content, imageUrl } = req.body;
 
   if (!content) {
-    res.status(400).json({ error: 'Post content is required' });
+    res.status(400).json({ message: 'Post content is required' });
     return;
   }
 
@@ -49,14 +62,14 @@ export const createPostController = async (req: AuthenticatedRequest, res: Respo
 
 export const updateFeedController = async (req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> => {
   if (!req.user?.userId || !req.user?.role) {
-    res.status(401).json({ error: 'Authentication missing' });
+    res.status(401).json({ message: 'Authentication missing' });
     return;
   }
 
   const { content } = req.body;
 
   if (!content) {
-    res.status(400).json({ error: 'Content is required' });
+    res.status(400).json({ message: 'Content is required' });
     return;
   }
 
@@ -70,7 +83,7 @@ export const updateFeedController = async (req: AuthenticatedRequest, res: Respo
 
 export const deleteFeedController = async (req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> => {
   if (!req.user?.userId || !req.user?.role) {
-    res.status(401).json({ error: 'Authentication missing' });
+    res.status(401).json({ message: 'Authentication missing' });
     return;
   }
 

@@ -28,14 +28,14 @@ export const getResourceByIdController = async (req: AuthenticatedRequest, res: 
 
 export const createResourceController = async (req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> => {
   if (!req.user?.userId) {
-    res.status(401).json({ error: 'Authentication missing' });
+    res.status(401).json({ message: 'Authentication missing' });
     return;
   }
 
   const { name, description, type, isCommunityOwned } = req.body;
 
   if (!name || !description || !type) {
-    res.status(400).json({ error: 'Mandatory resource fields missing' });
+    res.status(400).json({ message: 'Mandatory resource fields missing' });
     return;
   }
 
@@ -50,14 +50,14 @@ export const createResourceController = async (req: AuthenticatedRequest, res: R
 
 export const reserveResourceController = async (req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> => {
   if (!req.user?.userId) {
-    res.status(401).json({ error: 'Authentication missing' });
+    res.status(401).json({ message: 'Authentication missing' });
     return;
   }
 
   const { startTime, endTime } = req.body;
 
   if (!startTime || !endTime) {
-    res.status(400).json({ error: 'Reservation constraints missing' });
+    res.status(400).json({ message: 'Reservation constraints missing' });
     return;
   }
 
@@ -74,7 +74,7 @@ export const reserveResourceController = async (req: AuthenticatedRequest, res: 
 
 export const returnResourceController = async (req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> => {
   if (!req.user?.userId) {
-    res.status(401).json({ error: 'Authentication missing' });
+    res.status(401).json({ message: 'Authentication missing' });
     return;
   }
 
@@ -88,14 +88,14 @@ export const returnResourceController = async (req: AuthenticatedRequest, res: R
 
 export const updateResourceController = async (req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> => {
   if (!req.user?.userId || !req.user?.role) {
-    res.status(401).json({ error: 'Authentication missing' });
+    res.status(401).json({ message: 'Authentication missing' });
     return;
   }
 
   const { name, description } = req.body;
 
   if (!name || !description) {
-    res.status(400).json({ error: 'Name and description are required' });
+    res.status(400).json({ message: 'Name and description are required' });
     return;
   }
 
@@ -109,7 +109,7 @@ export const updateResourceController = async (req: AuthenticatedRequest, res: R
 
 export const deleteResourceController = async (req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> => {
   if (!req.user?.userId || !req.user?.role) {
-    res.status(401).json({ error: 'Authentication missing' });
+    res.status(401).json({ message: 'Authentication missing' });
     return;
   }
 
