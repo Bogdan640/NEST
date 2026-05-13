@@ -25,6 +25,12 @@ export class FeedApiService {
     return this.http.post<Post>(API_ENDPOINTS.FEED.BASE, payload);
   }
 
+  uploadImage(file: File): Observable<{imageUrl: string}> {
+    const formData = new FormData();
+    formData.append('image', file);
+    return this.http.post<{imageUrl: string}>(API_ENDPOINTS.FEED.IMAGE, formData);
+  }
+
   updatePost(id: string, payload: UpdatePostRequest): Observable<Post> {
     return this.http.put<Post>(API_ENDPOINTS.FEED.BY_ID(id), payload);
   }

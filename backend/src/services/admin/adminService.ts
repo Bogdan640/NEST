@@ -110,3 +110,67 @@ export const removeUser = async (adminId: string, userId: string) => {
     }
   });
 };
+
+export const getBlockResidents = async (adminId: string) => {
+  const adminBlocks = await prisma.block.findMany({
+    where: { adminId },
+    select: { id: true }
+  });
+
+  const blockIds = adminBlocks.map(b => b.id);
+
+  const now = new Date();
+
+  const residents = await prisma.user.findMany({
+    where: {
+      blockId: { in: blockIds },
+      isVerified: true
+    },
+    select: {
+      id: true,
+      email: true,
+      firstName: true,
+      lastName: true,
+      apartmentNumber: true,
+      phoneNumber: true,
+      profileImage: true,
+      coverImage: true,
+      role: true,
+      createdAt: true,
+      eventsCreated: {
+        where: { endTime: { gte: now } },
+        select: { id: true, title: true }
+      },
+      eventAttendances: {
+        where: {
+          event: { endTime: { gte: now } }
+        },
+        select: {
+          event: { select: { id: true, title: true } }
+        }
+      },
+      resourceReservations: {
+        where: { status: 'APPROVED' },
+        select: {
+          resource: { select: { id: true, name: true, type: true } }
+        }
+      }
+    }
+  });
+
+  return residents.map(r => ({
+    id: r.id,
+    email: r.email,
+    firstName: r.firstName,
+    lastName: r.lastName,
+    apartmentNumber: r.apartmentNumber,
+    phoneNumber: r.phoneNumber,
+    profileImage: r.profileImage,
+    coverImage: r.coverImage,
+    role: r.role,
+    createdAt: r.createdAt,
+    activeEventsCreated: r.eventsCreated,
+    eventsParticipating: r.eventAttendances.map(a => a.event),
+    borrowedTools: r.resourceReservations.map(rr => rr.resource)
+  }));
+};

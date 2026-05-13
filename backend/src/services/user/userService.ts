@@ -12,6 +12,7 @@ export const getCurrentUserProfile = async (userId: string) => {
       apartmentNumber: true,
       phoneNumber: true,
       profileImage: true,
+      coverImage: true,
       headline: true,
       about: true,
       preferences: true,
@@ -35,7 +36,9 @@ export const getUserProfileById = async (targetUserId: string) => {
       firstName: true,
       lastName: true,
       apartmentNumber: true,
+      phoneNumber: true,
       profileImage: true,
+      coverImage: true,
       headline: true,
       about: true,
       preferences: true,
@@ -65,6 +68,7 @@ export const updateUserProfile = async (
     headline?: string;
     about?: string;
     profileImage?: string;
+    coverImage?: string;
   }
 ) => {
   const user = await prisma.user.findUnique({ where: { id: userId } });
@@ -81,6 +85,7 @@ export const updateUserProfile = async (
       apartmentNumber: true,
       phoneNumber: true,
       profileImage: true,
+      coverImage: true,
       headline: true,
       about: true,
       preferences: true,

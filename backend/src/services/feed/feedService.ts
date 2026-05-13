@@ -20,7 +20,7 @@ export const retrieveAllPosts = async (
       take: limit,
       include: {
         author: {
-          select: { id: true, firstName: true, lastName: true, profileImage: true }
+          select: { id: true, firstName: true, lastName: true, profileImage: true, coverImage: true }
         }
       }
     }),
@@ -33,7 +33,7 @@ export const retrieveAllPosts = async (
 export const retrievePostById = async (postId: string) => {
   const postResult = await prisma.post.findUnique({
     where: { id: postId },
-    include: { author: { select: { id: true, firstName: true, lastName: true, profileImage: true } } }
+    include: { author: { select: { id: true, firstName: true, lastName: true, profileImage: true, coverImage: true } } }
   });
   if (!postResult) throw new NotFoundError('Post not found');
   return postResult;
@@ -64,7 +64,7 @@ export const createFeedPost = async (authorIdPayload: string, contentPayload: st
     },
     include: {
       author: {
-        select: { id: true, firstName: true, lastName: true, profileImage: true }
+        select: { id: true, firstName: true, lastName: true, profileImage: true, coverImage: true }
       }
     }
   });

@@ -25,7 +25,11 @@ export const retrievePlatformAnnouncements = async (
       include: {
         publisher: { select: { firstName: true, lastName: true, apartmentNumber: true } },
         parkingSlot: true,
-        applications: true
+        applications: {
+          include: {
+            applicant: { select: { firstName: true, lastName: true } }
+          }
+        }
       }
     }),
     prisma.parkingAnnouncement.count({ where: queryFilter })
@@ -37,7 +41,7 @@ export const retrievePlatformAnnouncements = async (
 export const retrieveAnnouncementById = async (announcementId: string) => {
   const announcementResult = await prisma.parkingAnnouncement.findUnique({
     where: { id: announcementId },
-    include: { publisher: { select: { firstName: true, lastName: true, apartmentNumber: true } }, parkingSlot: true, applications: true }
+    include: { publisher: { select: { firstName: true, lastName: true, apartmentNumber: true } }, parkingSlot: true, applications: { include: { applicant: { select: { firstName: true, lastName: true } } } } }
   });
   if (!announcementResult) throw new NotFoundError('Parking announcement not found');
   return announcementResult;
@@ -59,7 +63,11 @@ export const createTargetAnnouncement = async (
     include: {
       publisher: { select: { firstName: true, lastName: true, apartmentNumber: true } },
       parkingSlot: true,
-      applications: true
+      applications: {
+        include: {
+          applicant: { select: { firstName: true, lastName: true } }
+        }
+      }
     }
   });
 };

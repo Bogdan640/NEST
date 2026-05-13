@@ -1,50 +1,129 @@
 <div class="admin-page">
   <div class="admin-header">
-    <h1 class="page-title">Building Administration</h1>
+    <div class="header-text">
+      <h1 class="page-title">🏢 Building Administration</h1>
+      <p class="page-subtitle">Manage residents, monitor activity, and oversee your community</p>
+    </div>
+    <div class="stats-bar">
+      <div class="stat-chip">
+        <span class="stat-icon">👥</span>
+        <span class="stat-value">{{ residents().length }}</span>
+        <span class="stat-label">Residents</span>
+      </div>
+      <div class="stat-chip pending-chip">
+        <span class="stat-icon">⏳</span>
+        <span class="stat-value">{{ pendingRequests().length }}</span>
+        <span class="stat-label">Pending</span>
+      </div>
+    </div>
   </div>
-  
-  <div class="admin-card">
-    <h3>Pending Verification Requests</h3>
-    
-    @if (isLoading()) {
-      <div class="loading-state">
-        <span class="spinner"></span>
+
+  <!-- Tab Navigation -->
+  <div class="tab-bar">
+    <button class="tab-btn" [class.active]="activeTab() === 'residents'" (click)="setTab('residents')">
+      <span class="tab-icon">👥</span> Residents Directory
+    </button>
+    <button class="tab-btn" [class.active]="activeTab() === 'pending'" (click)="setTab('pending')">
+      <span class="tab-icon">📋</span> Pending Requests
+      @if (pendingRequests().length > 0) {
+        <span class="tab-badge">{{ pendingRequests().length }}</span>
+      }
+    </button>
+  </div>
+
+  <!-- Residents Tab -->
+  @if (activeTab() === 'residents') {
+    <div class="admin-card residents-card">
+      <div class="card-toolbar">
+        <div class="search-wrapper">
+          <span class="search-icon">🔍</span>
+          <input
+            type="text"
+            class="quick-filter"
+            placeholder="Search residents by name, email, tools..."
+            (input)="onFilterChange($event)"
+          />
+        </div>
       </div>
-    } @else if (pendingRequests().length === 0) {
-      <div class="empty-state">
-        <div class="empty-icon">✅</div>
-        <p>No pending requests.</p>
-      </div>
-    } @else {
-      <div class="table-container">
-        <table class="requests-table">
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Email</th>
-              <th>Apartment</th>
-              <th>Block</th>
-              <th>Date</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            @for (req of pendingRequests(); track req.id) {
+
+      @if (isResidentsLoading()) {
+        <div class="loading-state">
+          <span class="spinner"></span>
+          <p>Loading residents...</p>
+        </div>
+      } @else {
+        <div class="grid-container">
+          <ag-grid-angular
+            style="width: 100%; height: 680px;"
+            [theme]="theme"
+            [rowData]="residents()"
+            [columnDefs]="columnDefs"
+            [defaultColDef]="defaultColDef"
+            [quickFilterText]="quickFilterText()"
+            [rowHeight]="52"
+            [headerHeight]="44"
+            [animateRows]="true"
+            [pagination]="true"
+            [paginationPageSize]="10"
+            [paginationPageSizeSelector]="[10, 25, 50]"
+            (gridReady)="onGridReady($event)"
+          />
+        </div>
+      }
+    </div>
+  }
+
+  <!-- Pending Requests Tab -->
+  @if (activeTab() === 'pending') {
+    <div class="admin-card">
+      <h3>📋 Pending Verification Requests</h3>
+
+      @if (isLoading()) {
+        <div class="loading-state">
+          <span class="spinner"></span>
+        </div>
+      } @else if (pendingRequests().length === 0) {
+        <div class="empty-state">
+          <div class="empty-icon">✅</div>
+          <h3>All caught up!</h3>
+          <p>No pending requests at the moment.</p>
+        </div>
+      } @else {
+        <div class="table-container">
+          <table class="requests-table">
+            <thead>
               <tr>
-                <td>{{ req.user?.firstName }} {{ req.user?.lastName }}</td>
-                <td>{{ req.user?.email }}</td>
-                <td>{{ req.user?.apartmentNumber || '-' }}</td>
-                <td>{{ req.blockId }}</td>
-                <td>{{ req.createdAt | date:'shortDate' }}</td>
-                <td class="actions">
-                  <button class="btn-primary btn-sm" (click)="approve(req)">Approve</button>
-                  <button class="btn-secondary btn-sm" (click)="reject(req)">Reject</button>
-                </td>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Apartment</th>
+                <th>Block</th>
+                <th>Date</th>
+                <th>Actions</th>
               </tr>
-            }
-          </tbody>
-        </table>
-      </div>
-    }
-  </div>
+            </thead>
+            <tbody>
+              @for (req of pendingRequests(); track req.id) {
+                <tr>
+                  <td>
+                    <div class="name-cell">
+                      <div class="avatar-mini">{{ req.user?.firstName?.charAt(0) || 'U' }}</div>
+                      <span>{{ req.user?.firstName }} {{ req.user?.lastName }}</span>
+                    </div>
+                  </td>
+                  <td>{{ req.user?.email }}</td>
+                  <td>{{ req.user?.apartmentNumber || '-' }}</td>
+                  <td>{{ req.blockId }}</td>
+                  <td>{{ req.createdAt | date:'shortDate' }}</td>
+                  <td class="actions">
+                    <button class="btn-approve" (click)="approve(req)">✓ Approve</button>
+                    <button class="btn-reject" (click)="reject(req)">✕ Reject</button>
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      }
+    </div>
+  }
 </div>

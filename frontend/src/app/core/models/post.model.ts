@@ -13,6 +13,7 @@ export interface PostAuthor {
   firstName: string;
   lastName: string;
   profileImage: string | null;
+  coverImage: string | null;
 }
 
 export interface CreatePostRequest {

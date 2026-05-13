@@ -39,6 +39,23 @@ export const getFeedStatusController = async (req: AuthenticatedRequest, res: Re
   }
 };
 
+export const uploadFeedImageController = async (req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> => {
+  if (!req.user?.userId) {
+    res.status(401).json({ message: 'Authentication missing' });
+    return;
+  }
+  try {
+    if (!req.file) {
+      res.status(400).json({ message: 'No image file provided' });
+      return;
+    }
+    const imageUrl = `/uploads/${req.file.filename}`;
+    res.status(200).json({ imageUrl });
+  } catch (error) {
+    next(error);
+  }
+};
+
 export const createPostController = async (req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> => {
   if (!req.user?.userId) {
     res.status(401).json({ message: 'Authentication missing' });

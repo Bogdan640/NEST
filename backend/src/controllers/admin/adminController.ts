@@ -1,5 +1,5 @@
 import { Response, NextFunction } from 'express';
-import { getPendingUsers, approveUser, rejectUser, removeUser } from '../../services/admin/adminService';
+import { getPendingUsers, approveUser, rejectUser, removeUser, getBlockResidents } from '../../services/admin/adminService';
 import { AuthenticatedRequest } from '../../middlewares/authMiddleware';
 import prisma from '../../config/prisma';
 
@@ -82,6 +82,20 @@ export const removeUserController = async (req: AuthenticatedRequest, res: Respo
 
   try {
     const result = await removeUser(req.user.userId, req.params.userId as string);
+    res.status(200).json(result);
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const getBlockResidentsController = async (req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> => {
+  if (!req.user?.userId) {
+    res.status(401).json({ message: 'Authentication missing' });
+    return;
+  }
+
+  try {
+    const result = await getBlockResidents(req.user.userId);
     res.status(200).json(result);
   } catch (error) {
     next(error);

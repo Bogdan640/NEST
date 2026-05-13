@@ -122,4 +122,14 @@ export class ParkingEffects {
       )
     )
   );
+
+  refreshAnnouncements$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(
+        ParkingActions.applyToAnnouncementSuccess,
+        ParkingActions.approveApplicationSuccess
+      ),
+      map(() => ParkingActions.loadAnnouncements({ params: { page: 1, limit: 10 } }))
+    )
+  );
 }

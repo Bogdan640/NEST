@@ -6,6 +6,7 @@ export interface User {
   apartmentNumber: string;
   phoneNumber: string | null;
   profileImage: string | null;
+  coverImage: string | null;
   headline: string | null;
   about: string | null;
   preferences: UserPreferences;

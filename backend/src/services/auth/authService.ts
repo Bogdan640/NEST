@@ -26,17 +26,11 @@ export const authenticateResident = async (emailPayload: string, passwordPayload
     blockId: targetedUser.blockId
   });
 
+  const { passwordHash, ...userWithoutPassword } = targetedUser;
+
   return {
     token: generatedJwtToken,
-    user: {
-      id: targetedUser.id,
-      email: targetedUser.email,
-      firstName: targetedUser.firstName,
-      lastName: targetedUser.lastName,
-      role: targetedUser.role,
-      isVerified: targetedUser.isVerified,
-      blockId: targetedUser.blockId
-    },
+    user: userWithoutPassword,
     permissions: getPermissionsForRole(targetedUser.role)
   };
 };
@@ -73,17 +67,11 @@ export const registerResident = async (
     blockId: newUser.blockId
   });
 
+  const { passwordHash: _hash, ...userWithoutPassword } = newUser;
+
   return {
     token: generatedJwtToken,
-    user: {
-      id: newUser.id,
-      email: newUser.email,
-      firstName: newUser.firstName,
-      lastName: newUser.lastName,
-      role: newUser.role,
-      isVerified: newUser.isVerified,
-      blockId: newUser.blockId
-    },
+    user: userWithoutPassword,
     permissions: getPermissionsForRole(newUser.role)
   };
 };

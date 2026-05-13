@@ -49,8 +49,10 @@ export const parkingReducer = createReducer(
   on(ParkingActions.createSlotFailure, (state, { error }) => ({ ...state, isLoading: false, error })),
 
   on(ParkingActions.applyToAnnouncement, (state) => ({ ...state, isLoading: true, error: null })),
+  on(ParkingActions.applyToAnnouncementSuccess, (state) => ({ ...state, isLoading: false })),
   on(ParkingActions.applyToAnnouncementFailure, (state, { error }) => ({ ...state, isLoading: false, error })),
 
   on(ParkingActions.approveApplication, (state) => ({ ...state, isLoading: true, error: null })),
+  on(ParkingActions.approveApplicationSuccess, (state) => ({ ...state, isLoading: false })),
   on(ParkingActions.approveApplicationFailure, (state, { error }) => ({ ...state, isLoading: false, error }))
 );

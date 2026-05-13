@@ -11,6 +11,7 @@ export const API_ENDPOINTS = {
   },
   FEED: {
     BASE: `${BASE}/feed`,
+    IMAGE: `${BASE}/feed/image`,
     STATUS: `${BASE}/feed/status`,
     BY_ID: (id: string) => `${BASE}/feed/${id}`,
   },
@@ -36,10 +37,13 @@ export const API_ENDPOINTS = {
   USER: {
     ME: `${BASE}/users/me`,
     PREFERENCES: `${BASE}/users/me/preferences`,
+    UPLOAD_PROFILE_IMAGE: `${BASE}/users/me/profile-image`,
+    UPLOAD_COVER_IMAGE: `${BASE}/users/me/cover-image`,
     BY_ID: (id: string) => `${BASE}/users/${id}`,
   },
   ADMIN: {
     PENDING_USERS: `${BASE}/admin/pending-users`,
+    BLOCK_RESIDENTS: `${BASE}/admin/block-residents`,
     APPROVE_USER: (userId: string) => `${BASE}/admin/users/${userId}/approve`,
     REJECT_USER: (userId: string) => `${BASE}/admin/users/${userId}/reject`,
     REMOVE_USER: (userId: string) => `${BASE}/admin/users/${userId}`,

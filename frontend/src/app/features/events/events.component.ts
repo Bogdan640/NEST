@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, signal, computed, OnDestroy } from '@angular/core';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators, AbstractControl, ValidationErrors } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -41,6 +41,23 @@ export class EventsComponent {
 
   eventTypes: EventType[] = ['SOCIAL', 'MEETING', 'MAINTENANCE', 'OTHER'];
   today = new Date();
+
+  now = signal(new Date());
+  private intervalId: any;
+
+  constructor() {
+    // Update 'now' every minute to dynamically trigger expiration
+    this.intervalId = setInterval(() => this.now.set(new Date()), 60000);
+  }
+
+  ngOnDestroy() {
+    if (this.intervalId) clearInterval(this.intervalId);
+  }
+
+  activeEvents = computed(() => {
+    const currentNow = this.now();
+    return this.events().filter(e => new Date(e.endTime) >= currentNow);
+  });
 
   /** Min time for start: if start date is today, min time = now */
   get minStartTime(): string {

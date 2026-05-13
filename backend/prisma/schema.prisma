@@ -17,6 +17,7 @@ model User {
 
   phoneNumber           String?               
   profileImage          String?
+  coverImage            String?
   headline              String?
   about                 String?
 

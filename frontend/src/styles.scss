@@ -1,6 +1,7 @@
 /* Angular Material Theme */
 @use '@angular/material' as mat;
 
+
 /* Apply a custom emerald-green Material theme */
 html {
   @include mat.theme((

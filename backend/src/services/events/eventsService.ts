@@ -9,7 +9,11 @@ export const retrieveAllEvents = async (
   page: number = 1,
   limit: number = 20
 ) => {
-  const queryFilter: any = {};
+  const queryFilter: any = {
+    endTime: {
+      gte: new Date()
+    }
+  };
   if (search) {
     queryFilter.OR = [
       { title: { contains: search } },

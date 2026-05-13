@@ -1,6 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 import morgan from 'morgan';
+import path from 'path';
 import { swaggerServe, swaggerSetup } from './config/swagger';
 import { globalErrorHandler } from './middlewares/errorHandler';
 import { generalLimiter, authLimiter } from './middlewares/rateLimiter';
@@ -18,6 +19,9 @@ app.use(cors({ origin: process.env.CORS_ORIGIN || 'http://localhost:4200' }));
 app.use(express.json());
 app.use(morgan('dev'));
 app.use(generalLimiter);
+
+// Serve uploaded files statically
+app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
 
 app.use('/api-docs', swaggerServe, swaggerSetup);
 app.use('/api/v1/auth', authLimiter, authRouter);

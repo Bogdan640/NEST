@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
 import { AuthFacade } from '../store/auth/auth.facade';
 import { NAV_ITEMS } from '../core/constants/ui';
@@ -17,6 +17,11 @@ export class LayoutComponent {
   currentUser = this.authFacade.currentUser;
   userFullName = this.authFacade.userFullName;
   isAdmin = this.authFacade.isAdmin;
+  sidebarCollapsed = signal(false);
+
+  toggleSidebar(): void {
+    this.sidebarCollapsed.update(v => !v);
+  }
 
   onLogout(): void {
     this.authFacade.logout();
