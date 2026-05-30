@@ -21,7 +21,7 @@ model User {
   headline              String?
   about                 String?
 
-  preferences           String                @default("{\"theme\": \"light\", \"isPhonePublic\": false}")
+  preferences           String                @default("{\"theme\": \"light\", \"isPhonePublic\": false, \"notifyResourceAvailable\": true, \"notifyEventReminders\": true, \"notifyNewPosts\": true, \"browserNotifications\": false}")
 
   role                  String                @default("RESIDENT")
   isVerified            Boolean               @default(false)

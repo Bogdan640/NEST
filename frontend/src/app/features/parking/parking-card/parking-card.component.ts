@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, input, output, computed, signal } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { ParkingAnnouncement } from '../../../core/models/parking.model';
 import { ConfirmDialogComponent } from '../../../shared/components/confirm-dialog/confirm-dialog.component';
@@ -11,36 +11,39 @@ import { ConfirmDialogComponent } from '../../../shared/components/confirm-dialo
   styleUrl: './parking-card.component.scss',
 })
 export class ParkingCardComponent {
-  @Input({ required: true }) announcement!: ParkingAnnouncement;
-  @Input() currentUserId: string | undefined;
-  @Input() canDelete = false;
+  readonly announcement = input.required<ParkingAnnouncement>();
+  readonly currentUserId = input<string | undefined>();
+  readonly canDelete = input(false);
 
-  @Output() applyClicked = new EventEmitter<string>();
-  @Output() approveClicked = new EventEmitter<string>();
-  @Output() deleteClicked = new EventEmitter<string>();
+  readonly applyClicked = output<string>();
+  readonly approveClicked = output<string>();
+  readonly deleteClicked = output<string>();
 
-  showDeleteConfirm = false;
+  readonly showDeleteConfirm = signal(false);
 
-  get hasApplied(): boolean {
-    if (!this.currentUserId || !this.announcement.applications) return false;
-    return this.announcement.applications.some(a => a.applicantId === this.currentUserId);
-  }
+  readonly hasApplied = computed(() => {
+    const userId = this.currentUserId();
+    const apps = this.announcement().applications;
+    if (!userId || !apps) return false;
+    return apps.some(a => a.applicantId === userId);
+  });
 
-  get isMyAnnouncement(): boolean {
-    return this.currentUserId === this.announcement.publisherId;
-  }
+  readonly isMyAnnouncement = computed(() => {
+    return this.currentUserId() === this.announcement().publisherId;
+  });
 
-  get approvedApplication() {
-    if (!this.announcement.applications) return null;
-    return this.announcement.applications.find(a => a.status === 'APPROVED');
-  }
+  readonly approvedApplication = computed(() => {
+    const apps = this.announcement().applications;
+    if (!apps) return null;
+    return apps.find(a => a.status === 'APPROVED') ?? null;
+  });
 
-  get isAvailable(): boolean {
-    return !this.approvedApplication && new Date(this.announcement.availableTo) > new Date();
-  }
+  readonly isAvailable = computed(() => {
+    return !this.approvedApplication() && new Date(this.announcement().availableTo) > new Date();
+  });
 
   onApply(): void {
-    this.applyClicked.emit(this.announcement.id);
+    this.applyClicked.emit(this.announcement().id);
   }
 
   onApprove(applicationId: string): void {
@@ -48,15 +51,15 @@ export class ParkingCardComponent {
   }
 
   onDelete(): void {
-    this.showDeleteConfirm = true;
+    this.showDeleteConfirm.set(true);
   }
 
   confirmDelete(): void {
-    this.showDeleteConfirm = false;
-    this.deleteClicked.emit(this.announcement.id);
+    this.showDeleteConfirm.set(false);
+    this.deleteClicked.emit(this.announcement().id);
   }
 
   cancelDelete(): void {
-    this.showDeleteConfirm = false;
+    this.showDeleteConfirm.set(false);
   }
 }

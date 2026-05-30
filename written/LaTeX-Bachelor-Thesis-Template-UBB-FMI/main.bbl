@@ -1,0 +1,51 @@
+\begin{thebibliography}{1}
+
+\bibitem{putnam2000bowling}
+Robert~D Putnam.
+\newblock {\em Bowling Alone: The Collapse and Revival of American Community}.
+\newblock Simon and Schuster, 2000.
+
+\bibitem{hampton2003neighboring}
+Keith Hampton and Barry Wellman.
+\newblock Neighboring in netville: How the internet supports community and
+  social capital in a wired suburb.
+\newblock {\em City \& Community}, 2(4):277--311, 2003.
+
+\bibitem{masden2014tensions}
+Christina~A Masden, Catherine Grevet, Rebecca~E Grinter, Eric Gilbert, and
+  W~Keith Edwards.
+\newblock Tensions in scaling-up community social media: A multi-neighborhood
+  study of nextdoor.
+\newblock In {\em Proceedings of the SIGCHI Conference on Human Factors in
+  Computing Systems}, pages 3239--3248, 2014.
+
+\bibitem{angularDocs}
+{Google LLC}.
+\newblock {Angular Documentation}.
+\newblock \url{https://angular.io/docs}, 2024.
+\newblock Accessed: 2026-05-04.
+
+\bibitem{ngrxDocs}
+{NgRx Team}.
+\newblock {NgRx Documentation}.
+\newblock \url{https://ngrx.io/docs}, 2024.
+\newblock Accessed: 2026-05-04.
+
+\bibitem{expressDocs}
+{OpenJS Foundation}.
+\newblock {Express.js Documentation}.
+\newblock \url{https://expressjs.com/}, 2024.
+\newblock Accessed: 2026-05-04.
+
+\bibitem{norman1986cognitive}
+Donald~A Norman.
+\newblock Cognitive engineering.
+\newblock {\em User centered system design: New perspectives on human-computer
+  interaction}, 31(61):31--61, 1986.
+
+\bibitem{fowler2002patterns}
+Martin Fowler.
+\newblock {\em Patterns of Enterprise Application Architecture}.
+\newblock Addison-Wesley Professional, 2002.
+
+\end{thebibliography}

@@ -1,11 +1,176 @@
 <div class="settings-page">
   <div class="settings-header">
-    <h1 class="page-title">App Settings</h1>
+    <h1 class="page-title">⚙️ Settings</h1>
+    <p class="page-subtitle">Customize your NEST experience</p>
   </div>
-  
-  <div class="settings-card">
-    <div class="empty-icon">⚙️</div>
-    <h3>Preferences</h3>
-    <p>Notification settings, appearance, and privacy options will go here.</p>
-  </div>
+
+  <!-- ── Appearance Section ── -->
+  <section class="settings-section">
+    <div class="section-header">
+      <span class="section-icon">🎨</span>
+      <div>
+        <h2 class="section-title">Appearance</h2>
+        <p class="section-description">Choose how NEST looks to you</p>
+      </div>
+    </div>
+
+    <div class="theme-selector">
+      <button
+        class="theme-card"
+        [class.active]="!isDark()"
+        (click)="setTheme('light')"
+        id="theme-light-btn"
+      >
+        <div class="theme-preview light-preview">
+          <div class="preview-sidebar"></div>
+          <div class="preview-content">
+            <div class="preview-line short"></div>
+            <div class="preview-line"></div>
+            <div class="preview-line medium"></div>
+          </div>
+        </div>
+        <span class="theme-label">☀️ Light</span>
+      </button>
+
+      <button
+        class="theme-card"
+        [class.active]="isDark()"
+        (click)="setTheme('dark')"
+        id="theme-dark-btn"
+      >
+        <div class="theme-preview dark-preview">
+          <div class="preview-sidebar"></div>
+          <div class="preview-content">
+            <div class="preview-line short"></div>
+            <div class="preview-line"></div>
+            <div class="preview-line medium"></div>
+          </div>
+        </div>
+        <span class="theme-label">🌙 Dark</span>
+      </button>
+    </div>
+  </section>
+
+  <!-- ── Notifications Section ── -->
+  <section class="settings-section">
+    <div class="section-header">
+      <span class="section-icon">🔔</span>
+      <div>
+        <h2 class="section-title">Notifications</h2>
+        <p class="section-description">Control what alerts you receive</p>
+      </div>
+    </div>
+
+    <div class="toggle-list">
+      <div class="toggle-row">
+        <div class="toggle-info">
+          <span class="toggle-emoji">🛠️</span>
+          <div>
+            <h3 class="toggle-label">Resource Availability</h3>
+            <p class="toggle-description">Get notified when a Shared Shed item becomes available</p>
+          </div>
+        </div>
+        <label class="toggle-switch" id="toggle-resource">
+          <input
+            type="checkbox"
+            [checked]="preferences().notifyResourceAvailable"
+            (change)="onPreferenceChange('notifyResourceAvailable', $any($event.target).checked)"
+          />
+          <span class="toggle-slider"></span>
+        </label>
+      </div>
+
+      <div class="toggle-row">
+        <div class="toggle-info">
+          <span class="toggle-emoji">📅</span>
+          <div>
+            <h3 class="toggle-label">Event Reminders</h3>
+            <p class="toggle-description">Receive reminders about upcoming events you've joined</p>
+          </div>
+        </div>
+        <label class="toggle-switch" id="toggle-events">
+          <input
+            type="checkbox"
+            [checked]="preferences().notifyEventReminders"
+            (change)="onPreferenceChange('notifyEventReminders', $any($event.target).checked)"
+          />
+          <span class="toggle-slider"></span>
+        </label>
+      </div>
+
+      <div class="toggle-row">
+        <div class="toggle-info">
+          <span class="toggle-emoji">🐦</span>
+          <div>
+            <h3 class="toggle-label">New Posts</h3>
+            <p class="toggle-description">Get notified when neighbors publish new posts in the Feed</p>
+          </div>
+        </div>
+        <label class="toggle-switch" id="toggle-posts">
+          <input
+            type="checkbox"
+            [checked]="preferences().notifyNewPosts"
+            (change)="onPreferenceChange('notifyNewPosts', $any($event.target).checked)"
+          />
+          <span class="toggle-slider"></span>
+        </label>
+      </div>
+
+      <div class="toggle-row">
+        <div class="toggle-info">
+          <span class="toggle-emoji">🖥️</span>
+          <div>
+            <h3 class="toggle-label">Browser Notifications</h3>
+            <p class="toggle-description">Enable desktop push notifications (requires browser permission)</p>
+          </div>
+        </div>
+        <label class="toggle-switch" id="toggle-browser">
+          <input
+            type="checkbox"
+            [checked]="preferences().browserNotifications"
+            (change)="onBrowserNotificationsToggle($any($event.target).checked)"
+          />
+          <span class="toggle-slider"></span>
+        </label>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Privacy Section ── -->
+  <section class="settings-section">
+    <div class="section-header">
+      <span class="section-icon">🔒</span>
+      <div>
+        <h2 class="section-title">Privacy</h2>
+        <p class="section-description">Manage your visibility to other residents</p>
+      </div>
+    </div>
+
+    <div class="toggle-list">
+      <div class="toggle-row">
+        <div class="toggle-info">
+          <span class="toggle-emoji">📞</span>
+          <div>
+            <h3 class="toggle-label">Show Phone Number</h3>
+            <p class="toggle-description">Allow other residents to see your phone number on your profile</p>
+          </div>
+        </div>
+        <label class="toggle-switch" id="toggle-phone">
+          <input
+            type="checkbox"
+            [checked]="preferences().isPhonePublic"
+            (change)="onPreferenceChange('isPhonePublic', $any($event.target).checked)"
+          />
+          <span class="toggle-slider"></span>
+        </label>
+      </div>
+    </div>
+  </section>
+
+  @if (isSaving()) {
+    <div class="saving-indicator">
+      <div class="saving-spinner"></div>
+      <span>Saving...</span>
+    </div>
+  }
 </div>

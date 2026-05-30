@@ -24,7 +24,6 @@ export class ShedComponent {
   currentUser = this.authFacade.currentUser;
 
   showCreateForm = signal(false);
-  isSubmitting = signal(false);
   activeTab = signal<'browse' | 'borrowed'>('browse');
 
   resourceTypes: ResourceType[] = ['TOOL', 'BOOK', 'OTHER'];
@@ -35,19 +34,17 @@ export class ShedComponent {
     type: ['TOOL' as ResourceType, [Validators.required]],
   });
 
-  /** Items available for browsing (not owned by me, or all items) */
-  get browseItems() {
-    return this.resources();
-  }
+  /** Items available for browsing */
+  browseItems = computed(() => this.resources());
 
   /** Items I'm currently borrowing (have an APPROVED reservation) */
-  get myBorrowedItems() {
+  myBorrowedItems = computed(() => {
     const user = this.currentUser();
     if (!user) return [];
     return this.resources().filter(r =>
       r.reservations?.some(res => res.borrowerId === user.id && res.status === 'APPROVED')
     );
-  }
+  });
 
   setTab(tab: 'browse' | 'borrowed'): void {
     this.activeTab.set(tab);
@@ -60,14 +57,11 @@ export class ShedComponent {
   onSubmit(): void {
     if (this.newResourceForm.invalid) return;
     
-    this.isSubmitting.set(true);
     const formValue = this.newResourceForm.getRawValue();
-    
     this.shedFacade.createResource(formValue);
     
     this.newResourceForm.reset({ type: 'TOOL' });
     this.showCreateForm.set(false);
-    this.isSubmitting.set(false);
   }
 
   onDeleteResource(id: string): void {

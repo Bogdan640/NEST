@@ -2,7 +2,7 @@ import { Injectable, inject } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { EventsActions } from './events.actions';
 import { EventsApiService } from '../../core/api/events-api.service';
-import { catchError, map, mergeMap, of, tap } from 'rxjs';
+import { catchError, map, switchMap, mergeMap, of } from 'rxjs';
 import { AuthFacade } from '../auth/auth.facade';
 import { ToastService } from '../../shared/services/toast.service';
 
@@ -16,7 +16,7 @@ export class EventsEffects {
   loadEvents$ = createEffect(() =>
     this.actions$.pipe(
       ofType(EventsActions.loadEvents),
-      mergeMap(({ params }) =>
+      switchMap(({ params }) =>
         this.eventsApi.getEvents(params).pipe(
           map((response) => EventsActions.loadEventsSuccess({ response })),
           catchError((error) => {

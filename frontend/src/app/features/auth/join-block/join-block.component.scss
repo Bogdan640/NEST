@@ -4,7 +4,8 @@
   align-items: center;
   justify-content: center;
   padding: 1.5rem;
-  background-color: #ecfdf5;
+  background-color: var(--auth-page-bg);
+  transition: background-color 0.3s ease;
 }
 
 .join-content {
@@ -21,13 +22,13 @@
 .join-title {
   font-size: 2.25rem;
   font-weight: 800;
-  color: #064e3b;
+  color: var(--auth-title-color);
   margin: 0 0 1rem;
   letter-spacing: -0.025em;
 }
 
 .join-subtitle {
-  color: #059669;
+  color: var(--auth-subtitle-color);
   font-size: 1.125rem;
   font-weight: 500;
   margin: 0 0 2.5rem;
@@ -35,8 +36,8 @@
 }
 
 .join-error {
-  background: #fef2f2;
-  color: #dc2626;
+  background: var(--color-danger-bg);
+  color: var(--color-danger);
   padding: 0.75rem 1rem;
   border-radius: 1rem;
   font-size: 0.875rem;
@@ -56,11 +57,11 @@
   font-size: 1.875rem;
   letter-spacing: 0.15em;
   padding: 1.5rem;
-  background: #fff;
-  border: 2px solid #a7f3d0;
+  background: var(--color-surface);
+  border: 2px solid var(--color-emerald-200);
   border-radius: 2rem;
   font-weight: 700;
-  color: #064e3b;
+  color: var(--auth-input-color);
   outline: none;
   text-transform: uppercase;
   transition: border-color 0.2s, box-shadow 0.2s;
@@ -68,12 +69,12 @@
   box-sizing: border-box;
 
   &::placeholder {
-    color: #a7f3d0;
+    color: var(--color-emerald-200);
     text-transform: none;
   }
 
   &:focus {
-    border-color: #f59e0b;
+    border-color: var(--color-amber-500);
     box-shadow: 0 0 0 4px rgba(245, 158, 11, 0.2);
   }
 }
@@ -81,7 +82,7 @@
 .btn-accent {
   width: 100%;
   padding: 1.25rem;
-  background: #f59e0b;
+  background: var(--color-amber-500);
   color: #451a03;
   border: none;
   border-radius: 1.5rem;
@@ -92,7 +93,7 @@
   box-shadow: 0 10px 25px -5px rgba(245, 158, 11, 0.3);
 
   &:hover:not(:disabled) {
-    background: #fbbf24;
+    background: var(--color-amber-600);
   }
 
   &:active:not(:disabled) {

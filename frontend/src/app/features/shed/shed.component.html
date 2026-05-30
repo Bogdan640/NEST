@@ -36,7 +36,7 @@
         
         <div class="form-actions">
           <button type="button" class="btn-secondary" (click)="toggleForm()">Cancel</button>
-          <button type="submit" class="btn-primary" [disabled]="newResourceForm.invalid || isSubmitting()">
+          <button type="submit" class="btn-primary" [disabled]="newResourceForm.invalid || isLoading()">
             Share Item
           </button>
         </div>
@@ -59,8 +59,8 @@
       (click)="setTab('borrowed')"
     >
       📦 My Borrowed Items
-      @if (myBorrowedItems.length > 0) {
-        <span class="badge">{{ myBorrowedItems.length }}</span>
+      @if (myBorrowedItems().length > 0) {
+        <span class="badge">{{ myBorrowedItems().length }}</span>
       }
     </button>
   </div>
@@ -71,12 +71,12 @@
 
   <!-- Browse Tab -->
   @if (activeTab() === 'browse') {
-    @if (isLoading() && browseItems.length === 0) {
+    @if (isLoading() && browseItems().length === 0) {
       <div class="loading-state">
         <span class="spinner"></span>
         <p>Loading shed items...</p>
       </div>
-    } @else if (browseItems.length === 0) {
+    } @else if (browseItems().length === 0) {
       <div class="empty-state">
         <div class="empty-icon">🛠️</div>
         <h3>The shed is empty</h3>
@@ -85,7 +85,7 @@
       </div>
     } @else {
       <div class="resources-grid">
-        @for (resource of browseItems; track resource.id) {
+        @for (resource of browseItems(); track resource.id) {
           <app-resource-card
             [resource]="resource"
             [currentUserId]="currentUser()?.id"
@@ -102,7 +102,7 @@
 
   <!-- My Borrowed Tab -->
   @if (activeTab() === 'borrowed') {
-    @if (myBorrowedItems.length === 0) {
+    @if (myBorrowedItems().length === 0) {
       <div class="empty-state">
         <div class="empty-icon">📦</div>
         <h3>No borrowed items</h3>
@@ -111,7 +111,7 @@
       </div>
     } @else {
       <div class="resources-grid">
-        @for (resource of myBorrowedItems; track resource.id) {
+        @for (resource of myBorrowedItems(); track resource.id) {
           <app-resource-card
             [resource]="resource"
             [currentUserId]="currentUser()?.id"

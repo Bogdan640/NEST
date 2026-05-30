@@ -20,6 +20,7 @@ export const AuthActions = createActionGroup({
     'Load Permissions Success': props<{ permissions: string[] }>(),
 
     'Restore Session': props<{ user: User; token: string }>(),
+    'Update User': props<{ user: User }>(),
     'Logout': emptyProps(),
     'Clear Error': emptyProps(),
   },

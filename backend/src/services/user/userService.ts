@@ -1,58 +1,82 @@
 import prisma from '../../config/prisma';
 import { NotFoundError } from '../../utils/errors';
 
+const DEFAULT_PREFERENCES = {
+  theme: 'light',
+  isPhonePublic: false,
+  notifyResourceAvailable: true,
+  notifyEventReminders: true,
+  notifyNewPosts: true,
+  browserNotifications: false,
+};
+
+const USER_SELECT = {
+  id: true,
+  email: true,
+  firstName: true,
+  lastName: true,
+  apartmentNumber: true,
+  phoneNumber: true,
+  profileImage: true,
+  coverImage: true,
+  headline: true,
+  about: true,
+  preferences: true,
+  role: true,
+  isVerified: true,
+  blockId: true,
+  createdAt: true,
+  updatedAt: true,
+} as const;
+
+/**
+ * Safely parse the preferences JSON string and merge with defaults
+ * so existing users without new fields still get them.
+ */
+function parsePreferences(prefsString: string): Record<string, unknown> {
+  try {
+    return { ...DEFAULT_PREFERENCES, ...JSON.parse(prefsString) };
+  } catch {
+    return { ...DEFAULT_PREFERENCES };
+  }
+}
+
+/**
+ * Transform a raw user row: parse the preferences JSON string into an object.
+ */
+function transformUser(user: any) {
+  return {
+    ...user,
+    preferences: parsePreferences(user.preferences),
+  };
+}
+
 export const getCurrentUserProfile = async (userId: string) => {
   const user = await prisma.user.findUnique({
     where: { id: userId },
     select: {
-      id: true,
-      email: true,
-      firstName: true,
-      lastName: true,
-      apartmentNumber: true,
-      phoneNumber: true,
-      profileImage: true,
-      coverImage: true,
-      headline: true,
-      about: true,
-      preferences: true,
-      role: true,
-      isVerified: true,
-      blockId: true,
+      ...USER_SELECT,
       block: { select: { id: true, name: true, address: true } },
-      createdAt: true
     }
   });
 
   if (!user) throw new NotFoundError('User not found');
-  return user;
+  return transformUser(user);
 };
 
 export const getUserProfileById = async (targetUserId: string) => {
   const user = await prisma.user.findUnique({
     where: { id: targetUserId },
     select: {
-      id: true,
-      firstName: true,
-      lastName: true,
-      apartmentNumber: true,
-      phoneNumber: true,
-      profileImage: true,
-      coverImage: true,
-      headline: true,
-      about: true,
-      preferences: true,
-      role: true,
+      ...USER_SELECT,
       block: { select: { id: true, name: true } },
-      createdAt: true
     }
   });
 
   if (!user) throw new NotFoundError('User not found');
 
-  const prefs = JSON.parse(user.preferences);
-  const result: any = { ...user };
-  if (!prefs.isPhonePublic) {
+  const result = transformUser(user);
+  if (!result.preferences.isPhonePublic) {
     delete result.phoneNumber;
   }
 
@@ -74,41 +98,27 @@ export const updateUserProfile = async (
   const user = await prisma.user.findUnique({ where: { id: userId } });
   if (!user) throw new NotFoundError('User not found');
 
-  return await prisma.user.update({
+  const updated = await prisma.user.update({
     where: { id: userId },
     data,
-    select: {
-      id: true,
-      email: true,
-      firstName: true,
-      lastName: true,
-      apartmentNumber: true,
-      phoneNumber: true,
-      profileImage: true,
-      coverImage: true,
-      headline: true,
-      about: true,
-      preferences: true,
-      role: true,
-      isVerified: true,
-      blockId: true
-    }
+    select: USER_SELECT,
   });
+
+  return transformUser(updated);
 };
 
-export const updateUserPreferences = async (userId: string, preferences: { theme?: string; isPhonePublic?: boolean }) => {
+export const updateUserPreferences = async (userId: string, preferences: Record<string, unknown>) => {
   const user = await prisma.user.findUnique({ where: { id: userId } });
   if (!user) throw new NotFoundError('User not found');
 
-  const currentPrefs = JSON.parse(user.preferences);
+  const currentPrefs = parsePreferences(user.preferences);
   const updatedPrefs = { ...currentPrefs, ...preferences };
 
-  return await prisma.user.update({
+  const updated = await prisma.user.update({
     where: { id: userId },
     data: { preferences: JSON.stringify(updatedPrefs) },
-    select: {
-      id: true,
-      preferences: true
-    }
+    select: USER_SELECT,
   });
+
+  return transformUser(updated);
 };

@@ -1,0 +1,14 @@
+// ============================================================
+// SHARED STYLES — Barrel File
+// ============================================================
+// Import this single file in any component or global stylesheet
+// to gain access to all design tokens.
+//
+// NOTE: _colors.scss defines CSS custom properties on :root
+// and [data-theme="dark"], so it must be imported ONCE in
+// a global context (styles.scss). The other files only
+// define SCSS variables so they can be imported anywhere.
+// ============================================================
+
+@forward 'spacing';
+@forward 'layout';

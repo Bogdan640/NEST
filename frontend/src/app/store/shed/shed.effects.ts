@@ -2,8 +2,9 @@ import { Injectable, inject } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { ShedActions } from './shed.actions';
 import { ShedApiService } from '../../core/api/shed-api.service';
-import { catchError, map, mergeMap, of, tap } from 'rxjs';
+import { catchError, map, switchMap, mergeMap, of } from 'rxjs';
 import { ToastService } from '../../shared/services/toast.service';
+import { DEFAULT_SHED_PAGE_SIZE, FIRST_PAGE } from '../../core/constants/ui';
 
 @Injectable()
 export class ShedEffects {
@@ -14,7 +15,7 @@ export class ShedEffects {
   loadResources$ = createEffect(() =>
     this.actions$.pipe(
       ofType(ShedActions.loadResources),
-      mergeMap(({ params }) =>
+      switchMap(({ params }) =>
         this.shedApi.getResources(params).pipe(
           map((response) => ShedActions.loadResourcesSuccess({ response })),
           catchError((error) => {
@@ -110,7 +111,7 @@ export class ShedEffects {
   reloadOnSuccess$ = createEffect(() =>
     this.actions$.pipe(
       ofType(ShedActions.reserveResourceSuccess, ShedActions.returnResourceSuccess),
-      map(() => ShedActions.loadResources({ params: { page: 1, limit: 50 } }))
+      map(() => ShedActions.loadResources({ params: { page: FIRST_PAGE, limit: DEFAULT_SHED_PAGE_SIZE } }))
     )
   );
 }

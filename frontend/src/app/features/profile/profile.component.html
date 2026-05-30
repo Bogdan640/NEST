@@ -2,8 +2,8 @@
   @if (currentUser()) {
     <!-- Profile Banner -->
     <div class="profile-banner" (click)="coverInput.click()" title="Change cover image">
-      @if (coverImageUrl) {
-        <img [src]="coverImageUrl" alt="Cover" class="banner-image" />
+      @if (coverImageUrl()) {
+        <img [src]="coverImageUrl()" alt="Cover" class="banner-image" />
       } @else {
         <div class="banner-gradient"></div>
       }
@@ -16,10 +16,10 @@
     <!-- Profile Avatar (separate from banner to fix centering) -->
     <div class="profile-avatar-area">
       <div class="profile-avatar-wrapper" (click)="avatarInput.click()" title="Change profile picture">
-        @if (profileImageUrl) {
-          <img [src]="profileImageUrl" alt="Profile" class="profile-avatar-img" />
+        @if (profileImageUrl()) {
+          <img [src]="profileImageUrl()" alt="Profile" class="profile-avatar-img" />
         } @else {
-          <div class="profile-avatar">{{ userInitials }}</div>
+          <div class="profile-avatar">{{ userInitials() }}</div>
         }
         <div class="avatar-overlay">
           {{ isUploadingProfile() ? '⏳' : '📷' }}
@@ -65,7 +65,7 @@
           <div class="info-tile">
             <span class="tile-icon">📅</span>
             <span class="tile-label">Member Since</span>
-            <span class="tile-value">{{ memberSince }}</span>
+            <span class="tile-value">{{ memberSince() }}</span>
           </div>
         </div>
 
@@ -103,7 +103,7 @@
             </div>
             <div class="form-group full-width">
               <label><span class="field-icon">📅</span> Registered Date</label>
-              <input type="text" [value]="exactMemberSince" class="form-control" disabled style="background: rgba(0,0,0,0.05); cursor: not-allowed;" />
+              <input type="text" [value]="exactMemberSince()" class="form-control" disabled style="background: var(--form-input-disabled-bg); cursor: not-allowed;" />
             </div>
             <div class="form-group full-width">
               <label><span class="field-icon">💡</span> Headline</label>
@@ -130,14 +130,14 @@
     <!-- Borrowed Tools Section -->
     <div class="section-card">
       <h2 class="section-title"><span class="section-icon">🔧</span> My Borrowed Tools</h2>
-      @if (borrowedTools.length === 0) {
+      @if (borrowedTools().length === 0) {
         <div class="empty-mini">
           <span class="empty-mini-icon">📦</span>
           <p>You haven't borrowed any tools yet. Visit the <strong>Shared Shed</strong> to find items!</p>
         </div>
       } @else {
         <div class="tools-grid">
-          @for (item of borrowedTools; track item.resource.id) {
+          @for (item of borrowedTools(); track item.resource.id) {
             <div class="tool-card">
               <div class="tool-type" [class]="item.resource.type.toLowerCase()">{{ item.resource.type }}</div>
               <h4>{{ item.resource.name }}</h4>

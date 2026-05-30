@@ -1,6 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { Store } from '@ngrx/store';
-import * as EventsSelectors from './events.selectors';
+import { selectEventsList, selectEventsTotalCount, selectEventsIsLoading, selectEventsError } from './events.selectors';
 import { EventsActions } from './events.actions';
 import { CreateEventRequest, UpdateEventRequest } from '../../core/models/event.model';
 import { PaginationParams } from '../../core/models/paginated-response.model';
@@ -9,10 +9,10 @@ import { PaginationParams } from '../../core/models/paginated-response.model';
 export class EventsFacade {
   private store = inject(Store);
 
-  events = this.store.selectSignal(EventsSelectors.selectEvents);
-  totalCount = this.store.selectSignal(EventsSelectors.selectTotalCount);
-  isLoading = this.store.selectSignal(EventsSelectors.selectIsLoading);
-  error = this.store.selectSignal(EventsSelectors.selectError);
+  events = this.store.selectSignal(selectEventsList);
+  totalCount = this.store.selectSignal(selectEventsTotalCount);
+  isLoading = this.store.selectSignal(selectEventsIsLoading);
+  error = this.store.selectSignal(selectEventsError);
 
   loadEvents(params: PaginationParams): void {
     this.store.dispatch(EventsActions.loadEvents({ params }));

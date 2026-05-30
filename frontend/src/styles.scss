@@ -1,7 +1,6 @@
 /* Angular Material Theme */
 @use '@angular/material' as mat;
 
-
 /* Apply a custom emerald-green Material theme */
 html {
   @include mat.theme((
@@ -14,6 +13,9 @@ html {
   ));
 }
 
+/* Shared Design System — Color Tokens (light + dark themes) */
+@import 'app/shared/styles/colors';
+
 /* Global Styles */
 @import 'styles/variables';
 @import 'styles/mixins';
@@ -22,9 +24,10 @@ html {
 
 body {
   margin: 0;
-  background-color: $color-bg;
-  color: $color-text-primary;
+  background-color: var(--color-bg);
+  color: var(--color-text-primary);
   min-height: 100vh;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 * {
@@ -33,24 +36,24 @@ body {
 
 /* Material datepicker overrides for emerald theme */
 .mat-datepicker-content {
-  background: #ffffff !important;
+  background: var(--mat-datepicker-bg) !important;
   border-radius: 1rem !important;
   box-shadow: 0 20px 60px -15px rgba(0, 0, 0, 0.3) !important;
 }
 
 .mat-calendar-body-selected {
-  background-color: #059669 !important;
+  background-color: var(--mat-calendar-selected) !important;
   color: white !important;
 }
 
 .mat-calendar-body-today:not(.mat-calendar-body-selected) {
-  border-color: #10b981 !important;
+  border-color: var(--mat-calendar-today-border) !important;
 }
 
 .mat-calendar-body-cell:hover .mat-calendar-body-cell-content {
-  background-color: rgba(16, 185, 129, 0.15) !important;
+  background-color: var(--mat-calendar-hover) !important;
 }
 
 .mat-datepicker-toggle-active {
-  color: #059669 !important;
+  color: var(--mat-datepicker-toggle) !important;
 }

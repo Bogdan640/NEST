@@ -20,7 +20,20 @@ export interface User {
 export interface UserPreferences {
   theme: 'light' | 'dark';
   isPhonePublic: boolean;
+  notifyResourceAvailable: boolean;
+  notifyEventReminders: boolean;
+  notifyNewPosts: boolean;
+  browserNotifications: boolean;
 }
+
+export const DEFAULT_PREFERENCES: UserPreferences = {
+  theme: 'light',
+  isPhonePublic: false,
+  notifyResourceAvailable: true,
+  notifyEventReminders: true,
+  notifyNewPosts: true,
+  browserNotifications: false,
+};
 
 export type UserRole = 'ADMIN' | 'RESIDENT';
 
@@ -85,4 +98,8 @@ export interface UpdateProfileRequest {
 export interface UpdatePreferencesRequest {
   theme?: 'light' | 'dark';
   isPhonePublic?: boolean;
+  notifyResourceAvailable?: boolean;
+  notifyEventReminders?: boolean;
+  notifyNewPosts?: boolean;
+  browserNotifications?: boolean;
 }

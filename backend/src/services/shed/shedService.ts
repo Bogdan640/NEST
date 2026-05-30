@@ -1,15 +1,16 @@
 import prisma from '../../config/prisma';
+import { Prisma } from '@prisma/client';
 import { NotFoundError, ConflictError, ForbiddenError, BadRequestError } from '../../utils/errors';
 import { assertOwnerOrAdmin } from '../../utils/authHelpers';
 
-export const retrievePlatformResources = async (
+export const getResources = async (
   search?: string,
   sortBy: string = 'createdAt',
   sortOrder: string = 'desc',
   page: number = 1,
   limit: number = 20
 ) => {
-  const queryFilter: any = {};
+  const queryFilter: Prisma.ResourceWhereInput = {};
   if (search) {
     queryFilter.OR = [
       { name: { contains: search } },
@@ -39,39 +40,39 @@ export const retrievePlatformResources = async (
   return { data, total, page, limit };
 };
 
-export const retrieveResourceById = async (resourceId: string) => {
-  const resourceResult = await prisma.resource.findUnique({
+export const getResourceById = async (resourceId: string) => {
+  const resource = await prisma.resource.findUnique({
     where: { id: resourceId },
     include: { owner: { select: { firstName: true, lastName: true } }, reservations: true }
   });
-  if (!resourceResult) throw new NotFoundError('Resource not found');
-  return resourceResult;
+  if (!resource) throw new NotFoundError('Resource not found');
+  return resource;
 };
 
-export const createTargetResource = async (
-  nameValue: string,
-  descriptionValue: string,
-  typeValue: string,
-  ownerIdValue?: string
+export const createResource = async (
+  name: string,
+  description: string,
+  type: string,
+  ownerId?: string
 ) => {
   return await prisma.resource.create({
     data: {
-      name: nameValue,
-      description: descriptionValue,
-      type: typeValue,
-      ownerId: ownerIdValue
+      name,
+      description,
+      type,
+      ownerId
     }
   });
 };
 
-export const reserveTargetResource = async (
-  userIdValue: string,
-  resourceIdValue: string,
-  startTimeValue: Date,
-  endTimeValue: Date
+export const reserveResource = async (
+  userId: string,
+  resourceId: string,
+  startTime: Date,
+  endTime: Date
 ) => {
-  const targetedResource = await prisma.resource.findUnique({
-    where: { id: resourceIdValue },
+  const resource = await prisma.resource.findUnique({
+    where: { id: resourceId },
     include: {
       reservations: {
         orderBy: { endTime: 'desc' }
@@ -79,30 +80,30 @@ export const reserveTargetResource = async (
     }
   });
 
-  if (!targetedResource) {
+  if (!resource) {
     throw new NotFoundError('Resource not found');
   }
 
   // Block the owner from borrowing their own resource
-  if (targetedResource.ownerId === userIdValue) {
+  if (resource.ownerId === userId) {
     throw new ForbiddenError('You cannot borrow your own shared resource');
   }
 
   // Check if the user already has an active reservation on this resource
-  const userActiveReservation = targetedResource.reservations.find(
-    res => res.borrowerId === userIdValue && res.status === 'APPROVED'
+  const userActiveReservation = resource.reservations.find(
+    res => res.borrowerId === userId && res.status === 'APPROVED'
   );
   if (userActiveReservation) {
     throw new ConflictError('You already have an active reservation for this item. Please return it first.');
   }
 
-  const isEngaged = targetedResource.reservations.some(res => res.status === 'APPROVED' && res.endTime > new Date());
+  const isEngaged = resource.reservations.some(res => res.status === 'APPROVED' && res.endTime > new Date());
   if (isEngaged) {
     throw new ConflictError('This item is already borrowed by someone else');
   }
 
-  if (targetedResource.type === 'TOOL' && targetedResource.reservations.length > 0) {
-    const previousReservation = targetedResource.reservations[0];
+  if (resource.type === 'TOOL' && resource.reservations.length > 0) {
+    const previousReservation = resource.reservations[0];
     if (previousReservation && previousReservation.status === 'RETURNED') {
       const borrowedDurationMs = previousReservation.endTime.getTime() - previousReservation.startTime.getTime();
       const cooldownMs = borrowedDurationMs / 24;
@@ -117,16 +118,16 @@ export const reserveTargetResource = async (
 
   return await prisma.resourceReservation.create({
     data: {
-      resourceId: resourceIdValue,
-      borrowerId: userIdValue,
-      startTime: startTimeValue,
-      endTime: endTimeValue,
+      resourceId,
+      borrowerId: userId,
+      startTime,
+      endTime,
       status: 'APPROVED'
     }
   });
 };
 
-export const returnTargetResource = async (userId: string, resourceId: string) => {
+export const returnResource = async (userId: string, resourceId: string) => {
   const resource = await prisma.resource.findUnique({
     where: { id: resourceId }
   });
@@ -160,7 +161,7 @@ export const returnTargetResource = async (userId: string, resourceId: string) =
   });
 };
 
-export const updateShedResource = async (userId: string, resourceId: string, userRole: string, newName: string, newDescription: string) => {
+export const updateResource = async (userId: string, resourceId: string, userRole: string, name: string, description: string) => {
   const existingResource = await prisma.resource.findUnique({ where: { id: resourceId } });
   if (!existingResource) throw new NotFoundError('Resource not found');
   
@@ -168,11 +169,11 @@ export const updateShedResource = async (userId: string, resourceId: string, use
 
   return await prisma.resource.update({
     where: { id: resourceId },
-    data: { name: newName, description: newDescription }
+    data: { name, description }
   });
 };
 
-export const deleteShedResource = async (userId: string, resourceId: string, userRole: string) => {
+export const deleteResource = async (userId: string, resourceId: string, userRole: string) => {
   const existingResource = await prisma.resource.findUnique({ where: { id: resourceId } });
   if (!existingResource) throw new NotFoundError('Resource not found');
   

@@ -1,38 +1,38 @@
 <div class="resource-card">
   <div class="resource-header">
-    <div class="resource-type-badge" [class]="resource.type.toLowerCase()">
-      {{ resource.type }}
+    <div class="resource-type-badge" [class]="resource().type.toLowerCase()">
+      {{ resource().type }}
     </div>
     
-    @if (canDelete) {
+    @if (canDelete()) {
       <button class="btn-icon delete-btn" (click)="onDelete()" title="Delete resource">
         ✕
       </button>
     }
   </div>
 
-  <h3 class="resource-name">{{ resource.name }}</h3>
+  <h3 class="resource-name">{{ resource().name }}</h3>
   
-  <p class="resource-description">{{ resource.description }}</p>
+  <p class="resource-description">{{ resource().description }}</p>
 
   <div class="resource-status">
-    <div class="status-indicator" [class.available]="isAvailable" [class.borrowed]="!isAvailable">
+    <div class="status-indicator" [class.available]="isAvailable()" [class.borrowed]="!isAvailable()">
       <span class="dot"></span>
-      {{ isAvailable ? 'Available' : 'Currently Borrowed' }}
+      {{ isAvailable() ? 'Available' : 'Currently Borrowed' }}
     </div>
     
-    @if (!isAvailable && currentBorrower) {
+    @if (!isAvailable() && currentBorrower()) {
       <div class="borrower-info">
-        Borrowed by {{ currentBorrower.firstName }} {{ currentBorrower.lastName }}
+        Borrowed by {{ currentBorrower()!.firstName }} {{ currentBorrower()!.lastName }}
       </div>
     }
   </div>
 
   <div class="resource-footer">
     <div class="owner-info">
-      @if (resource.owner) {
-        <span class="avatar-small">{{ resource.owner.firstName.charAt(0) }}</span>
-        <span class="owner-name">Shared by {{ resource.owner.firstName }}</span>
+      @if (resource().owner) {
+        <span class="avatar-small">{{ resource().owner!.firstName.charAt(0) }}</span>
+        <span class="owner-name">Shared by {{ resource().owner!.firstName }}</span>
       } @else {
         <span class="avatar-small building-avatar">B</span>
         <span class="owner-name">Building Resource</span>
@@ -40,32 +40,36 @@
     </div>
 
     <!-- Owner sees "Mark as Returned" when their item is borrowed -->
-    @if (isOwner && !isAvailable) {
+    @if (isOwner() && !isAvailable()) {
       <button class="btn-return" (click)="onReturn()">Mark as Returned</button>
-    } @else if (isOwner) {
+    } @else if (isOwner()) {
       <span class="owner-badge">Your Item</span>
-    } @else if (borrowedMode && isBorrowedByMe) {
+    } @else if (borrowedMode() && isBorrowedByMe()) {
       <!-- In "My Borrowed" tab, just show info (only owner can mark returned) -->
       <span class="borrowed-badge">Currently Using</span>
-    } @else if (!borrowedMode && !isOwner) {
-      <!-- In "Browse" tab, non-owners can borrow available items -->
-      @if (isBorrowedByMe) {
+    } @else if (!borrowedMode() && !isOwner()) {
+      <!-- In "Browse" tab, non-owners can borrow available items or subscribe to notifications -->
+      @if (isBorrowedByMe()) {
         <span class="borrowed-badge">You are borrowing this</span>
       } @else {
-        <button 
-          class="btn-primary" 
-          (click)="onReserve()" 
-          [disabled]="!isAvailable"
-        >
-          {{ isAvailable ? 'Borrow Item' : 'Unavailable' }}
-        </button>
+        @if (isAvailable()) {
+          <button class="btn-primary" (click)="onReserve()">Borrow Item</button>
+        } @else {
+          <button 
+            [class]="isWatchingThisResource() ? 'btn-notify watching' : 'btn-notify'" 
+            (click)="onToggleNotification($event)"
+            [title]="isWatchingThisResource() ? 'Unsubscribe from alerts' : 'Get notified when available'"
+          >
+            {{ isWatchingThisResource() ? '🔕 Cancel Alert' : '🔔 Notify Me' }}
+          </button>
+        }
       }
     }
   </div>
 </div>
 
 <app-confirm-dialog
-  [isOpen]="showDeleteConfirm"
+  [isOpen]="showDeleteConfirm()"
   title="Delete Item"
   message="Are you sure you want to remove this item from the shared shed?"
   confirmText="Delete"

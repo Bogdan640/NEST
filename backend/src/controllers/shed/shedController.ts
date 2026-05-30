@@ -1,5 +1,5 @@
 import { Response, NextFunction } from 'express';
-import { retrievePlatformResources, createTargetResource, reserveTargetResource, returnTargetResource, updateShedResource, deleteShedResource, retrieveResourceById } from '../../services/shed/shedService';
+import { getResources, createResource, reserveResource, returnResource, updateResource, deleteResource, getResourceById } from '../../services/shed/shedService';
 import { AuthenticatedRequest } from '../../middlewares/authMiddleware';
 
 export const getResourcesController = async (req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> => {
@@ -10,7 +10,7 @@ export const getResourcesController = async (req: AuthenticatedRequest, res: Res
     const page = parseInt(req.query.page as string) || 1;
     const limit = parseInt(req.query.limit as string) || 20;
 
-    const result = await retrievePlatformResources(search, sortBy, sortOrder, page, limit);
+    const result = await getResources(search, sortBy, sortOrder, page, limit);
     res.status(200).json(result);
   } catch (error) {
     next(error);
@@ -19,7 +19,7 @@ export const getResourcesController = async (req: AuthenticatedRequest, res: Res
 
 export const getResourceByIdController = async (req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> => {
   try {
-    const result = await retrieveResourceById(req.params.id as string);
+    const result = await getResourceById(req.params.id as string);
     res.status(200).json(result);
   } catch (error) {
     next(error);
@@ -41,7 +41,7 @@ export const createResourceController = async (req: AuthenticatedRequest, res: R
 
   try {
     const ownerIdParam = isCommunityOwned ? undefined : req.user.userId;
-    const result = await createTargetResource(name, description, type, ownerIdParam);
+    const result = await createResource(name, description, type, ownerIdParam);
     res.status(201).json(result);
   } catch (error) {
     next(error);
@@ -65,7 +65,7 @@ export const reserveResourceController = async (req: AuthenticatedRequest, res: 
     const parsedStart = new Date(startTime);
     const parsedEnd = new Date(endTime);
 
-    const result = await reserveTargetResource(req.user.userId, req.params.id as string, parsedStart, parsedEnd);
+    const result = await reserveResource(req.user.userId, req.params.id as string, parsedStart, parsedEnd);
     res.status(200).json(result);
   } catch (error) {
     next(error);
@@ -79,7 +79,7 @@ export const returnResourceController = async (req: AuthenticatedRequest, res: R
   }
 
   try {
-    const result = await returnTargetResource(req.user.userId, req.params.id as string);
+    const result = await returnResource(req.user.userId, req.params.id as string);
     res.status(200).json(result);
   } catch (error) {
     next(error);
@@ -100,7 +100,7 @@ export const updateResourceController = async (req: AuthenticatedRequest, res: R
   }
 
   try {
-    const result = await updateShedResource(req.user.userId, req.params.id as string, req.user.role, name, description);
+    const result = await updateResource(req.user.userId, req.params.id as string, req.user.role, name, description);
     res.status(200).json(result);
   } catch (error) {
     next(error);
@@ -114,7 +114,7 @@ export const deleteResourceController = async (req: AuthenticatedRequest, res: R
   }
 
   try {
-    await deleteShedResource(req.user.userId, req.params.id as string, req.user.role);
+    await deleteResource(req.user.userId, req.params.id as string, req.user.role);
     res.status(204).send();
   } catch (error) {
     next(error);

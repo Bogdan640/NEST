@@ -1,6 +1,7 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, input, output, computed, signal, inject } from '@angular/core';
 import { Resource } from '../../../core/models/resource.model';
 import { ConfirmDialogComponent } from '../../../shared/components/confirm-dialog/confirm-dialog.component';
+import { ResourceAvailabilityNotificationService } from '../../../shared/services/resource-availability-notification.service';
 
 @Component({
   selector: 'app-resource-card',
@@ -10,38 +11,52 @@ import { ConfirmDialogComponent } from '../../../shared/components/confirm-dialo
   styleUrl: './resource-card.component.scss',
 })
 export class ResourceCardComponent {
-  @Input({ required: true }) resource!: Resource;
-  @Input() currentUserId: string | undefined;
-  @Input() canDelete = false;
+  private notificationService = inject(ResourceAvailabilityNotificationService);
+
+  /** The resource to display */
+  resource = input.required<Resource>();
+  /** ID of the currently logged-in user */
+  currentUserId = input<string | undefined>();
+  /** Whether the current user can delete this resource */
+  canDelete = input(false);
   /** When in "My Borrowed" tab, show return button for the borrower */
-  @Input() borrowedMode = false;
+  borrowedMode = input(false);
 
-  @Output() reserveClicked = new EventEmitter<{id: string, startTime: string, endTime: string}>();
-  @Output() returnClicked = new EventEmitter<string>();
-  @Output() deleteClicked = new EventEmitter<string>();
+  reserveClicked = output<{id: string, startTime: string, endTime: string}>();
+  returnClicked = output<string>();
+  deleteClicked = output<string>();
 
-  showDeleteConfirm = false;
+  showDeleteConfirm = signal(false);
 
-  get isBorrowedByMe(): boolean {
-    if (!this.currentUserId || !this.resource.reservations) return false;
-    return this.resource.reservations.some(
-      r => r.borrowerId === this.currentUserId && r.status === 'APPROVED'
+  isBorrowedByMe = computed(() => {
+    const userId = this.currentUserId();
+    const reservations = this.resource().reservations;
+    if (!userId || !reservations) return false;
+    return reservations.some(
+      r => r.borrowerId === userId && r.status === 'APPROVED'
     );
-  }
+  });
 
-  get isOwner(): boolean {
-    return !!this.currentUserId && this.currentUserId === this.resource.ownerId;
-  }
+  isOwner = computed(() => {
+    const userId = this.currentUserId();
+    return !!userId && userId === this.resource().ownerId;
+  });
 
-  get isAvailable(): boolean {
-    if (!this.resource.reservations) return true;
-    return !this.resource.reservations.some(r => r.status === 'APPROVED');
-  }
+  isAvailable = computed(() => {
+    const reservations = this.resource().reservations;
+    if (!reservations) return true;
+    return !reservations.some(r => r.status === 'APPROVED');
+  });
 
-  get currentBorrower() {
-    if (!this.resource.reservations) return null;
-    return this.resource.reservations.find(r => r.status === 'APPROVED')?.borrower;
-  }
+  currentBorrower = computed(() => {
+    const reservations = this.resource().reservations;
+    if (!reservations) return null;
+    return reservations.find(r => r.status === 'APPROVED')?.borrower ?? null;
+  });
+
+  isWatchingThisResource = computed(() => {
+    return this.notificationService.watchedResourceIds().includes(this.resource().id);
+  });
 
   onReserve(): void {
     const startTime = new Date().toISOString();
@@ -49,23 +64,34 @@ export class ResourceCardComponent {
     endDate.setDate(endDate.getDate() + 1);
     const endTime = endDate.toISOString();
 
-    this.reserveClicked.emit({ id: this.resource.id, startTime, endTime });
+    this.reserveClicked.emit({ id: this.resource().id, startTime, endTime });
   }
 
   onReturn(): void {
-    this.returnClicked.emit(this.resource.id);
+    this.returnClicked.emit(this.resource().id);
   }
 
   onDelete(): void {
-    this.showDeleteConfirm = true;
+    this.showDeleteConfirm.set(true);
   }
 
   confirmDelete(): void {
-    this.showDeleteConfirm = false;
-    this.deleteClicked.emit(this.resource.id);
+    this.showDeleteConfirm.set(false);
+    this.deleteClicked.emit(this.resource().id);
   }
 
   cancelDelete(): void {
-    this.showDeleteConfirm = false;
+    this.showDeleteConfirm.set(false);
+  }
+
+  onToggleNotification(event: Event): void {
+    event.stopPropagation();
+    const id = this.resource().id;
+    const name = this.resource().name;
+    if (this.isWatchingThisResource()) {
+      this.notificationService.unwatchResource(id);
+    } else {
+      this.notificationService.watchResource(id, name);
+    }
   }
 }

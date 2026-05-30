@@ -21,13 +21,13 @@
 .page-title {
   font-size: 2rem;
   font-weight: 800;
-  color: #064e3b;
+  color: var(--page-title-color);
   margin: 0 0 0.25rem;
   letter-spacing: -0.02em;
 }
 
 .page-subtitle {
-  color: #6b7280;
+  color: var(--color-text-tertiary);
   font-size: 1rem;
   margin: 0;
 }
@@ -41,11 +41,12 @@
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  background: #ffffff;
-  border: 1px solid #d1fae5;
+  background: var(--stat-chip-bg);
+  border: 1px solid var(--stat-chip-border);
   border-radius: 1rem;
   padding: 0.5rem 1rem;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  box-shadow: var(--shadow-sm);
+  transition: background 0.3s ease;
 
   .stat-icon {
     font-size: 1.25rem;
@@ -54,18 +55,18 @@
   .stat-value {
     font-weight: 800;
     font-size: 1.25rem;
-    color: #064e3b;
+    color: var(--stat-value-color);
   }
 
   .stat-label {
     font-size: 0.8rem;
-    color: #6b7280;
+    color: var(--color-text-tertiary);
     font-weight: 500;
   }
 }
 
 .pending-chip .stat-value {
-  color: #d97706;
+  color: var(--pending-value-color);
 }
 
 // ── Tabs ──────────────────────────────────────────
@@ -73,11 +74,12 @@
   display: flex;
   gap: 0.25rem;
   margin-bottom: 1.5rem;
-  background: #ffffff;
-  border: 1px solid #f3f4f6;
+  background: var(--tab-bg);
+  border: 1px solid var(--tab-border);
   border-radius: 0.75rem;
   padding: 0.25rem;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+  box-shadow: var(--shadow-sm);
+  transition: background 0.3s ease;
 }
 
 .tab-btn {
@@ -92,19 +94,19 @@
   background: transparent;
   font-size: 0.875rem;
   font-weight: 600;
-  color: #6b7280;
+  color: var(--color-text-tertiary);
   cursor: pointer;
   transition: all 0.2s ease;
 
   &:hover {
-    background: #f9fafb;
-    color: #374151;
+    background: var(--tab-hover-bg);
+    color: var(--color-text-secondary);
   }
 
   &.active {
-    background: #059669;
-    color: #ffffff;
-    box-shadow: 0 1px 3px rgba(5, 150, 105, 0.3);
+    background: var(--tab-active-bg);
+    color: var(--color-text-inverted);
+    box-shadow: 0 1px 3px var(--tab-active-shadow);
   }
 
   .tab-icon {
@@ -119,29 +121,30 @@
   min-width: 20px;
   height: 20px;
   border-radius: 9999px;
-  background: #fef3c7;
-  color: #92400e;
+  background: var(--tab-badge-bg);
+  color: var(--tab-badge-color);
   font-size: 0.7rem;
   font-weight: 700;
   padding: 0 5px;
 
   .active & {
     background: rgba(255, 255, 255, 0.25);
-    color: #ffffff;
+    color: var(--color-text-inverted);
   }
 }
 
 // ── Cards ──────────────────────────────────────────
 .admin-card {
-  background: #ffffff;
+  background: var(--card-bg);
   border-radius: 1rem;
   padding: 1.5rem;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
-  border: 1px solid #f3f4f6;
+  box-shadow: var(--shadow-card);
+  border: 1px solid var(--card-border);
   margin-bottom: 1.5rem;
+  transition: background 0.3s ease;
 
   h3 {
-    color: #111827;
+    color: var(--color-text-primary);
     font-size: 1.25rem;
     margin: 0 0 1rem;
     font-weight: 700;
@@ -170,22 +173,22 @@
 .quick-filter {
   width: 100%;
   padding: 0.625rem 0.75rem 0.625rem 2.5rem;
-  border: 1.5px solid #d1fae5;
+  border: 1.5px solid var(--search-input-border);
   border-radius: 0.625rem;
   font-size: 0.875rem;
-  background: #f0fdf9;
-  color: #111827;
+  background: var(--search-input-bg);
+  color: var(--color-text-primary);
   transition: all 0.2s ease;
   outline: none;
 
   &::placeholder {
-    color: #9ca3af;
+    color: var(--btn-icon-color);
   }
 
   &:focus {
-    border-color: #059669;
-    box-shadow: 0 0 0 3px rgba(5, 150, 105, 0.12);
-    background: #ffffff;
+    border-color: var(--search-input-focus-border);
+    box-shadow: 0 0 0 3px var(--search-input-focus-shadow);
+    background: var(--color-surface);
   }
 }
 
@@ -207,21 +210,21 @@
 
   th, td {
     padding: 0.875rem 1rem;
-    border-bottom: 1px solid #f3f4f6;
+    border-bottom: 1px solid var(--table-border);
     text-align: left;
   }
 
   th {
-    background: #f0fdf9;
+    background: var(--table-header-bg);
     font-weight: 600;
-    color: #064e3b;
+    color: var(--table-header-color);
     font-size: 0.8rem;
     text-transform: uppercase;
     letter-spacing: 0.05em;
   }
 
   td {
-    color: #4b5563;
+    color: var(--color-text-secondary);
     font-size: 0.875rem;
   }
 
@@ -229,7 +232,7 @@
     transition: background 0.15s ease;
 
     &:hover {
-      background: #f9fafb;
+      background: var(--table-row-hover);
     }
   }
 }
@@ -244,8 +247,8 @@
   width: 28px;
   height: 28px;
   border-radius: 50%;
-  background: linear-gradient(135deg, #059669, #34d399);
-  color: white;
+  background: linear-gradient(135deg, var(--btn-primary-bg), var(--color-emerald-400));
+  color: var(--color-text-inverted);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -270,25 +273,25 @@
 }
 
 .btn-approve {
-  background: #059669;
-  color: white;
-  &:hover { background: #047857; transform: translateY(-1px); }
+  background: var(--btn-approve-bg);
+  color: var(--color-text-inverted);
+  &:hover { background: var(--btn-primary-hover); transform: translateY(-1px); }
 }
 
 .btn-reject {
-  background: #fee2e2;
-  color: #dc2626;
-  &:hover { background: #fecaca; transform: translateY(-1px); }
+  background: var(--btn-reject-bg);
+  color: var(--btn-reject-color);
+  &:hover { background: var(--btn-reject-hover-bg); transform: translateY(-1px); }
 }
 
 // ── Empty / Loading States ──────────────────────────
 .empty-state {
   text-align: center;
   padding: 3rem 1rem;
-  color: #6b7280;
+  color: var(--color-text-tertiary);
 
   h3 {
-    color: #374151;
+    color: var(--color-text-secondary);
     font-size: 1.125rem;
     margin: 0.5rem 0 0.25rem;
   }
@@ -307,7 +310,7 @@
 .loading-state {
   text-align: center;
   padding: 3rem 1rem;
-  color: #6b7280;
+  color: var(--color-text-tertiary);
 
   p {
     margin: 0.75rem 0 0;
@@ -319,8 +322,8 @@
   display: inline-block;
   width: 2rem;
   height: 2rem;
-  border: 3px solid rgba(16, 185, 129, 0.3);
-  border-top-color: #10b981;
+  border: 3px solid var(--spinner-track);
+  border-top-color: var(--spinner-fill);
   border-radius: 50%;
   animation: spin 0.8s linear infinite;
 }

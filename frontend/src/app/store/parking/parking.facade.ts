@@ -1,6 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { Store } from '@ngrx/store';
-import * as ParkingSelectors from './parking.selectors';
+import { selectParkingAnnouncements, selectParkingSlots, selectParkingTotalCount, selectParkingIsLoading, selectParkingError } from './parking.selectors';
 import { ParkingActions } from './parking.actions';
 import { CreateAnnouncementRequest, CreateParkingSlotRequest } from '../../core/models/parking.model';
 import { PaginationParams } from '../../core/models/paginated-response.model';
@@ -9,11 +9,11 @@ import { PaginationParams } from '../../core/models/paginated-response.model';
 export class ParkingFacade {
   private store = inject(Store);
 
-  announcements = this.store.selectSignal(ParkingSelectors.selectAnnouncements);
-  slots = this.store.selectSignal(ParkingSelectors.selectSlots);
-  totalCount = this.store.selectSignal(ParkingSelectors.selectTotalCount);
-  isLoading = this.store.selectSignal(ParkingSelectors.selectIsLoading);
-  error = this.store.selectSignal(ParkingSelectors.selectError);
+  announcements = this.store.selectSignal(selectParkingAnnouncements);
+  slots = this.store.selectSignal(selectParkingSlots);
+  totalCount = this.store.selectSignal(selectParkingTotalCount);
+  isLoading = this.store.selectSignal(selectParkingIsLoading);
+  error = this.store.selectSignal(selectParkingError);
 
   loadAnnouncements(params: PaginationParams): void {
     this.store.dispatch(ParkingActions.loadAnnouncements({ params }));

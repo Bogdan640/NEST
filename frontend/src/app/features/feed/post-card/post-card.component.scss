@@ -1,14 +1,14 @@
 .post-card {
-  background: #ffffff;
+  background: var(--card-bg);
   border-radius: 1rem;
   padding: 1.5rem;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+  box-shadow: var(--shadow-card);
   margin-bottom: 1.5rem;
-  border: 1px solid #f3f4f6;
-  transition: box-shadow 0.2s ease;
+  border: 1px solid var(--card-border);
+  transition: box-shadow 0.2s ease, background 0.3s ease;
 
   &:hover {
-    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
+    box-shadow: var(--shadow-card-hover);
   }
 }
 
@@ -28,8 +28,8 @@
 .avatar {
   width: 2.5rem;
   height: 2.5rem;
-  background-color: #10b981;
-  color: white;
+  background-color: var(--avatar-bg);
+  color: var(--color-text-inverted);
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -42,18 +42,18 @@
   margin: 0;
   font-size: 1rem;
   font-weight: 600;
-  color: #111827;
+  color: var(--color-text-primary);
 }
 
 .post-time {
   font-size: 0.875rem;
-  color: #6b7280;
+  color: var(--color-text-tertiary);
 }
 
 .post-content {
   p {
     margin: 0 0 1rem 0;
-    color: #374151;
+    color: var(--post-content-color);
     line-height: 1.5;
     white-space: pre-wrap;
   }
@@ -71,13 +71,13 @@
   background: transparent;
   border: none;
   cursor: pointer;
-  color: #9ca3af;
+  color: var(--btn-icon-color);
   padding: 0.5rem;
   border-radius: 0.375rem;
   transition: all 0.2s ease;
 
   &:hover {
-    background-color: #f3f4f6;
-    color: #ef4444;
+    background-color: var(--btn-icon-hover-bg);
+    color: var(--btn-icon-hover-color);
   }
 }

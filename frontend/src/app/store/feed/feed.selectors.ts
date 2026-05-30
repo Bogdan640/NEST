@@ -3,7 +3,7 @@ import { FeedState } from './feed.state';
 
 export const selectFeedState = createFeatureSelector<FeedState>('feed');
 
-export const selectPosts = createSelector(selectFeedState, (state) => state.posts);
-export const selectTotalCount = createSelector(selectFeedState, (state) => state.totalCount);
-export const selectIsLoading = createSelector(selectFeedState, (state) => state.isLoading);
-export const selectError = createSelector(selectFeedState, (state) => state.error);
+export const selectFeedPosts = createSelector(selectFeedState, (state) => state.posts);
+export const selectFeedTotalCount = createSelector(selectFeedState, (state) => state.totalCount);
+export const selectFeedIsLoading = createSelector(selectFeedState, (state) => state.isLoading);
+export const selectFeedError = createSelector(selectFeedState, (state) => state.error);

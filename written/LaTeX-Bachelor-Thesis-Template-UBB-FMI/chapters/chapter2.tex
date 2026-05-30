@@ -1,0 +1,53 @@
+\chapter{Technologies and Tools Used}
+\label{chap:technologies-tools-used}
+
+Building a localized web platform capable of handling real-time interaction, structured data flows, and an engaging user experience requires a robust technology stack. This chapter outlines the theoretical background of the primary tools selected for the NEST application, justifying their usage in the context of community-driven software.
+
+\section{Frontend Architecture: Angular}
+Modern web development heavily relies on Single-Page Applications (SPAs) to provide a seamless, app-like experience within the browser. SPAs dynamically rewrite the current web page with new data from the web server, instead of the default method of loading entire new pages \cite{angularDocs}. 
+
+For the NEST application, Angular was chosen as the primary frontend framework. Angular provides a structured, component-based architecture that enforces modularity and separation of concerns. This is particularly beneficial for a platform like NEST, where features such as the authentication flow, the community feed, and the mutual aid shed can be developed as isolated, reusable components. Furthermore, Angular's built-in dependency injection system allows for efficient management of services, such as API communication or user state management, ensuring that the application remains scalable as new features are added.
+
+\section{State Management: NgRx and Signals}
+Managing the state of a complex web application—such as user session data, loaded feed posts, or pending mutual aid requests—can quickly become difficult to track. Without a predictable state container, data inconsistencies and unexpected side effects frequently occur.
+
+To solve this, the NEST application implements NgRx, a reactive state management framework inspired by Redux \cite{ngrxDocs}. NgRx enforces a unidirectional data flow, where the state is read-only and can only be modified by dispatching actions to reducers. 
+
+In addition to traditional NgRx stores, the application leverages Angular Signals, a recent addition to the Angular ecosystem that provides a fine-grained reactivity model. Table \ref{tab:state-management} compares traditional local state management with the Global Store approach used in this project.
+
+\begin{table}[h]
+\centering
+\begin{tabular}{|l|p{5cm}|p{5cm}|}
+\hline
+\textbf{Feature} & \textbf{Component Local State} & \textbf{NgRx Global Store + Signals} \\ \hline
+Scope & Limited to the specific component. & Accessible application-wide. \\ \hline
+Data Flow & Two-way or prop drilling. & Unidirectional and predictable. \\ \hline
+Reactivity & Relies on Angular's default change detection (Zone.js). & Fine-grained reactivity; updates only what is necessary. \\ \hline
+Use Case & Simple forms, UI toggles. & User sessions, cached feed data, application-wide settings. \\ \hline
+\end{tabular}
+\caption{Comparison of State Management Approaches}
+\label{tab:state-management}
+\end{table}
+
+\textbf{Justification for NEST:} Using NgRx Stores combined with Signals was a deliberate architectural choice for NEST. By decoupling the state from the UI components (the Facade pattern), components remain "dumb" and strictly focused on presentation. The Store acts as the single source of truth, meaning that if a user claims an item in the Shared Shed, that change is immediately and reactively reflected in their personal dashboard without requiring additional API calls or complex component communication.
+
+\section{Backend Infrastructure: Node.js and Express}
+The backend architecture follows a RESTful API design using Node.js and the Express framework \cite{expressDocs}. Node.js, built on Chrome's V8 JavaScript engine, allows for non-blocking, event-driven execution. This makes it highly efficient for handling numerous simultaneous requests, a common scenario in community platforms where multiple users might be fetching feed updates or posting messages concurrently.
+
+Express was selected as the web framework due to its minimalist and unopinionated nature, providing robust routing and middleware capabilities. Middleware functions are heavily utilized in the NEST backend for processing incoming requests, validating data schemas, and enforcing rate limiting to maintain server stability. The Object-Relational Mapping (ORM) is handled by Prisma, which offers type-safe database access, aligning perfectly with the strict typing of the TypeScript-based frontend.
+
+\section{UI/UX Design Principles}
+A community application must not only be functional but also deeply intuitive and welcoming to encourage participation \cite{norman1986cognitive}.
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.92\textwidth]{figures/events_page.png}
+\caption{Events page of the NEST application.}
+\label{fig:events-page}
+\end{figure}
+Key UI/UX decisions include:
+\begin{itemize}
+    \item \textbf{Vibrant and Accessible Palettes:} Utilizing an emerald-themed palette to convey growth and community trust, while ensuring contrast ratios meet accessibility standards.
+    \item \textbf{Progressive Disclosure:} Showing users only the information they need at a given time. For example, detailed item descriptions in the Shed are hidden behind a click or a modal, keeping the main feed uncluttered.
+    \item \textbf{Clear Feedback Loops:} Providing immediate visual feedback for user actions (e.g., toast notifications on successful login or item requests) to reduce uncertainty and build trust in the platform.
+\end{itemize}

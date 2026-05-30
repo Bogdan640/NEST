@@ -14,27 +14,28 @@
 .page-title {
   font-size: 2rem;
   font-weight: 800;
-  color: #064e3b;
+  color: var(--page-title-color);
   margin: 0 0 0.5rem;
 }
 
 .page-subtitle {
-  color: #059669;
+  color: var(--page-subtitle-color);
   font-size: 1.125rem;
   margin: 0;
 }
 
 .create-resource-card {
-  background: #ffffff;
+  background: var(--card-bg);
   border-radius: 1rem;
   padding: 1.5rem;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+  box-shadow: var(--shadow-card);
   margin-bottom: 2rem;
-  border: 1px solid #10b981;
+  border: 1px solid var(--card-border-accent);
+  transition: background 0.3s ease;
 
   h3 {
     margin: 0 0 1.5rem 0;
-    color: #111827;
+    color: var(--color-text-primary);
   }
 }
 
@@ -57,15 +58,16 @@
   label {
     font-size: 0.875rem;
     font-weight: 500;
-    color: #374151;
+    color: var(--form-label-color);
   }
 }
 
 .form-control {
   padding: 0.75rem 1rem;
-  border: 1px solid #d1fae5;
+  border: 1px solid var(--form-input-border);
   border-radius: 0.5rem;
-  background: #f9fafb;
+  background: var(--form-input-bg);
+  color: var(--color-text-primary);
   font-family: inherit;
   font-size: 1rem;
   outline: none;
@@ -73,8 +75,8 @@
   box-sizing: border-box;
 
   &:focus {
-    border-color: #34d399;
-    background: #ffffff;
+    border-color: var(--form-input-focus-border);
+    background: var(--form-input-focus-bg);
   }
 }
 
@@ -86,7 +88,7 @@ textarea.form-control {
   display: flex;
   justify-content: flex-end;
   gap: 1rem;
-  border-top: 1px solid #f3f4f6;
+  border-top: 1px solid var(--form-divider);
   padding-top: 1.5rem;
 }
 
@@ -100,23 +102,23 @@ textarea.form-control {
 }
 
 .btn-primary {
-  background: #059669;
-  color: white;
+  background: var(--btn-primary-bg);
+  color: var(--color-text-inverted);
   
-  &:hover:not(:disabled) { background: #047857; }
+  &:hover:not(:disabled) { background: var(--btn-primary-hover); }
   &:disabled { opacity: 0.5; cursor: not-allowed; }
 }
 
 .btn-secondary {
-  background: #f3f4f6;
-  color: #4b5563;
+  background: var(--btn-secondary-bg);
+  color: var(--btn-secondary-color);
   
-  &:hover { background: #e5e7eb; color: #111827; }
+  &:hover { background: var(--btn-secondary-hover-bg); color: var(--btn-secondary-hover-color); }
 }
 
 .error-message {
-  background: #fef2f2;
-  color: #dc2626;
+  background: var(--color-danger-bg);
+  color: var(--color-danger);
   padding: 1rem;
   border-radius: 0.5rem;
   margin-bottom: 1rem;
@@ -125,7 +127,7 @@ textarea.form-control {
 .loading-state, .empty-state {
   text-align: center;
   padding: 4rem 1rem;
-  color: #6b7280;
+  color: var(--color-text-tertiary);
 }
 
 .empty-icon {
@@ -134,7 +136,7 @@ textarea.form-control {
 }
 
 .empty-state h3 {
-  color: #111827;
+  color: var(--color-text-primary);
   font-size: 1.25rem;
   margin: 0 0 0.5rem;
 }
@@ -145,8 +147,8 @@ textarea.form-control {
   display: inline-block;
   width: 2rem;
   height: 2rem;
-  border: 3px solid rgba(16, 185, 129, 0.3);
-  border-top-color: #10b981;
+  border: 3px solid var(--spinner-track);
+  border-top-color: var(--spinner-fill);
   border-radius: 50%;
   animation: spin 0.8s linear infinite;
   margin-bottom: 1rem;
@@ -166,7 +168,7 @@ textarea.form-control {
   display: flex;
   gap: 0;
   margin-bottom: 2rem;
-  border-bottom: 2px solid #e5e7eb;
+  border-bottom: 2px solid var(--shed-tab-border);
 }
 
 .tab-button {
@@ -177,7 +179,7 @@ textarea.form-control {
   border-bottom: 3px solid transparent;
   font-weight: 600;
   font-size: 0.95rem;
-  color: #6b7280;
+  color: var(--shed-tab-color);
   cursor: pointer;
   transition: all 0.2s ease;
   display: flex;
@@ -187,20 +189,20 @@ textarea.form-control {
   margin-bottom: -2px;
 
   &:hover {
-    color: #059669;
-    background: rgba(16, 185, 129, 0.04);
+    color: var(--shed-tab-hover);
+    background: var(--color-surface-hover);
   }
 
   &.active {
-    color: #059669;
-    border-bottom-color: #059669;
-    background: rgba(16, 185, 129, 0.06);
+    color: var(--shed-tab-active-color);
+    border-bottom-color: var(--shed-tab-active-border);
+    background: var(--shed-tab-active-bg);
   }
 }
 
 .badge {
-  background: #059669;
-  color: white;
+  background: var(--shed-badge-bg);
+  color: var(--color-text-inverted);
   font-size: 0.75rem;
   font-weight: 700;
   padding: 0.125rem 0.5rem;
@@ -208,4 +210,3 @@ textarea.form-control {
   min-width: 1.25rem;
   text-align: center;
 }
-

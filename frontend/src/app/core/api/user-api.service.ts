@@ -23,4 +23,12 @@ export class UserApiService {
   getUserById(id: string): Observable<User> {
     return this.http.get<User>(API_ENDPOINTS.USER.BY_ID(id));
   }
+
+  uploadProfileImage(formData: FormData): Observable<User> {
+    return this.http.post<User>(API_ENDPOINTS.USER.UPLOAD_PROFILE_IMAGE, formData);
+  }
+
+  uploadCoverImage(formData: FormData): Observable<User> {
+    return this.http.post<User>(API_ENDPOINTS.USER.UPLOAD_COVER_IMAGE, formData);
+  }
 }

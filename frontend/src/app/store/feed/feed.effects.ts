@@ -2,7 +2,7 @@ import { Injectable, inject } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { FeedActions } from './feed.actions';
 import { FeedApiService } from '../../core/api/feed-api.service';
-import { catchError, map, mergeMap, of, tap } from 'rxjs';
+import { catchError, map, switchMap, mergeMap, of } from 'rxjs';
 import { ToastService } from '../../shared/services/toast.service';
 
 @Injectable()
@@ -14,7 +14,7 @@ export class FeedEffects {
   loadPosts$ = createEffect(() =>
     this.actions$.pipe(
       ofType(FeedActions.loadPosts),
-      mergeMap(({ params }) =>
+      switchMap(({ params }) =>
         this.feedApi.getPosts(params).pipe(
           map((response) => FeedActions.loadPostsSuccess({ response })),
           catchError((error) => {

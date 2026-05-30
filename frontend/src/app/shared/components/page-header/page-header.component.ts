@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, input } from '@angular/core';
 
 @Component({
   selector: 'app-page-header',
@@ -6,9 +6,9 @@ import { Component, Input } from '@angular/core';
   template: `
     <div class="page-header">
       <div>
-        <h1 class="page-title">{{ title }}</h1>
-        @if (subtitle) {
-          <p class="page-subtitle">{{ subtitle }}</p>
+        <h1 class="page-title">{{ title() }}</h1>
+        @if (subtitle()) {
+          <p class="page-subtitle">{{ subtitle() }}</p>
         }
       </div>
       <div class="actions">
@@ -27,12 +27,12 @@ import { Component, Input } from '@angular/core';
     .page-title {
       font-size: 2rem;
       font-weight: 800;
-      color: #064e3b;
+      color: var(--page-title-color);
       margin: 0 0 0.5rem;
     }
 
     .page-subtitle {
-      color: #059669;
+      color: var(--page-subtitle-color);
       font-size: 1.125rem;
       margin: 0;
     }
@@ -44,6 +44,6 @@ import { Component, Input } from '@angular/core';
   `]
 })
 export class PageHeaderComponent {
-  @Input({ required: true }) title!: string;
-  @Input() subtitle: string = '';
+  readonly title = input.required<string>();
+  readonly subtitle = input<string>('');
 }

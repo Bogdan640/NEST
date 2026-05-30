@@ -20,7 +20,7 @@
 .banner-gradient {
   width: 100%;
   height: 100%;
-  background: linear-gradient(135deg, #059669 0%, #10b981 30%, #34d399 60%, #6ee7b7 100%);
+  background: linear-gradient(135deg, var(--profile-banner-gradient-start) 0%, #10b981 30%, #34d399 60%, var(--profile-banner-gradient-end) 100%);
 }
 
 .banner-image {
@@ -43,7 +43,7 @@
   z-index: 2;
 }
 
-/* === Avatar Area (separate block for centering) === */
+/* === Avatar Area === */
 .profile-avatar-area {
   display: flex;
   justify-content: center;
@@ -66,14 +66,14 @@
   width: 6rem;
   height: 6rem;
   border-radius: 50%;
-  background: linear-gradient(135deg, #064e3b 0%, #065f46 100%);
+  background: linear-gradient(135deg, var(--profile-avatar-gradient-start) 0%, var(--profile-avatar-gradient-end) 100%);
   color: white;
   font-size: 1.75rem;
   font-weight: 800;
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 4px solid white;
+  border: 4px solid var(--profile-avatar-border);
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
 }
 
@@ -82,7 +82,7 @@
   height: 6rem;
   border-radius: 50%;
   object-fit: cover;
-  border: 4px solid white;
+  border: 4px solid var(--profile-avatar-border);
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
 }
 
@@ -104,9 +104,9 @@
 .online-dot {
   width: 1rem;
   height: 1rem;
-  background: #22c55e;
+  background: var(--online-dot-bg);
   border-radius: 50%;
-  border: 3px solid white;
+  border: 3px solid var(--online-dot-border);
   position: absolute;
   bottom: 4px;
   right: 4px;
@@ -114,11 +114,12 @@
 
 /* === Info Card === */
 .profile-info-card {
-  background: #ffffff;
+  background: var(--card-bg);
   border-radius: 1.25rem;
   padding: 2rem;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 10px 15px -3px rgba(0, 0, 0, 0.03);
+  box-shadow: var(--shadow-card), 0 10px 15px -3px rgba(0, 0, 0, 0.03);
   margin-bottom: 1.5rem;
+  transition: background 0.3s ease;
 }
 
 .profile-name-section {
@@ -129,20 +130,20 @@
 .profile-name {
   font-size: 1.75rem;
   font-weight: 800;
-  color: #064e3b;
+  color: var(--profile-name-color);
   margin: 0 0 0.25rem;
 }
 
 .profile-headline {
   font-size: 1rem;
-  color: #059669;
+  color: var(--profile-headline-color);
   margin: 0 0 0.5rem;
   font-style: italic;
 }
 
 .profile-email {
   font-size: 0.9rem;
-  color: #6b7280;
+  color: var(--color-text-tertiary);
   margin: 0;
   display: flex;
   align-items: center;
@@ -163,8 +164,8 @@
 }
 
 .info-tile {
-  background: linear-gradient(135deg, #f0fdf4 0%, #ecfdf5 100%);
-  border: 1px solid #d1fae5;
+  background: var(--info-tile-bg);
+  border: 1px solid var(--info-tile-border);
   border-radius: 1rem;
   padding: 1rem;
   text-align: center;
@@ -188,7 +189,7 @@
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  color: #6b7280;
+  color: var(--color-text-tertiary);
   margin-bottom: 0.25rem;
 }
 
@@ -196,7 +197,7 @@
   display: block;
   font-size: 0.95rem;
   font-weight: 700;
-  color: #111827;
+  color: var(--color-text-primary);
 }
 
 .role-badge {
@@ -204,20 +205,20 @@
   padding: 0.125rem 0.625rem;
   border-radius: 9999px;
   font-size: 0.8rem;
-  background: #ecfdf5;
-  color: #059669;
-  border: 1px solid #a7f3d0;
+  background: var(--owner-badge-bg);
+  color: var(--owner-badge-color);
+  border: 1px solid var(--owner-badge-border);
 
   &.admin {
-    background: #fffbeb;
-    color: #d97706;
-    border-color: #fde68a;
+    background: var(--color-warning-bg);
+    color: var(--color-amber-600);
+    border-color: var(--color-amber-500);
   }
 }
 
 /* === About === */
 .about-section {
-  background: #f9fafb;
+  background: var(--about-bg);
   border-radius: 0.75rem;
   padding: 1.25rem;
   margin-bottom: 1.5rem;
@@ -225,13 +226,13 @@
   h3 {
     font-size: 1rem;
     font-weight: 700;
-    color: #111827;
+    color: var(--color-text-primary);
     margin: 0 0 0.5rem;
   }
 
   p {
     margin: 0;
-    color: #374151;
+    color: var(--color-text-secondary);
     font-size: 0.95rem;
     line-height: 1.6;
     white-space: pre-wrap;
@@ -252,9 +253,9 @@
 .btn-edit {
   padding: 0.625rem 1.5rem;
   border-radius: 0.75rem;
-  border: 2px solid #059669;
-  background: white;
-  color: #059669;
+  border: 2px solid var(--color-primary);
+  background: var(--color-surface);
+  color: var(--color-primary);
   font-weight: 600;
   cursor: pointer;
   transition: all 0.2s;
@@ -263,17 +264,17 @@
   gap: 0.375rem;
 
   &:hover {
-    background: #059669;
-    color: white;
+    background: var(--color-primary);
+    color: var(--color-text-inverted);
   }
 }
 
 .btn-danger {
   padding: 0.625rem 1.5rem;
   border-radius: 0.75rem;
-  border: 2px solid #ef4444;
-  background: white;
-  color: #ef4444;
+  border: 2px solid var(--color-danger);
+  background: var(--color-surface);
+  color: var(--color-danger);
   font-weight: 600;
   cursor: pointer;
   transition: all 0.2s;
@@ -282,8 +283,8 @@
   gap: 0.375rem;
 
   &:hover {
-    background: #ef4444;
-    color: white;
+    background: var(--color-danger);
+    color: var(--color-text-inverted);
   }
 }
 
@@ -291,7 +292,7 @@
 .edit-title {
   font-size: 1.25rem;
   font-weight: 700;
-  color: #111827;
+  color: var(--color-text-primary);
   margin: 0 0 1.5rem;
   text-align: center;
 }
@@ -315,7 +316,7 @@
   label {
     font-size: 0.85rem;
     font-weight: 600;
-    color: #374151;
+    color: var(--form-label-color);
   }
 }
 
@@ -325,9 +326,10 @@
 
 .form-control {
   padding: 0.75rem 1rem;
-  border: 2px solid #d1fae5;
+  border: 2px solid var(--form-input-border);
   border-radius: 0.75rem;
-  background: #f9fafb;
+  background: var(--form-input-bg);
+  color: var(--color-text-primary);
   font-family: inherit;
   font-size: 0.95rem;
   outline: none;
@@ -335,9 +337,9 @@
   box-sizing: border-box;
 
   &:focus {
-    border-color: #10b981;
-    background: #fff;
-    box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.15);
+    border-color: var(--form-input-focus-border);
+    background: var(--form-input-focus-bg);
+    box-shadow: 0 0 0 3px var(--color-primary-light);
   }
 }
 
@@ -347,7 +349,7 @@ textarea.form-control {
 
 .char-count {
   font-size: 0.7rem;
-  color: #9ca3af;
+  color: var(--char-count-color);
   text-align: right;
 }
 
@@ -356,21 +358,21 @@ textarea.form-control {
   justify-content: flex-end;
   gap: 0.75rem;
   padding-top: 1rem;
-  border-top: 1px solid #f3f4f6;
+  border-top: 1px solid var(--form-divider);
 }
 
 .btn-cancel {
   padding: 0.625rem 1.25rem;
   border-radius: 0.625rem;
   border: none;
-  background: #f3f4f6;
-  color: #4b5563;
+  background: var(--btn-secondary-bg);
+  color: var(--btn-secondary-color);
   font-weight: 600;
   cursor: pointer;
   transition: all 0.2s;
 
   &:hover {
-    background: #e5e7eb;
+    background: var(--btn-secondary-hover-bg);
   }
 }
 
@@ -378,14 +380,14 @@ textarea.form-control {
   padding: 0.625rem 1.5rem;
   border-radius: 0.625rem;
   border: none;
-  background: #059669;
-  color: white;
+  background: var(--btn-primary-bg);
+  color: var(--color-text-inverted);
   font-weight: 600;
   cursor: pointer;
   transition: all 0.2s;
 
   &:hover:not(:disabled) {
-    background: #047857;
+    background: var(--btn-primary-hover);
   }
 
   &:disabled {
@@ -396,17 +398,18 @@ textarea.form-control {
 
 /* === Section Cards === */
 .section-card {
-  background: #ffffff;
+  background: var(--card-bg);
   border-radius: 1.25rem;
   padding: 1.5rem;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+  box-shadow: var(--shadow-card);
   margin-bottom: 1.5rem;
+  transition: background 0.3s ease;
 }
 
 .section-title {
   font-size: 1.125rem;
   font-weight: 700;
-  color: #111827;
+  color: var(--color-text-primary);
   margin: 0 0 1.25rem;
 }
 
@@ -414,7 +417,7 @@ textarea.form-control {
 .empty-mini {
   text-align: center;
   padding: 2rem 1rem;
-  color: #6b7280;
+  color: var(--color-text-tertiary);
   font-size: 0.95rem;
 }
 
@@ -431,8 +434,8 @@ textarea.form-control {
 }
 
 .tool-card {
-  background: linear-gradient(135deg, #f0fdf4 0%, #ffffff 100%);
-  border: 1px solid #d1fae5;
+  background: var(--tool-card-bg);
+  border: 1px solid var(--tool-card-border);
   border-radius: 0.875rem;
   padding: 1rem;
   transition: transform 0.2s;
@@ -444,7 +447,7 @@ textarea.form-control {
   h4 {
     margin: 0.5rem 0 0.25rem;
     font-size: 0.95rem;
-    color: #111827;
+    color: var(--color-text-primary);
   }
 }
 
@@ -456,14 +459,14 @@ textarea.form-control {
   padding: 0.125rem 0.5rem;
   border-radius: 4px;
   
-  &.tool { background: #dbeafe; color: #1d4ed8; }
-  &.book { background: #fef3c7; color: #92400e; }
-  &.other { background: #e5e7eb; color: #374151; }
+  &.tool { background: var(--badge-social-bg); color: var(--badge-social-color); }
+  &.book { background: var(--badge-meeting-bg); color: var(--badge-meeting-color); }
+  &.other { background: var(--badge-other-bg); color: var(--badge-other-color); }
 }
 
 .tool-desc {
   font-size: 0.8rem;
-  color: #6b7280;
+  color: var(--color-text-tertiary);
   margin: 0 0 0.5rem;
   display: -webkit-box;
   -webkit-line-clamp: 2;
@@ -484,21 +487,21 @@ textarea.form-control {
   border-radius: 9999px;
   
   &.approved {
-    background: #ecfdf5;
-    color: #059669;
-    border: 1px solid #a7f3d0;
+    background: var(--owner-badge-bg);
+    color: var(--owner-badge-color);
+    border: 1px solid var(--owner-badge-border);
   }
 }
 
 .tool-date {
   font-size: 0.75rem;
-  color: #9ca3af;
+  color: var(--btn-icon-color);
 }
 
 /* === Tips === */
 .tips-card {
-  background: linear-gradient(135deg, #f0fdf4 0%, #ffffff 100%);
-  border: 1px solid #d1fae5;
+  background: var(--tips-card-bg);
+  border: 1px solid var(--tips-card-border);
 }
 
 .tips-grid {
@@ -514,7 +517,7 @@ textarea.form-control {
   p {
     margin: 0.375rem 0 0;
     font-size: 0.85rem;
-    color: #374151;
+    color: var(--color-text-secondary);
     line-height: 1.4;
   }
 }

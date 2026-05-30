@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, input, output } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { Post } from '../../../core/models/post.model';
 
@@ -10,14 +10,14 @@ import { Post } from '../../../core/models/post.model';
   styleUrl: './post-card.component.scss',
 })
 export class PostCardComponent {
-  @Input({ required: true }) post!: Post;
-  @Input() canDelete = false;
+  readonly post = input.required<Post>();
+  readonly canDelete = input(false);
 
-  @Output() deleteClicked = new EventEmitter<string>();
+  readonly deleteClicked = output<string>();
 
   onDelete(): void {
     if (confirm('Are you sure you want to delete this post?')) {
-      this.deleteClicked.emit(this.post.id);
+      this.deleteClicked.emit(this.post().id);
     }
   }
 }

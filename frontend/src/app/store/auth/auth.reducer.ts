@@ -51,6 +51,11 @@ export const authReducer = createReducer(
     token,
   })),
 
+  on(AuthActions.updateUser, (state, { user }) => ({
+    ...state,
+    user,
+  })),
+
   on(AuthActions.logout, () => initialAuthState),
 
   on(AuthActions.clearError, (state) => ({

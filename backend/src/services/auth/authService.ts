@@ -4,6 +4,23 @@ import { generateToken } from '../../utils/jwtUtils';
 import { getPermissionsForRole } from '../../config/constants';
 import { ConflictError } from '../../utils/errors';
 
+const DEFAULT_PREFERENCES = {
+  theme: 'light',
+  isPhonePublic: false,
+  notifyResourceAvailable: true,
+  notifyEventReminders: true,
+  notifyNewPosts: true,
+  browserNotifications: false,
+};
+
+function parsePreferences(prefsString: string): Record<string, unknown> {
+  try {
+    return { ...DEFAULT_PREFERENCES, ...JSON.parse(prefsString) };
+  } catch {
+    return { ...DEFAULT_PREFERENCES };
+  }
+}
+
 export const authenticateResident = async (emailPayload: string, passwordPayload: string) => {
   const targetedUser = await prisma.user.findUnique({
     where: { email: emailPayload }
@@ -30,7 +47,7 @@ export const authenticateResident = async (emailPayload: string, passwordPayload
 
   return {
     token: generatedJwtToken,
-    user: userWithoutPassword,
+    user: { ...userWithoutPassword, preferences: parsePreferences(userWithoutPassword.preferences) },
     permissions: getPermissionsForRole(targetedUser.role)
   };
 };
@@ -71,7 +88,7 @@ export const registerResident = async (
 
   return {
     token: generatedJwtToken,
-    user: userWithoutPassword,
+    user: { ...userWithoutPassword, preferences: parsePreferences(userWithoutPassword.preferences) },
     permissions: getPermissionsForRole(newUser.role)
   };
 };

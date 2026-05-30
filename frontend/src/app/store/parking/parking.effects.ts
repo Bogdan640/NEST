@@ -2,8 +2,9 @@ import { Injectable, inject } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { ParkingActions } from './parking.actions';
 import { ParkingApiService } from '../../core/api/parking-api.service';
-import { catchError, map, mergeMap, of, tap } from 'rxjs';
+import { catchError, map, switchMap, mergeMap, of } from 'rxjs';
 import { ToastService } from '../../shared/services/toast.service';
+import { DEFAULT_PARKING_PAGE_SIZE, FIRST_PAGE } from '../../core/constants/ui';
 
 @Injectable()
 export class ParkingEffects {
@@ -14,7 +15,7 @@ export class ParkingEffects {
   loadAnnouncements$ = createEffect(() =>
     this.actions$.pipe(
       ofType(ParkingActions.loadAnnouncements),
-      mergeMap(({ params }) =>
+      switchMap(({ params }) =>
         this.parkingApi.getAnnouncements(params).pipe(
           map((response) => ParkingActions.loadAnnouncementsSuccess({ response })),
           catchError((error) => {
@@ -94,7 +95,7 @@ export class ParkingEffects {
   loadSlots$ = createEffect(() =>
     this.actions$.pipe(
       ofType(ParkingActions.loadSlots),
-      mergeMap(() =>
+      switchMap(() =>
         this.parkingApi.getSlots().pipe(
           map((slots) => ParkingActions.loadSlotsSuccess({ slots })),
           catchError((error) => {
@@ -129,7 +130,7 @@ export class ParkingEffects {
         ParkingActions.applyToAnnouncementSuccess,
         ParkingActions.approveApplicationSuccess
       ),
-      map(() => ParkingActions.loadAnnouncements({ params: { page: 1, limit: 10 } }))
+      map(() => ParkingActions.loadAnnouncements({ params: { page: FIRST_PAGE, limit: DEFAULT_PARKING_PAGE_SIZE } }))
     )
   );
 }

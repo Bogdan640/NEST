@@ -1,19 +1,19 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, input, output } from '@angular/core';
 
 @Component({
   selector: 'app-confirm-dialog',
   standalone: true,
   template: `
-    @if (isOpen) {
+    @if (isOpen()) {
       <div class="overlay" (click)="onCancel()">
         <div class="dialog" (click)="$event.stopPropagation()">
-          <div class="dialog-icon">{{ icon }}</div>
-          <h3 class="dialog-title">{{ title }}</h3>
-          <p class="dialog-message">{{ message }}</p>
+          <div class="dialog-icon">{{ icon() }}</div>
+          <h3 class="dialog-title">{{ title() }}</h3>
+          <p class="dialog-message">{{ message() }}</p>
           <div class="dialog-actions">
             <button class="btn-cancel" (click)="onCancel()">Cancel</button>
-            <button class="btn-confirm" [class.danger]="danger" (click)="onConfirm()">
-              {{ confirmText }}
+            <button class="btn-confirm" [class.danger]="danger()" (click)="onConfirm()">
+              {{ confirmText() }}
             </button>
           </div>
         </div>
@@ -34,7 +34,7 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
     }
 
     .dialog {
-      background: #ffffff;
+      background: var(--card-bg);
       border-radius: 1.25rem;
       padding: 2rem;
       max-width: 400px;
@@ -42,6 +42,7 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
       text-align: center;
       box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
       animation: scaleIn 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+      border: 1px solid var(--card-border);
     }
 
     .dialog-icon {
@@ -53,12 +54,12 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
       margin: 0 0 0.5rem;
       font-size: 1.25rem;
       font-weight: 700;
-      color: #111827;
+      color: var(--color-text-primary);
     }
 
     .dialog-message {
       margin: 0 0 1.5rem;
-      color: #6b7280;
+      color: var(--color-text-tertiary);
       font-size: 0.95rem;
       line-height: 1.5;
     }
@@ -80,21 +81,21 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
     }
 
     .btn-cancel {
-      background: #f3f4f6;
-      color: #4b5563;
+      background: var(--btn-secondary-bg);
+      color: var(--btn-secondary-color);
 
-      &:hover { background: #e5e7eb; }
+      &:hover { background: var(--btn-secondary-hover-bg); }
     }
 
     .btn-confirm {
-      background: #059669;
-      color: white;
+      background: var(--btn-primary-bg);
+      color: var(--color-text-inverted);
 
-      &:hover { background: #047857; }
+      &:hover { background: var(--btn-primary-hover); }
 
       &.danger {
-        background: #ef4444;
-        &:hover { background: #dc2626; }
+        background: var(--color-danger);
+        &:hover { background: var(--color-danger-hover); }
       }
     }
 
@@ -110,15 +111,15 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
   `]
 })
 export class ConfirmDialogComponent {
-  @Input() isOpen = false;
-  @Input() title = 'Are you sure?';
-  @Input() message = 'This action cannot be undone.';
-  @Input() confirmText = 'Confirm';
-  @Input() icon = '⚠️';
-  @Input() danger = true;
+  readonly isOpen = input(false);
+  readonly title = input('Are you sure?');
+  readonly message = input('This action cannot be undone.');
+  readonly confirmText = input('Confirm');
+  readonly icon = input('⚠️');
+  readonly danger = input(true);
 
-  @Output() confirmed = new EventEmitter<void>();
-  @Output() cancelled = new EventEmitter<void>();
+  readonly confirmed = output<void>();
+  readonly cancelled = output<void>();
 
   onConfirm(): void {
     this.confirmed.emit();

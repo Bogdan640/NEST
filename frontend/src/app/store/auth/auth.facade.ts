@@ -64,6 +64,11 @@ export class AuthFacade {
     }
   }
 
+  updateUser(user: User): void {
+    this.store.dispatch(AuthActions.updateUser({ user }));
+    localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(user));
+  }
+
   hasPermission(permission: string): boolean {
     return this.permissions().includes(permission);
   }

@@ -1,6 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { Store } from '@ngrx/store';
-import * as ShedSelectors from './shed.selectors';
+import { selectShedResources, selectShedTotalCount, selectShedIsLoading, selectShedError } from './shed.selectors';
 import { ShedActions } from './shed.actions';
 import { CreateResourceRequest, UpdateResourceRequest, ReserveResourceRequest } from '../../core/models/resource.model';
 import { PaginationParams } from '../../core/models/paginated-response.model';
@@ -9,10 +9,10 @@ import { PaginationParams } from '../../core/models/paginated-response.model';
 export class ShedFacade {
   private store = inject(Store);
 
-  resources = this.store.selectSignal(ShedSelectors.selectResources);
-  totalCount = this.store.selectSignal(ShedSelectors.selectTotalCount);
-  isLoading = this.store.selectSignal(ShedSelectors.selectIsLoading);
-  error = this.store.selectSignal(ShedSelectors.selectError);
+  resources = this.store.selectSignal(selectShedResources);
+  totalCount = this.store.selectSignal(selectShedTotalCount);
+  isLoading = this.store.selectSignal(selectShedIsLoading);
+  error = this.store.selectSignal(selectShedError);
 
   loadResources(params: PaginationParams): void {
     this.store.dispatch(ShedActions.loadResources({ params }));
