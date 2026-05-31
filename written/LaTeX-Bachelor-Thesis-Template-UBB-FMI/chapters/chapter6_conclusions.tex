@@ -1,6 +1,41 @@
 \chapter{Conclusions and Future Work}
 \label{chap:conclusions-future-work}
 
-\section{Summary of Contributions}
+This chapter concludes the research and development documented in this thesis. It provides a summary of the project's contributions, reflects on the lessons learned during development, acknowledges system limitations, and outlines future avenues of engineering.
 
-\section{Potential Future Features}
+\section{Summary of Contributions}
+The primary goal of this thesis was to design and implement NEST, a secure, responsive, and highly reactive hyper-local web application that converts digital engagement into physical neighborhood collaboration. By analyzing the system against the core objectives defined in Chapter 1, all major milestones have been achieved:
+\begin{itemize}
+    \item \textbf{Milestone 1 -- Verification and Security (O1):} Successfully implemented a multi-stage onboarding flow. Guests are verified by local administrators using secure blocks, restricting data access to verified residents.
+    \item \textbf{Milestone 2 -- Cohesive Design System (O2):} Created a design token architecture with over 600 CSS variables. This supports light and dark themes and maintains responsive layouts across mobile, tablet, and desktop viewports.
+    \item \textbf{Milestone 3 -- Collaborative Consumption (O3):} Developed the Shared Shed module, providing a digital tool catalog with conflict prevention logic and state-machine transitions to support resource sharing.
+    \item \textbf{Milestone 4 -- Parking Optimization (O4):} Built the Parking Sharing module. This includes an automated conflict-resolution engine that denies overlapping requests once an application is approved, ensuring efficient spot booking.
+    \item \textbf{Milestone 5 -- High-Performance Reactive Architecture (O5):} Integrated the NgRx Facade state model with Angular Signals. This isolates store operations, handles async data pre-fetching, and enables fine-grained DOM rendering to minimize browser performance overhead.
+\end{itemize}
+
+\section{Lessons Learned}
+Developing NEST provided several software engineering insights:
+\begin{enumerate}
+    \item \textbf{Signal-Based Component Advantages:} Transitioning from traditional Angular change detection to reactive Signal APIs simplified component state. Monotonically tracking inputs (\texttt{input()}) and computed values (\texttt{computed()}) reduced boiler-plate lifecycle code while improving rendering precision.
+    \item \textbf{State Abstraction via Facades:} Implementing a Facade layer between the visual components and the NgRx store improved maintainability. Components remain decoupled from actions and selectors, allowing development teams to refactor state schemas without altering template markup.
+    \item \textbf{Design Token Scalability:} Centralizing the design system inside a single, structured color token sheet simplified layout development. Component styles are clean and theme-agnostic, demonstrating that robust CSS architectures prevent styling duplication.
+\end{enumerate}
+
+\section{Limitations}
+While NEST is a robust application, several limitations are identified:
+\begin{itemize}
+    \item \textbf{Lack of Real-Time Subscriptions:} All updates (such as feed posts and shed requests) rely on HTTP requests and store refreshes. The lack of WebSocket integration prevents real-time notifications, requiring manual page refreshes or periodic polling.
+    \item \textbf{SQLite Persistence Boundaries:} The SQLite database is excellent for local staging, testing, and single-host deployments. However, it lacks the concurrent transaction scaling needed for multi-block, high-throughput enterprise deployments.
+    \item \textbf{Local File Storage Boundaries:} Profile and post attachments are saved directly to local directory systems on the API server. This approach works well for local deployments, but lacks the durability and horizontal scaling provided by cloud object stores (e.g., AWS S3).
+\end{itemize}
+
+\section{Future Work}
+To address these limitations and expand the platform's capabilities, several future enhancements are planned:
+\begin{enumerate}
+    \item \textbf{WebSocket Real-Time Notification Integration:} Integrate Socket.io on the Express backend and RxJS WebSocket subjects on the Angular client to enable instant, real-time chats, active borrowing requests, and parking alerts.
+    \item \textbf{Enterprise Relational Databases and Cloud Storage:} Migrate persistence to PostgreSQL to support concurrent queries, and transition static uploads to secure Amazon S3 or Google Cloud Storage buckets.
+    \item \textbf{Progressive Web Application (PWA) Capabilities:} Configure service workers and web manifest files to support offline caching, background sync, and native push notifications on Android and iOS devices.
+    \item \textbf{Internationalization (i18n):} Integrate Angular's localization libraries to provide support for English and Romanian, broadening the application's accessibility.
+\end{enumerate}
+
+In conclusion, NEST demonstrates how structured, hyper-local platforms can support mutual aid and community connection. The architectural patterns, reactive flows, and security designs implemented in this project provide a stable foundation for future local community engineering.

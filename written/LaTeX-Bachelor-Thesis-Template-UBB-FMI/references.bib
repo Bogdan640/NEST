@@ -1,66 +1,190 @@
+% ============================================================
+% BIBLIOGRAPHY — NEST Bachelor Thesis
+% ============================================================
+% Organized by topic for maintainability.
+% ============================================================
+
+% ── Sociology / Community ─────────────────────────────────────
+
 @book{putnam2000bowling,
-  title={Bowling Alone: The Collapse and Revival of American Community},
-  author={Putnam, Robert D},
-  year={2000},
-  publisher={Simon and Schuster}
+  title     = {Bowling Alone: The Collapse and Revival of American Community},
+  author    = {Putnam, Robert D.},
+  year      = {2000},
+  publisher = {Simon and Schuster}
 }
 
 @article{hampton2003neighboring,
-  title={Neighboring in Netville: How the Internet Supports Community and Social Capital in a Wired Suburb},
-  author={Hampton, Keith and Wellman, Barry},
-  journal={City \& Community},
-  volume={2},
-  number={4},
-  pages={277--311},
-  year={2003},
-  publisher={Wiley Online Library}
+  title     = {Neighboring in {Netville}: How the Internet Supports Community and Social Capital in a Wired Suburb},
+  author    = {Hampton, Keith and Wellman, Barry},
+  journal   = {City \& Community},
+  volume    = {2},
+  number    = {4},
+  pages     = {277--311},
+  year      = {2003},
+  publisher = {Wiley Online Library}
 }
 
 @inproceedings{masden2014tensions,
-  title={Tensions in scaling-up community social media: A multi-neighborhood study of Nextdoor},
-  author={Masden, Christina A and Grevet, Catherine and Grinter, Rebecca E and Gilbert, Eric and Edwards, W Keith},
-  booktitle={Proceedings of the SIGCHI Conference on Human Factors in Computing Systems},
-  pages={3239--3248},
-  year={2014}
+  title     = {Tensions in Scaling-Up Community Social Media: A Multi-Neighborhood Study of {Nextdoor}},
+  author    = {Masden, Christina A. and Grevet, Catherine and Grinter, Rebecca E. and Gilbert, Eric and Edwards, W. Keith},
+  booktitle = {Proceedings of the SIGCHI Conference on Human Factors in Computing Systems},
+  pages     = {3239--3248},
+  year      = {2014}
+}
+
+% ── Software Engineering (General) ────────────────────────────
+
+@book{sommerville2016software,
+  title     = {Software Engineering},
+  author    = {Sommerville, Ian},
+  edition   = {10},
+  year      = {2016},
+  publisher = {Pearson Education}
 }
 
 @book{fowler2002patterns,
-  title={Patterns of Enterprise Application Architecture},
-  author={Fowler, Martin},
-  year={2002},
-  publisher={Addison-Wesley Professional}
+  title     = {Patterns of Enterprise Application Architecture},
+  author    = {Fowler, Martin},
+  year      = {2002},
+  publisher = {Addison-Wesley Professional}
 }
 
+@book{gamma1994design,
+  title     = {Design Patterns: Elements of Reusable Object-Oriented Software},
+  author    = {Gamma, Erich and Helm, Richard and Johnson, Ralph and Vlissides, John},
+  year      = {1994},
+  publisher = {Addison-Wesley Professional}
+}
+
+@book{martin2008clean,
+  title     = {Clean Code: A Handbook of Agile Software Craftsmanship},
+  author    = {Martin, Robert C.},
+  year      = {2008},
+  publisher = {Prentice Hall}
+}
+
+% ── Web Architecture ──────────────────────────────────────────
+
+@phdthesis{fielding2000rest,
+  title   = {Architectural Styles and the Design of Network-based Software Architectures},
+  author  = {Fielding, Roy Thomas},
+  year    = {2000},
+  school  = {University of California, Irvine},
+  note    = {Chapter 5 defines Representational State Transfer (REST)}
+}
+
+@techreport{jones2015jwt,
+  title       = {{JSON Web Token (JWT)}},
+  author      = {Jones, Michael B. and Bradley, John and Sakimura, Nat},
+  institution = {Internet Engineering Task Force},
+  type        = {RFC},
+  number      = {7519},
+  year        = {2015},
+  note        = {\url{https://datatracker.ietf.org/doc/html/rfc7519}}
+}
+
+% ── Security ──────────────────────────────────────────────────
+
+@misc{owasp2021top10,
+  title        = {{OWASP Top Ten Web Application Security Risks}},
+  author       = {{OWASP Foundation}},
+  howpublished = {\url{https://owasp.org/www-project-top-ten/}},
+  year         = {2021},
+  note         = {Accessed: 2026-05-15}
+}
+
+@inproceedings{provos1999bcrypt,
+  title     = {A Future-Adaptable Password Scheme},
+  author    = {Provos, Niels and Mazi\`{e}res, David},
+  booktitle = {Proceedings of the USENIX Annual Technical Conference},
+  pages     = {81--91},
+  year      = {1999}
+}
+
+% ── Frontend Frameworks & State Management ────────────────────
+
 @misc{angularDocs,
-  title={{Angular Documentation}},
-  author={{Google LLC}},
-  howpublished={\url{https://angular.io/docs}},
-  year={2024},
-  note={Accessed: 2026-05-04}
+  title        = {{Angular Developer Documentation}},
+  author       = {{Google LLC}},
+  howpublished = {\url{https://angular.dev/}},
+  year         = {2024},
+  note         = {Accessed: 2026-05-04}
+}
+
+@misc{angularSignalsRfc,
+  title        = {{Angular Signals RFC}},
+  author       = {{Angular Team}},
+  howpublished = {\url{https://github.com/angular/angular/discussions/49685}},
+  year         = {2023},
+  note         = {Accessed: 2026-05-10}
 }
 
 @misc{ngrxDocs,
-  title={{NgRx Documentation}},
-  author={{NgRx Team}},
-  howpublished={\url{https://ngrx.io/docs}},
-  year={2024},
-  note={Accessed: 2026-05-04}
+  title        = {{NgRx -- Reactive State for Angular}},
+  author       = {{NgRx Team}},
+  howpublished = {\url{https://ngrx.io/docs}},
+  year         = {2024},
+  note         = {Accessed: 2026-05-04}
 }
+
+@inproceedings{abramov2015redux,
+  title     = {Live React: Hot Reloading with Time Travel},
+  author    = {Abramov, Dan and Clark, Andrew},
+  booktitle = {ReactEurope Conference},
+  year      = {2015},
+  note      = {Introduced the Redux architecture for predictable state containers}
+}
+
+% ── Backend & Database ────────────────────────────────────────
 
 @misc{expressDocs,
-  title={{Express.js Documentation}},
-  author={{OpenJS Foundation}},
-  howpublished={\url{https://expressjs.com/}},
-  year={2024},
-  note={Accessed: 2026-05-04}
+  title        = {{Express.js -- Fast, Unopinionated, Minimalist Web Framework for Node.js}},
+  author       = {{OpenJS Foundation}},
+  howpublished = {\url{https://expressjs.com/}},
+  year         = {2024},
+  note         = {Accessed: 2026-05-04}
 }
 
+@misc{prismaDocs,
+  title        = {{Prisma -- Next-generation Node.js and TypeScript ORM}},
+  author       = {{Prisma Data, Inc.}},
+  howpublished = {\url{https://www.prisma.io/docs}},
+  year         = {2024},
+  note         = {Accessed: 2026-05-10}
+}
+
+@book{elmasri2015fundamentals,
+  title     = {Fundamentals of Database Systems},
+  author    = {Elmasri, Ramez and Navathe, Shamkant B.},
+  edition   = {7},
+  year      = {2015},
+  publisher = {Pearson}
+}
+
+% ── UI/UX & Design ────────────────────────────────────────────
+
 @article{norman1986cognitive,
-  title={Cognitive engineering},
-  author={Norman, Donald A},
-  journal={User centered system design: New perspectives on human-computer interaction},
-  volume={31},
-  number={61},
-  pages={31--61},
-  year={1986}
+  title   = {Cognitive Engineering},
+  author  = {Norman, Donald A.},
+  journal = {User Centered System Design: New Perspectives on Human-Computer Interaction},
+  volume  = {31},
+  number  = {61},
+  pages   = {31--61},
+  year    = {1986}
+}
+
+@inproceedings{nielsen1994usability,
+  title     = {Usability Inspection Methods},
+  author    = {Nielsen, Jakob and Mack, Robert L.},
+  booktitle = {Conference Companion on Human Factors in Computing Systems},
+  year      = {1994},
+  publisher = {John Wiley \& Sons}
+}
+
+@misc{mdnCssCustomProperties,
+  title        = {{Using CSS Custom Properties (Variables)}},
+  author       = {{MDN Web Docs}},
+  howpublished = {\url{https://developer.mozilla.org/en-US/docs/Web/CSS/Using_CSS_custom_properties}},
+  year         = {2024},
+  note         = {Accessed: 2026-05-15}
 }

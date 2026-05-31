@@ -4,6 +4,7 @@
 \usepackage[onehalfspacing]{setspace}           % 1.5 distance between lines
 \usepackage[utf8]{inputenc}                     % encoding
 \usepackage{graphicx}                           % images
+\usepackage{amsmath}                            % math symbols (xrightarrow etc.)
 \usepackage{tabularx}                           % flexible tables
 \usepackage{array}                              % custom table column definitions
 \usepackage{makecell}                           % explicit line breaks in table cells
@@ -14,6 +15,37 @@
 \hypersetup{hidelinks}                          % keep links clickable without colored rectangles
 \usepackage{etoolbox,ifthen} 	                % ifthen type of commands
 \usepackage{kvoptions}	                        % define key/value pairs as options for packages and classes
+\usepackage{xcolor}                             % colors for listings
+\usepackage{listings}                           % source code listings
+\usepackage{enumitem}                           % customizable lists
+
+% Configure listings style for TypeScript / Angular
+\definecolor{codebg}{HTML}{F6F8FA}
+\definecolor{codeframe}{HTML}{D0D7DE}
+\definecolor{codekw}{HTML}{CF222E}
+\definecolor{codecomment}{HTML}{6E7781}
+\definecolor{codestring}{HTML}{0A3069}
+
+\lstdefinestyle{tscode}{
+  backgroundcolor=\color{codebg},
+  frame=single,
+  rulecolor=\color{codeframe},
+  basicstyle=\ttfamily\small,
+  keywordstyle=\color{codekw}\bfseries,
+  commentstyle=\color{codecomment}\itshape,
+  stringstyle=\color{codestring},
+  breaklines=true,
+  breakatwhitespace=true,
+  tabsize=2,
+  showstringspaces=false,
+  captionpos=b,
+  numbers=left,
+  numberstyle=\tiny\color{codecomment},
+  numbersep=8pt,
+  xleftmargin=1.5em,
+  framexleftmargin=1em,
+}
+\lstset{style=tscode}
 
 % package options
 \geometry{  a4paper,        

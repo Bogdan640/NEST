@@ -32,13 +32,14 @@
 \pagenumbering{roman} 
 
 \cleardoublepage
-ABSTRACT
-\vspace{0.5cm}	
-\hrule
-\vspace{0.5cm}	
-%\cleardoublepage
+\section*{Abstract}
+\addcontentsline{toc}{chapter}{Abstract}
 
-Abstract: un rezumat în limba engleză cu prezentarea, pe scurt, a conținutului pe capitole, punând accent pe contribuțiile proprii și originalitate
+In high-density urban residential blocks, physical proximity is paradoxically accompanied by deep social isolation and a lack of community trust. Neighbors share the same building structure for years without developing meaningful social capital, making simple daily challenges, such as coordinating local events, borrowing household tools, or temporary parking space allocation, inefficient and friction-filled. This thesis presents NEST, a secure, responsive, and highly reactive web application designed specifically to convert localized digital coordination into physical neighborhood cooperation. 
+
+NEST implements a decoupled Client-Server architecture. The presentation layer is built upon Angular 21, utilizing standalone components and reactive Signal APIs to achieve fine-grained DOM rendering. State management is structured around a global NgRx store encapsulated within the Facade pattern. The backend server is built using Node.js, Express, and TypeScript, employing a multi-layered middleware chain for JWT authorization, role-based access control, and rate limiting. Data persistence is managed via an SQLite database, abstracted through the Prisma ORM.
+
+The core contribution of this work includes the design and implementation of eight functional modules, featuring a dynamic CSS design token system with over 600 custom properties for seamless light/dark theming, and an automated conflict-resolution engine that prevents double-booking of parking slots and shared tools. Systematic testing and verification confirm zero compilation errors, full cross-browser responsiveness, high resilience against unauthorized API actions, and excellent usability. The results validate NEST as a secure, high-performance, and scalable digital hub that actively restores social capital and mutual aid within residential communities.
 
 
 

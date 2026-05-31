@@ -2,16 +2,71 @@
 \label{chap:project-context-motivation}
 
 \section{Urban Isolation in Apartment Communities}
-In many cities, people live close to each other but interact very little. In apartment blocks, neighbors can share the same building for years without building trust or a real sense of community. This situation is part of a broader decline in social participation and local social capital, described in established sociological research \cite{putnam2000bowling}.
+In modern metropolitan centers, high-density residential developments have paradoxically fostered social isolation. Neighbors live in physical proximity, separated only by thin concrete partitions, yet they often share no meaningful social capital or interpersonal trust. This social fragmentation is part of a broader decline in localized civic participation and community cohesion, a phenomenon well-documented by sociologists such as Robert Putnam in his seminal work on the erosion of social capital \cite{putnam2000bowling}. 
 
-This lack of connection affects daily life in practical ways: people communicate less, support each other less, and feel less involved in their immediate community. As a result, simple opportunities for socializing and mutual help are often missed.
+The consequences of this disconnect are not merely social, but highly practical. Without active communication channels, residents miss opportunities for mutual aid, shared resource allocation, building governance coordination, and safety collaboration. Simple daily challenges—such as finding a temporary parking spot, borrowing a household tool, or planning building-wide maintenance—become friction-filled tasks because there is no trusted hyper-local communication platform.
 
 \section{Local Digital Networks and Mutual Aid}
-Research in urban informatics suggests that digital tools can strengthen local communities when they are designed for a specific place and group of people. Local online networks can support, not replace, face-to-face interaction \cite{hampton2003neighboring}.
+To bridge this social gap, urban informatics researchers have investigated how digital communication networks can be designed to support physical communities. Keith Hampton and Barry Wellman's research on localized networks demonstrates that web-based platforms, when designed specifically for geographically bounded neighborhoods, act as catalysts for real-world social interaction rather than replacement channels \cite{hampton2003neighboring}.
 
-In this context, a hyper-local platform can act as a small digital meeting point. Residents can share announcements, propose activities, and ask for practical help in a trusted environment \cite{masden2014tensions}. Typical examples include organizing community events, inviting neighbors for casual meetups, coordinating pet care, or borrowing household tools.
+Hyper-local systems such as Nextdoor or building-wide WhatsApp groups are commonly deployed, yet they exhibit significant limitations:
+\begin{itemize}
+    \item \textbf{Commercial Noise and Data Exploitation:} Global platforms like Nextdoor are heavily commercialized, introducing advertising noise and posing privacy concerns that undermine resident trust \cite{masden2014tensions}.
+    \item \textbf{Informal Group Chat Chaos:} Instant messaging channels (e.g., WhatsApp, Telegram) lack structured categorization. Announcements, item lending requests, and event coordinates quickly become lost in continuous text streams, causing user fatigue.
+    \item \textbf{Lack of Verification:} General social networks do not provide building-level verification. Anyone can join, making transactions like tool sharing or parking allocation risky.
+\end{itemize}
+
+NEST addresses these limitations by providing a structured, building-specific digital space. It is designed to turn online coordination into real-world cooperation.
 
 \section{NEST Project Overview}
-Based on this context, the project proposed in this thesis is NEST, a web application dedicated to residents of the same apartment building. The main goal is to turn online interaction into real-world social activity and everyday collaboration.
+NEST is a hyper-local web application designed exclusively for residents of a single apartment building block. It provides a secure, structured space where residents can build trust, coordinate mutual aid, and organize community initiatives.
 
-The application focuses on three directions: encouraging participation through a clear and friendly interface, supporting community activities through posts and event planning, and enabling mutual aid through targeted local requests. My contribution in this project is the frontend design and implementation of these core flows, together with the integration of backend services needed for authentication and persistent data.
+Rather than trying to replicate a broad social network, the system focuses on structured utility modules:
+\begin{itemize}
+    \item \textbf{Social Hub:} Houses the chronological Community Feed where verified residents share general announcements and building news.
+    \item \textbf{Collaborative Consumption:} Operates the Shared Shed, enabling safe peer-to-peer household item lending and borrowing.
+    \item \textbf{Spatial Optimization:} Integrates the Parking Sharing system, helping residents coordinate temporary parking slot access.
+    \item \textbf{Physical Organizing:} Supports the Events module to facilitate real-world neighborhood meetings and gatherings.
+\end{itemize}
+
+My contribution to the NEST project is the frontend design and implementation, utilizing Angular 21, reactive Signals, and NgRx state management, alongside the integration of robust backend services, JWT verification middleware, database modeling with Prisma ORM, and the custom color CSS design token system.
+
+\section{Project Objectives}
+The NEST platform was developed with five core objectives:
+\begin{enumerate}
+    \item \textbf{Objective 1 (O1) -- Building Verification Security:} Design and implement a secure, multi-stage registration system requiring administrative approval before granting residents access to building data.
+    \item \textbf{Objective 2 (O2) -- Cohesive Design System:} Create a unified CSS design token system that supports responsive layouts and instant light/dark theme transitions across all modules.
+    \item \textbf{Objective 3 (O3) -- Collaborative Consumption (Shared Shed):} Implement a peer-to-peer tool-sharing catalog with conflict prevention and transaction history tracking.
+    \item \textbf{Objective 4 (O4) -- Spatial Sharing (Parking):} Build a parking spot sharing system with auto-rejection logic for overlapping requests.
+    \item \textbf{Objective 5 (O5) -- High-Performance Reactive Architecture:} Structure state management using the NgRx Facade pattern and Angular Signals to ensure fast initial loads and fine-grained DOM rendering.
+\end{enumerate}
+
+\section{Original Contributions}
+This thesis documents several technical contributions in localized web engineering:
+\begin{itemize}
+    \item \textbf{Facade-Signals Reactive Architecture:} Developed a state architecture that combines NgRx stores with Angular Signals, isolating state mechanics while leveraging fine-grained template reactivity.
+    \item \textbf{Dynamic CSS Theme Engine:} Constructed a design token system containing over 600 custom properties, achieving instant light-to-dark theme transitions without DOM re-renders.
+    \item \textbf{Secure Multi-Stage Verification Flow:} Developed a routing and security guard pipeline that limits unverified users to onboarding views until approved by the building administrator.
+    \item \textbf{Conflict-Resilient Rental \& Lending Logic:} Implemented backend transaction checks using Prisma ORM to prevent double-booking of parking slots and shared tools.
+\end{itemize}
+
+\section{Thesis Structure}
+The remainder of this thesis is organized as follows:
+\begin{itemize}
+    \item \textbf{Chapter 2 (Theoretical Background and State of the Art):} Reviews the literature on single-page applications, reactive state management, CSS architecture, web security, and related community platforms.
+    \item \textbf{Chapter 3 (Software Analysis and Design):} Details the requirements, system architecture, database modeling, and REST API contract specifications.
+    \item \textbf{Chapter 4 (Implementation Details):} Discusses the codebase, component structures, the NgRx Facade implementation, core module logics, and security middleware.
+    \item \textbf{Chapter 5 (Testing and Validation):} Explains the verification strategies, build outputs, compatibility checks, and usability considerations.
+    \item \textbf{Chapter 6 (Conclusions and Future Work):} Summarizes project outcomes, highlights engineering limitations, and proposes directions for future development.
+\end{itemize}
+
+\section{Declaration on the Use of AI Tools}
+In compliance with the academic integrity guidelines of Babe\c{s}-Bolyai University (Faculty of Mathematics and Computer Science), I declare that generative Artificial Intelligence tools (specifically, large language models) were utilized during the development and writing phases of this thesis. 
+
+AI assistance was specifically applied for:
+\begin{itemize}
+    \item \textbf{Refactoring SCSS Styles:} Migrating legacy hardcoded colors across 17 component stylesheets into the centralized CSS Custom Properties variables structure.
+    \item \textbf{Component Migration:} Assisting in the migration of Angular `@Input()` and `@Output()` decorators into modern Signal-based inputs (\texttt{input()}) and outputs (\texttt{output()}) to improve reactivity.
+    \item \textbf{LaTeX Structure Drafting:} Automating the formatting of code listings and tables inside this LaTeX thesis document to match FMI formatting standards.
+\end{itemize}
+All code, architectural designs, database schemas, and written analyses were reviewed, compiled, and verified by the author to ensure technical accuracy and academic integrity.

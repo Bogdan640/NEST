@@ -1,53 +1,161 @@
-\chapter{Technologies and Tools Used}
-\label{chap:technologies-tools-used}
+\chapter{Theoretical Background and State of the Art}
+\label{chap:theoretical-background}
 
-Building a localized web platform capable of handling real-time interaction, structured data flows, and an engaging user experience requires a robust technology stack. This chapter outlines the theoretical background of the primary tools selected for the NEST application, justifying their usage in the context of community-driven software.
+This chapter surveys the foundational concepts and existing body of knowledge upon which the NEST application is constructed. Rather than merely listing tools, the aim here is to provide a reasoned synthesis of the architectural paradigms, design patterns, and engineering principles that shaped the technical decisions made throughout this project. Each section introduces a concept from the literature, discusses its relevance, and explains why a particular approach was selected over its alternatives.
 
-\section{Frontend Architecture: Angular}
-Modern web development heavily relies on Single-Page Applications (SPAs) to provide a seamless, app-like experience within the browser. SPAs dynamically rewrite the current web page with new data from the web server, instead of the default method of loading entire new pages \cite{angularDocs}. 
+\section{Web Application Architecture Paradigms}
 
-For the NEST application, Angular was chosen as the primary frontend framework. Angular provides a structured, component-based architecture that enforces modularity and separation of concerns. This is particularly beneficial for a platform like NEST, where features such as the authentication flow, the community feed, and the mutual aid shed can be developed as isolated, reusable components. Furthermore, Angular's built-in dependency injection system allows for efficient management of services, such as API communication or user state management, ensuring that the application remains scalable as new features are added.
+The way a web application is structured at the highest level determines its performance characteristics, maintainability, and user experience. Three dominant paradigms have emerged over the past two decades.
 
-\section{State Management: NgRx and Signals}
-Managing the state of a complex web application—such as user session data, loaded feed posts, or pending mutual aid requests—can quickly become difficult to track. Without a predictable state container, data inconsistencies and unexpected side effects frequently occur.
+\textbf{Multi-Page Applications (MPAs)} represent the earliest model, where each user interaction triggers a full page reload from the server. While simple to reason about, this approach results in noticeable latency and a disjointed user experience, because the entire HTML document must be re-fetched for every navigation action.
 
-To solve this, the NEST application implements NgRx, a reactive state management framework inspired by Redux \cite{ngrxDocs}. NgRx enforces a unidirectional data flow, where the state is read-only and can only be modified by dispatching actions to reducers. 
+\textbf{Single-Page Applications (SPAs)} emerged as a response. In this model, the browser loads a single HTML shell and then dynamically rewrites the page content using JavaScript. Navigation occurs client-side through the History API, and data is fetched asynchronously from the server through API calls \cite{angularDocs}. The perceived responsiveness is substantially better, since only data payloads travel over the network rather than complete rendered pages.
 
-In addition to traditional NgRx stores, the application leverages Angular Signals, a recent addition to the Angular ecosystem that provides a fine-grained reactivity model. Table \ref{tab:state-management} compares traditional local state management with the Global Store approach used in this project.
+\textbf{Server-Side Rendering (SSR)} and hybrid approaches attempt to combine the SEO advantages of MPAs with the interactivity of SPAs, pre-rendering the initial HTML on the server and then ``hydrating'' it with client-side JavaScript.
+
+For a community platform like NEST, the SPA approach was chosen. The primary audience, apartment building residents, will use the application for short, frequent sessions (checking the feed, browsing available tools, RSVPing to an event). These interactions demand near-instant visual feedback, which a full-page reload model cannot deliver. Furthermore, since NEST operates behind an authentication wall and is not indexed by search engines, the SEO trade-off of a pure SPA is irrelevant.
+
+The client-server communication follows the Representational State Transfer (REST) architectural style, as defined in Fielding's doctoral dissertation \cite{fielding2000rest}. REST imposes a set of constraints, statelessness, uniform interface, layered system, that result in predictable, resource-oriented APIs. Each endpoint maps to a domain entity (e.g., \texttt{/api/v1/feed}, \texttt{/api/v1/events}), and standard HTTP verbs (\texttt{GET}, \texttt{POST}, \texttt{PUT}, \texttt{DELETE}) describe the operations upon them.
+
+\section{Component-Based Frontend Development}
+
+Modern frontend development has converged on the idea of decomposing user interfaces into independent, reusable \textit{components}. A component encapsulates its own template (structure), styles (appearance), and logic (behavior) in a single cohesive unit. This mirrors the broader software engineering principle of high cohesion and low coupling \cite{sommerville2016software}.
+
+Three frameworks dominate this space: React (maintained by Meta), Vue.js, and Angular (maintained by Google). Table~\ref{tab:framework-comparison} summarizes their key differences.
 
 \begin{table}[h]
 \centering
-\begin{tabular}{|l|p{5cm}|p{5cm}|}
+\small
+\begin{tabularx}{\textwidth}{|l|X|X|X|}
 \hline
-\textbf{Feature} & \textbf{Component Local State} & \textbf{NgRx Global Store + Signals} \\ \hline
-Scope & Limited to the specific component. & Accessible application-wide. \\ \hline
-Data Flow & Two-way or prop drilling. & Unidirectional and predictable. \\ \hline
-Reactivity & Relies on Angular's default change detection (Zone.js). & Fine-grained reactivity; updates only what is necessary. \\ \hline
-Use Case & Simple forms, UI toggles. & User sessions, cached feed data, application-wide settings. \\ \hline
-\end{tabular}
-\caption{Comparison of State Management Approaches}
-\label{tab:state-management}
+\textbf{Criterion} & \textbf{React} & \textbf{Vue.js} & \textbf{Angular} \\ \hline
+Architecture & Library (view layer only) & Progressive framework & Full opinionated framework \\ \hline
+Language & JSX (JavaScript) & SFCs (JavaScript or TS) & TypeScript (mandatory) \\ \hline
+State model & External (Redux, Zustand) & Reactive refs, Pinia & Built-in DI, NgRx optional \\ \hline
+Routing & Third-party (React Router) & Vue Router (official) & Built-in Angular Router \\ \hline
+Form handling & Third-party (Formik, etc.) & Third-party & Built-in Reactive Forms \\ \hline
+Learning curve & Moderate & Low--Moderate & Steep \\ \hline
+\end{tabularx}
+\caption{High-level comparison of dominant frontend frameworks}
+\label{tab:framework-comparison}
 \end{table}
 
-\textbf{Justification for NEST:} Using NgRx Stores combined with Signals was a deliberate architectural choice for NEST. By decoupling the state from the UI components (the Facade pattern), components remain "dumb" and strictly focused on presentation. The Store acts as the single source of truth, meaning that if a user claims an item in the Shared Shed, that change is immediately and reactively reflected in their personal dashboard without requiring additional API calls or complex component communication.
+Angular was selected for NEST for several concrete reasons. First, its mandatory use of TypeScript provides compile-time type checking across the entire frontend, catching errors before they reach the browser. Second, Angular ships with integrated solutions for routing, forms, HTTP communication, and dependency injection, which eliminates the ``decision fatigue'' of assembling a bespoke tool stack. Third, the framework's opinionated project structure, with conventions for modules, services, guards, interceptors, and pipes, enforces a level of architectural discipline that is particularly valuable for a project with multiple feature domains \cite{angularDocs}.
 
-\section{Backend Infrastructure: Node.js and Express}
-The backend architecture follows a RESTful API design using Node.js and the Express framework \cite{expressDocs}. Node.js, built on Chrome's V8 JavaScript engine, allows for non-blocking, event-driven execution. This makes it highly efficient for handling numerous simultaneous requests, a common scenario in community platforms where multiple users might be fetching feed updates or posting messages concurrently.
+\subsection{Standalone Components and the Modern Angular Model}
 
-Express was selected as the web framework due to its minimalist and unopinionated nature, providing robust routing and middleware capabilities. Middleware functions are heavily utilized in the NEST backend for processing incoming requests, validating data schemas, and enforcing rate limiting to maintain server stability. The Object-Relational Mapping (ORM) is handled by Prisma, which offers type-safe database access, aligning perfectly with the strict typing of the TypeScript-based frontend.
+Historically, Angular organized components into \texttt{NgModules}, which served as compilation units and dependency containers. Starting with Angular 14 and fully maturing in subsequent versions, the framework introduced \textit{standalone components}. A standalone component declares its own imports directly in the \texttt{@Component} decorator, removing the need for an intermediate module class \cite{angularDocs}.
 
-\section{UI/UX Design Principles}
-A community application must not only be functional but also deeply intuitive and welcoming to encourage participation \cite{norman1986cognitive}.
+This simplification has two consequences. At the technical level, it enables more granular tree-shaking: the compiler can exclude unused components from the production bundle because dependencies are declared at the component level rather than at the module level. At the organizational level, it makes the codebase more readable, because the reader can see exactly what a component depends on by inspecting its decorator metadata rather than tracing imports through a module hierarchy.
 
-\begin{figure}[h]
-\centering
-\includegraphics[width=0.92\textwidth]{figures/events_page.png}
-\caption{Events page of the NEST application.}
-\label{fig:events-page}
-\end{figure}
-Key UI/UX decisions include:
-\begin{itemize}
-    \item \textbf{Vibrant and Accessible Palettes:} Utilizing an emerald-themed palette to convey growth and community trust, while ensuring contrast ratios meet accessibility standards.
-    \item \textbf{Progressive Disclosure:} Showing users only the information they need at a given time. For example, detailed item descriptions in the Shed are hidden behind a click or a modal, keeping the main feed uncluttered.
-    \item \textbf{Clear Feedback Loops:} Providing immediate visual feedback for user actions (e.g., toast notifications on successful login or item requests) to reduce uncertainty and build trust in the platform.
+The NEST application adopts standalone components throughout, with zero \texttt{NgModule} declarations.
+
+\section{Reactive State Management}
+\label{sec:state-management}
+
+As web applications grow in complexity, managing the data that flows between components becomes a significant engineering challenge. Consider a community platform where a single user action, such as approving a parking request, must simultaneously update a notification counter, a list view, and a detail panel. If each component manages its own local copy of the relevant data, inconsistencies and race conditions quickly arise.
+
+\subsection{The Redux Architecture}
+
+The Redux architecture, introduced by Abramov and Clark \cite{abramov2015redux}, addresses this problem by centralizing all application state in a single, immutable store. State transitions occur exclusively through \textit{actions} (plain objects describing what happened) and \textit{reducers} (pure functions that compute the next state). Side effects, such as HTTP requests, are handled outside the reducer through middleware or, in the Angular ecosystem, through \textit{effects}.
+
+This architecture enforces a strict unidirectional data flow:
+
+\begin{center}
+\textit{Component} $\xrightarrow{\text{dispatches}}$ \textit{Action} $\xrightarrow{\text{processed by}}$ \textit{Reducer} $\rightarrow$ \textit{New State} $\xrightarrow{\text{selected by}}$ \textit{Component}
+\end{center}
+
+NgRx is the Angular-specific implementation of this pattern \cite{ngrxDocs}. It integrates with Angular's dependency injection system and provides additional constructs such as \textit{selectors} (memoized state projections) and \textit{effects} (RxJS-based side-effect handlers).
+
+\subsection{Angular Signals and Fine-Grained Reactivity}
+
+Angular traditionally relied on Zone.js for change detection: after any asynchronous event (a click, a timer, an HTTP response), the framework would walk the entire component tree to check for differences. While functional, this approach performs unnecessary work in large applications.
+
+Angular Signals, formally proposed in 2023 \cite{angularSignalsRfc}, introduce a fundamentally different reactivity model. A \texttt{signal} is a reactive primitive that tracks its own dependencies. When a signal's value changes, only the components that read that specific signal are notified, there is no tree-wide check.
+
+Signals come in several forms:
+\begin{itemize}[nosep]
+  \item \texttt{signal(value)} ,  a writable reactive container.
+  \item \texttt{computed(() => ...)} ,  a derived value that automatically recomputes when its dependencies change.
+  \item \texttt{input()} and \texttt{output()} ,  signal-based replacements for the older \texttt{@Input()} and \texttt{@Output()} decorators, used for parent-child component communication.
+  \item \texttt{effect(() => ...)} ,  a side-effect that runs whenever the signals it reads are updated.
 \end{itemize}
+
+In the NEST application, both paradigms coexist. The global, cross-cutting state (user session, feed posts, event lists) is managed through NgRx stores, while local component concerns and derived computations use signals. This hybrid approach is possible because NgRx itself exposes its store as a signal through \texttt{selectSignal()}.
+
+\subsection{The Facade Pattern for Store Access}
+
+A recurring problem in NgRx applications is that components become tightly coupled to the store's internal structure. If a selector or action name changes, every component that references it must be updated. The \textit{Facade pattern} \cite{gamma1994design} solves this by introducing an intermediary service that encapsulates all store interactions behind a clean, domain-specific API.
+
+For example, rather than having a component dispatch \texttt{AuthActions.login(\{email, password\})} directly, it calls \texttt{authFacade.login(email, password)}. The Facade translates this into the appropriate dispatch, and also exposes selectors as signals. This decoupling means that the store's internal structure can be refactored without touching any component code.
+
+\section{Design Patterns in Web Engineering}
+
+Several classical design patterns from the ``Gang of Four'' catalog \cite{gamma1994design} find direct application in the architecture of modern web applications.
+
+\textbf{Singleton.} Angular's dependency injection system guarantees that services declared with \texttt{providedIn: 'root'} are instantiated exactly once and shared across the entire application. This is critical for services such as the authentication facade or the theme service, where multiple instances would produce conflicting state.
+
+\textbf{Observer.} The NgRx store is fundamentally an implementation of the Observer pattern. Components \textit{subscribe} to slices of the state, and the store \textit{notifies} them whenever the relevant state changes. In the reactive programming terminology used by Angular, this is expressed through RxJS Observables (or, equivalently, through signals).
+
+\textbf{Strategy.} The Express middleware pipeline on the backend exemplifies the Strategy pattern. Each middleware function (authentication, verification, rate limiting) encapsulates a specific policy, and they are composed in different combinations depending on the route's security requirements.
+
+\textbf{Dependency Injection.} Angular's DI container is perhaps the most pervasive pattern in the framework. Services, guards, interceptors, and resolvers are all instantiated and injected by the framework based on their provider configuration. This makes it straightforward to substitute implementations (e.g., a mock API service during testing) without modifying the consuming code \cite{fowler2002patterns}.
+
+\section{Backend Architecture: Layered Services}
+
+The backend of a web application can be organized in many ways, but a layered architecture, where each layer has a well-defined responsibility and communicates only with its adjacent layers, is widely recommended for maintainability \cite{fowler2002patterns}.
+
+The layers adopted in NEST are:
+
+\begin{enumerate}[nosep]
+  \item \textbf{Routes}: Define the URL endpoints and attach middleware functions.
+  \item \textbf{Controllers}: Parse the incoming HTTP request, delegate business logic to the service layer, and format the HTTP response.
+  \item \textbf{Services}: Contain the core business logic and interact with the database.
+  \item \textbf{Data access (Prisma)}: Translate service-level queries into SQL statements and return typed results.
+\end{enumerate}
+
+This separation ensures that, for instance, the logic for approving a parking application can be reused regardless of whether the trigger is an HTTP request, a scheduled task, or a future WebSocket event.
+
+Node.js was chosen as the runtime because it shares the same language (JavaScript/TypeScript) as the frontend. This eliminates the cognitive overhead of context-switching between languages and enables shared type definitions and validation schemas between client and server. Express, the most widely adopted Node.js web framework, provides a minimal but flexible middleware pipeline \cite{expressDocs}.
+
+\section{Authentication and Authorization}
+
+Securing a community platform is not merely a technical concern but a social one. Residents must trust that only verified neighbors can view their posts, borrow their belongings, and access their contact information.
+
+\subsection{JSON Web Tokens}
+
+Token-based authentication, specifically through JSON Web Tokens (JWTs), has become the standard approach for stateless API authentication \cite{jones2015jwt}. A JWT consists of three base64-encoded segments: a header (specifying the signing algorithm), a payload (containing claims such as user ID and role), and a signature (ensuring the token has not been tampered with).
+
+The key advantage of JWTs over traditional session cookies is that the server does not need to maintain session state. Each request carries its own proof of identity, which the server can verify by checking the signature against a secret key. This property aligns well with the stateless constraint of REST \cite{fielding2000rest}.
+
+\subsection{Password Hashing with bcrypt}
+
+Storing passwords in plaintext, or even with simple hash functions like MD5, is a well-known vulnerability. The bcrypt algorithm, introduced by Provos and Mazi\`{e}res \cite{provos1999bcrypt}, is specifically designed for password hashing. It incorporates a configurable \textit{cost factor} that controls the computational expense of hashing. As hardware improves, the cost factor can be increased to maintain resistance against brute-force attacks.
+
+\subsection{Role-Based Access Control}
+
+Authorization in NEST follows a Role-Based Access Control (RBAC) model. Each user is assigned a role, currently \texttt{RESIDENT} or \texttt{ADMIN}, and middleware functions enforce role constraints at the route level. A multi-step verification flow adds an additional layer: a newly registered user cannot access the community until an administrator of their apartment block explicitly approves their account. This mirrors the real-world process of verifying residency.
+
+\section{Object-Relational Mapping and Database Design}
+
+Relational databases remain the dominant choice for structured application data, but writing raw SQL queries in application code introduces maintenance burdens and security risks (SQL injection). Object-Relational Mapping (ORM) libraries bridge the gap between the relational model and the object-oriented or type-based models used in application code \cite{elmasri2015fundamentals}.
+
+Prisma, the ORM selected for NEST, takes an unusual approach: rather than inferring the schema from code annotations (as Hibernate or TypeORM do), Prisma defines the schema in a dedicated \texttt{schema.prisma} file and generates a fully typed client library from it \cite{prismaDocs}. This means that every database query in the application is type-checked at compile time. If a column is renamed or a relation changes, the TypeScript compiler immediately flags all affected call sites.
+
+The generated Prisma Client also handles relation loading (eager or lazy), pagination, and transaction management, keeping the service-layer code focused on business logic rather than query construction.
+
+\section{CSS Architecture and Theming}
+
+A common oversight in frontend development is treating stylesheets as an afterthought. In a multi-module application with dozens of components, ad-hoc CSS quickly becomes unmaintainable: colors, spacing values, and font sizes are duplicated across files, and any visual change requires a global search-and-replace.
+
+\textit{CSS custom properties} (also called CSS variables) address this problem at the language level \cite{mdnCssCustomProperties}. A custom property is declared on a parent element, typically \texttt{:root}, and inherited by all descendant elements. By centralizing all visual tokens (colors, spacing scales, shadow definitions) in a single file and referencing them via \texttt{var(--token-name)} throughout the application, changes can be made in one place and propagated instantly.
+
+This mechanism also enables theming. By redefining the same set of custom properties under a different selector (e.g., \texttt{[data-theme="dark"]}), the entire application's visual appearance can be switched by toggling a single attribute on the root HTML element. No component-level changes are required. This approach was adopted for the NEST application's light and dark theme system.
+
+\section{Related Work and Existing Platforms}
+
+Several existing platforms address neighborhood communication. \textit{Nextdoor} is the most prominent, serving millions of users across neighborhoods worldwide. However, research has identified significant tensions in its design, including conflicts between commercial interests and community needs, as well as difficulties in scaling across neighborhoods with different norms \cite{masden2014tensions}.
+
+Other approaches include building-specific WhatsApp groups and Homeowners Association (HOA) management software. WhatsApp groups lack structure, there is no way to categorize a message as an event versus a lending offer, and they become noisy at scale. HOA software, conversely, tends to focus on administrative functions (dues collection, maintenance tickets) rather than fostering social interaction.
+
+NEST differentiates itself by focusing specifically on a single apartment building and structuring interactions around distinct community functions: a shared feed for announcements, an event planner with RSVP tracking, a mutual-aid tool-lending module, and a parking spot sharing system. The scope is deliberately narrow to maintain relevance and trust. As Hampton and Wellman observed, digital networks are most effective at strengthening community ties when they are designed for a specific, bounded group of people \cite{hampton2003neighboring}.

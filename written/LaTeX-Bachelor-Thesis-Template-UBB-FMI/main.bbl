@@ -1,51 +1,112 @@
-\begin{thebibliography}{1}
+\begin{thebibliography}{10}
 
 \bibitem{putnam2000bowling}
-Robert~D Putnam.
+Robert~D. Putnam.
 \newblock {\em Bowling Alone: The Collapse and Revival of American Community}.
 \newblock Simon and Schuster, 2000.
 
 \bibitem{hampton2003neighboring}
 Keith Hampton and Barry Wellman.
-\newblock Neighboring in netville: How the internet supports community and
+\newblock Neighboring in {Netville}: How the internet supports community and
   social capital in a wired suburb.
 \newblock {\em City \& Community}, 2(4):277--311, 2003.
 
 \bibitem{masden2014tensions}
-Christina~A Masden, Catherine Grevet, Rebecca~E Grinter, Eric Gilbert, and
-  W~Keith Edwards.
+Christina~A. Masden, Catherine Grevet, Rebecca~E. Grinter, Eric Gilbert, and
+  W.~Keith Edwards.
 \newblock Tensions in scaling-up community social media: A multi-neighborhood
-  study of nextdoor.
+  study of {Nextdoor}.
 \newblock In {\em Proceedings of the SIGCHI Conference on Human Factors in
   Computing Systems}, pages 3239--3248, 2014.
 
 \bibitem{angularDocs}
 {Google LLC}.
-\newblock {Angular Documentation}.
-\newblock \url{https://angular.io/docs}, 2024.
+\newblock {Angular Developer Documentation}.
+\newblock \url{https://angular.dev/}, 2024.
 \newblock Accessed: 2026-05-04.
+
+\bibitem{fielding2000rest}
+Roy~Thomas Fielding.
+\newblock {\em Architectural Styles and the Design of Network-based Software
+  Architectures}.
+\newblock PhD thesis, University of California, Irvine, 2000.
+\newblock Chapter 5 defines Representational State Transfer (REST).
+
+\bibitem{sommerville2016software}
+Ian Sommerville.
+\newblock {\em Software Engineering}.
+\newblock Pearson Education, 10 edition, 2016.
+
+\bibitem{abramov2015redux}
+Dan Abramov and Andrew Clark.
+\newblock Live react: Hot reloading with time travel.
+\newblock In {\em ReactEurope Conference}, 2015.
+\newblock Introduced the Redux architecture for predictable state containers.
 
 \bibitem{ngrxDocs}
 {NgRx Team}.
-\newblock {NgRx Documentation}.
+\newblock {NgRx -- Reactive State for Angular}.
 \newblock \url{https://ngrx.io/docs}, 2024.
 \newblock Accessed: 2026-05-04.
 
-\bibitem{expressDocs}
-{OpenJS Foundation}.
-\newblock {Express.js Documentation}.
-\newblock \url{https://expressjs.com/}, 2024.
-\newblock Accessed: 2026-05-04.
+\bibitem{angularSignalsRfc}
+{Angular Team}.
+\newblock {Angular Signals RFC}.
+\newblock \url{https://github.com/angular/angular/discussions/49685}, 2023.
+\newblock Accessed: 2026-05-10.
 
-\bibitem{norman1986cognitive}
-Donald~A Norman.
-\newblock Cognitive engineering.
-\newblock {\em User centered system design: New perspectives on human-computer
-  interaction}, 31(61):31--61, 1986.
+\bibitem{gamma1994design}
+Erich Gamma, Richard Helm, Ralph Johnson, and John Vlissides.
+\newblock {\em Design Patterns: Elements of Reusable Object-Oriented Software}.
+\newblock Addison-Wesley Professional, 1994.
 
 \bibitem{fowler2002patterns}
 Martin Fowler.
 \newblock {\em Patterns of Enterprise Application Architecture}.
 \newblock Addison-Wesley Professional, 2002.
+
+\bibitem{expressDocs}
+{OpenJS Foundation}.
+\newblock {Express.js -- Fast, Unopinionated, Minimalist Web Framework for
+  Node.js}.
+\newblock \url{https://expressjs.com/}, 2024.
+\newblock Accessed: 2026-05-04.
+
+\bibitem{jones2015jwt}
+Michael~B. Jones, John Bradley, and Nat Sakimura.
+\newblock {JSON Web Token (JWT)}.
+\newblock RFC 7519, Internet Engineering Task Force, 2015.
+\newblock \url{https://datatracker.ietf.org/doc/html/rfc7519}.
+
+\bibitem{provos1999bcrypt}
+Niels Provos and David Mazi\`{e}res.
+\newblock A future-adaptable password scheme.
+\newblock In {\em Proceedings of the USENIX Annual Technical Conference}, pages
+  81--91, 1999.
+
+\bibitem{elmasri2015fundamentals}
+Ramez Elmasri and Shamkant~B. Navathe.
+\newblock {\em Fundamentals of Database Systems}.
+\newblock Pearson, 7 edition, 2015.
+
+\bibitem{prismaDocs}
+{Prisma Data, Inc.}
+\newblock {Prisma -- Next-generation Node.js and TypeScript ORM}.
+\newblock \url{https://www.prisma.io/docs}, 2024.
+\newblock Accessed: 2026-05-10.
+
+\bibitem{mdnCssCustomProperties}
+{MDN Web Docs}.
+\newblock {Using CSS Custom Properties (Variables)}.
+\newblock
+  \url{https://developer.mozilla.org/en-US/docs/Web/CSS/Using_CSS_custom_properties},
+  2024.
+\newblock Accessed: 2026-05-15.
+
+\bibitem{nielsen1994usability}
+Jakob Nielsen and Robert~L. Mack.
+\newblock Usability inspection methods.
+\newblock In {\em Conference Companion on Human Factors in Computing Systems}.
+  John Wiley \& Sons, 1994.
 
 \end{thebibliography}
