@@ -17,40 +17,28 @@ The global client-server interaction model is depicted in Figure \ref{fig:system
 
 \begin{figure}[h]
 \centering
-\setlength{\unitlength}{1cm}
-\begin{picture}(14,6)
-    \put(0.5,4.5){\framebox(3,1){Angular SPA Client}}
-    \put(5.5,4.5){\framebox(3,1){Express API Server}}
-    \put(10.5,4.5){\framebox(3,1){SQLite Database}}
-    
-    \put(0.5,1.5){\framebox(3,1){Theme \& Signal Store}}
-    \put(5.5,1.5){\framebox(3,1){Middleware Chain}}
-    \put(10.5,1.5){\framebox(3,1){Prisma ORM Client}}
-    
+\begin{tikzpicture}[node distance=2.8cm and 2.2cm,
+    box/.style={draw, rectangle, minimum height=1cm, minimum width=3.8cm,
+                align=center, font=\small},
+    >=Stealth]
+    % Top row
+    \node[box] (client) {Angular SPA Client};
+    \node[box, right=of client] (server) {Express API Server};
+    \node[box, right=of server] (db) {SQLite Database};
+    % Bottom row
+    \node[box, below=of client] (theme) {Theme \& Signal Store};
+    \node[box, below=of server] (mw) {Middleware Chain};
+    \node[box, below=of db] (prisma) {Prisma ORM Client};
     % Horizontal arrows
-    \put(3.5,5.1){\vector(1,0){2}}
-    \put(3.5,4.9){{\tiny HTTP POST /api}}
-    \put(5.5,4.7){\vector(-1,0){2}}
-    \put(4.0,4.3){{\tiny JSON Response}}
-    
-    \put(8.5,5.1){\vector(1,0){2}}
-    \put(8.5,4.9){{\tiny SQL Query}}
-    \put(10.5,4.7){\vector(-1,0){2}}
-    \put(8.7,4.3){{\tiny Result Set}}
-    
-    % Vertical relations
-    \put(2,4.5){\line(0,-1){1}}
-    \put(2,3.5){\vector(0,-1){1}}
-    \put(2.1,3.5){{\tiny UI State Bind}}
-    
-    \put(7,4.5){\line(0,-1){1}}
-    \put(7,3.5){\vector(0,-1){1}}
-    \put(7.1,3.5){{\tiny Security Filters}}
-    
-    \put(12,4.5){\line(0,-1){1}}
-    \put(12,3.5){\vector(0,-1){1}}
-    \put(12.1,3.5){{\tiny Type Mapping}}
-\end{picture}
+    \draw[->] ([yshift=2pt]client.east) -- node[above,font=\scriptsize] {HTTP Request} ([yshift=2pt]server.west);
+    \draw[<-] ([yshift=-2pt]client.east) -- node[below,font=\scriptsize] {JSON Response} ([yshift=-2pt]server.west);
+    \draw[->] ([yshift=2pt]server.east) -- node[above,font=\scriptsize] {SQL Query} ([yshift=2pt]db.west);
+    \draw[<-] ([yshift=-2pt]server.east) -- node[below,font=\scriptsize] {Result Set} ([yshift=-2pt]db.west);
+    % Vertical arrows
+    \draw[->] (client) -- node[right,font=\scriptsize] {UI State Bind} (theme);
+    \draw[->] (server) -- node[right,font=\scriptsize] {Security Filters} (mw);
+    \draw[->] (db) -- node[right,font=\scriptsize] {Type Mapping} (prisma);
+\end{tikzpicture}
 \caption{System architecture overview and multi-tier data flow of the NEST application.}
 \label{fig:system-architecture-overview}
 \end{figure}
@@ -64,11 +52,12 @@ NEST is designed to consolidate isolated neighborhood interactions into 8 distin
 \begin{table}[htbp]
 \centering
 \small
-\setlength{\tabcolsep}{3pt}
-\begin{tabularx}{\textwidth}{|>{\raggedright\arraybackslash}p{2.2cm}|>{\raggedright\arraybackslash}p{3.2cm}|>{\raggedright\arraybackslash}X|}
+\setlength{\tabcolsep}{4pt}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabularx}{\textwidth}{|>{\raggedright\arraybackslash}p{2.0cm}|>{\raggedright\arraybackslash}p{2.8cm}|>{\raggedright\arraybackslash}X|}
 \hline
 \textbf{Module} & \textbf{Feature Requirement} & \textbf{Functional Description and Permissions} \\ \hline
-\textbf{Authentication} & User Registration, Login \& Building Join Request & Captures user profile fields and hashes passwords. Restricts standard application access until user joins a physical building block via unique block code, subject to Admin approval. \\ \hline
+\textbf{Authen\-tication} & User Registration, Login \& Building Join Request & Captures user profile fields and hashes passwords. Restricts standard application access until user joins a physical building block via unique block code, subject to Admin approval. \\ \hline
 \textbf{Community Feed} & Chronological Post Feed \& Media Attachment & Verified building residents can publish text announcements, attach images, and scroll through building updates. Supports real-time rendering. \\ \hline
 \textbf{Shared Shed} & Peer-to-Peer Tool Sharing \& Borrowing & Residents can list household appliances or tools. Other verified neighbors can request to borrow items, transitioning item states from available to pending and borrowed. \\ \hline
 \textbf{Events} & Local Activity Planning \& RSVP Tracking & Residents can schedule neighborhood meetings, clean-up activities, or parties. Limits participant count and tracks attendee lists reactively. \\ \hline
@@ -86,11 +75,7 @@ Non-functional requirements dictate the performance boundaries, operational safe
 
 \begin{itemize}
     \item \textbf{Security and Privacy:}
-    \begin{itemize}
-        \item \emph{Confidentiality:} All HTTP client-server communication must use secure protocols. Sensitive fields such as passwords must be hashed using the bcrypt algorithm with a workload factor of 10 prior to persistence.
-        \item \emph{Integrity:} State-modifying endpoints must be protected by JSON Web Token (JWT) authorization headers \cite{jones2015jwt}. Access must be restricted through middleware that enforces roles (\texttt{RESIDENT}, \texttt{ADMIN}).
-        \item \emph{Rate Limiting:} To prevent brute force and denial of service (DoS), API endpoints must enforce limit request rates (e.g., maximum 100 requests per 15 minutes per IP address).
-    \end{itemize}
+    Confidentiality is a primary concern. All HTTP client-server communication must use secure protocols. Sensitive fields such as passwords must be hashed using the bcrypt algorithm with a workload factor of 10 prior to persistence. To ensure data integrity, state-modifying endpoints must be protected by JSON Web Token (JWT) authorization headers \cite{jones2015jwt}. Access is strictly restricted through middleware that enforces roles (\texttt{RESIDENT}, \texttt{ADMIN}). Furthermore, to prevent brute force and denial of service (DoS) attacks, API endpoints must enforce request rate limits, allowing a maximum of 100 requests per 15 minutes per IP address.
     
     \item \textbf{Usability and Accessibility:}
     \begin{itemize}
@@ -119,6 +104,46 @@ The application model governs interactions through three distinct roles:
     \item \textbf{Resident (Verified User):} A logged-in resident associated with a verified building block. Can access the Feed, Shed, Events, Parking, Settings, and Profile modules.
     \item \textbf{Administrator:} A verified user with administrative privileges over a specific building block. Can perform all Resident actions and has exclusive rights to approve join requests and manage building configurations.
 \end{enumerate}
+
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[
+    usecase/.style={draw, ellipse, minimum width=2.5cm, minimum height=1cm, align=center, font=\scriptsize},
+    actor/.style={draw=none, align=center, font=\scriptsize},
+    >=Stealth, node distance=1.5cm and 3cm]
+    
+    % Actors
+    \node[actor] (guest) {\textbf{Guest}};
+    \node[actor, below=2cm of guest] (resident) {\textbf{Resident}};
+    \node[actor, below=2cm of resident] (admin) {\textbf{Administrator}};
+    
+    % Use Cases
+    \node[usecase, right=2cm of guest] (uc_register) {Register / Log In};
+    \node[usecase, right=3cm of resident] (uc_join) {Request to Join Block};
+    \node[usecase, above=0.3cm of uc_join] (uc_feed) {View/Post in Feed};
+    \node[usecase, below=0.3cm of uc_join] (uc_shed) {Borrow/Lend Tools};
+    \node[usecase, below=0.3cm of uc_shed] (uc_event) {RSVP to Events};
+    \node[usecase, right=2cm of admin] (uc_approve) {Approve Join Requests};
+    \node[usecase, below=0.3cm of uc_approve] (uc_manage) {Manage Building};
+    
+    % Connections
+    \draw[-] (guest.east) -- (uc_register.west);
+    
+    \draw[-] (resident.east) -- (uc_join.west);
+    \draw[-] (resident.east) -- (uc_feed.west);
+    \draw[-] (resident.east) -- (uc_shed.west);
+    \draw[-] (resident.east) -- (uc_event.west);
+    
+    \draw[-] (admin.east) -- (uc_approve.west);
+    \draw[-] (admin.east) -- (uc_manage.west);
+    
+    % Admin inherits from Resident
+    \draw[->, dashed] (admin.north) -- node[left, font=\tiny] {Inherits} (resident.south);
+    
+\end{tikzpicture}
+\caption{UML Use Case Diagram mapping system actors to primary functionalities.}
+\label{fig:use-case-diagram}
+\end{figure}
 
 \subsection{Use Case Scenarios}
 To map out user interactions and verify requirements, four critical use cases representing complex multi-party workflows are modeled below.
@@ -209,43 +234,31 @@ Components do not directly inject the NgRx \texttt{Store} or dispatch raw action
 
 \begin{figure}[h]
 \centering
-\setlength{\unitlength}{1cm}
-\begin{picture}(14,6.5)
-    \put(0.5,5.5){\framebox(3,0.8){Component Template}}
-    \put(0.5,3.0){\framebox(3,0.8){Facade Service}}
-    
-    \put(5.5,5.5){\framebox(3,0.8){NgRx Actions}}
-    \put(5.5,3.0){\framebox(3,0.8){NgRx Store State}}
-    \put(5.5,0.5){\framebox(3,0.8){NgRx Effects}}
-    
-    \put(10.5,5.5){\framebox(3,0.8){Backend API}}
-    \put(10.5,3.0){\framebox(3,0.8){Reducers / Selectors}}
-    
+\begin{tikzpicture}[node distance=2.2cm and 2.0cm,
+    box/.style={draw, rectangle, minimum height=0.9cm, minimum width=3.6cm,
+                align=center, font=\small},
+    lbl/.style={font=\scriptsize, fill=white, inner sep=1pt},
+    >=Stealth]
+    % Left column
+    \node[box] (template) {Component Template};
+    \node[box, below=of template] (facade) {Facade Service};
+    % Center column
+    \node[box, right=of template] (actions) {NgRx Actions};
+    \node[box, below=of actions] (store) {NgRx Store State};
+    \node[box, below=of store] (effects) {NgRx Effects};
+    % Right column
+    \node[box, right=of actions] (api) {Backend API};
+    \node[box, right=of store] (reducers) {Reducers / Selectors};
     % Flows
-    \put(2,5.5){\vector(0,-1){1.7}}
-    \put(2.1,4.5){{\tiny 1. User Action Method}}
-    
-    \put(3.5,3.4){\vector(1,0){2}}
-    \put(3.6,3.6){{\tiny 2. Dispatch Action}}
-    
-    \put(7,3.0){\vector(0,-1){1.7}}
-    \put(7.1,2.0){{\tiny 3. Intercept}}
-    
-    \put(8.5,0.9){\vector(1,1){2}}
-    \put(8.6,1.4){{\tiny 4. HTTP request}}
-    
-    \put(12,5.5){\vector(0,-1){1.7}}
-    \put(12.1,4.5){{\tiny 5. HTTP response}}
-    
-    \put(10.5,3.4){\vector(-1,0){2}}
-    \put(9.0,3.6){{\tiny 6. Update State}}
-    
-    \put(5.5,3.4){\vector(-1,0){2}}
-    \put(4.0,3.6){{\tiny 7. Select State}}
-    
-    \put(2,3.8){\vector(0,1){1.7}}
-    \put(0.2,4.5){{\tiny 8. Push Signal Update}}
-\end{picture}
+    \draw[->] ([xshift=-3pt]template.south) -- node[lbl,left] {1. User Action} ([xshift=-3pt]facade.north);
+    \draw[->] ([yshift=2pt]facade.east) -- node[lbl,above] {2. Dispatch Action} ([yshift=2pt]store.west);
+    \draw[->] (store.south) -- node[lbl,right] {3. Intercept} (effects.north);
+    \draw[->] (effects.east) -- ++(1,0) |- node[lbl, pos=0.25, right] {4. HTTP request} (reducers.south);
+    \draw[->] (api.south) -- node[lbl,right] {5. HTTP response} (reducers.north);
+    \draw[->] ([yshift=2pt]reducers.west) -- node[lbl,above] {6. Update State} ([yshift=2pt]store.east);
+    \draw[<-] ([yshift=-2pt]facade.east) -- node[lbl,below] {7. Select State} ([yshift=-2pt]store.west);
+    \draw[->] ([xshift=3pt]facade.north) -- node[lbl,right] {8. Push Signal Update} ([xshift=3pt]template.south);
+\end{tikzpicture}
 \caption{Reactive state data flow in the frontend utilizing the NgRx Facade and Signal paradigms.}
 \label{fig:reactive-state-flow}
 \end{figure}
@@ -255,32 +268,26 @@ The backend application is structured around a layered Model-View-Controller (MV
 
 \begin{figure}[h]
 \centering
-\setlength{\unitlength}{1cm}
-\begin{picture}(14,6)
-    \put(0.5,4.5){\framebox(3,1){Routing Layer}}
-    \put(5.5,4.5){\framebox(3,1){Controller Layer}}
-    \put(10.5,4.5){\framebox(3,1){Service Layer}}
-    
-    \put(0.5,1.5){\framebox(3,1){Middleware Pipelines}}
-    \put(5.5,1.5){\framebox(3,1){Request Validators}}
-    \put(10.5,1.5){\framebox(3,1){Persistence Layer (Prisma)}}
-    
+\begin{tikzpicture}[node distance=2.8cm and 2.2cm,
+    box/.style={draw, rectangle, minimum height=1cm, minimum width=4cm,
+                align=center, font=\small},
+    lbl/.style={font=\scriptsize, fill=white, inner sep=1pt},
+    >=Stealth]
+    % Top row
+    \node[box] (routing) {Routing Layer};
+    \node[box, right=of routing] (controller) {Controller Layer};
+    \node[box, right=of controller] (service) {Service Layer};
+    % Bottom row
+    \node[box, below=of routing] (mwpipe) {Middleware Pipelines};
+    \node[box, below=of controller] (validators) {Request Validators};
+    \node[box, below=of service] (persistence) {Persistence Layer\\(Prisma)};
     % Connections
-    \put(2,4.5){\vector(0,-1){2}}
-    \put(2.1,3.5){{\tiny Check Auth/Limit}}
-    
-    \put(3.5,2.0){\vector(1,0){2}}
-    \put(3.7,2.2){{\tiny Parse Payload}}
-    
-    \put(7,2.5){\vector(0,1){2}}
-    \put(7.1,3.5){{\tiny Invoke Action}}
-    
-    \put(8.5,5.0){\vector(1,0){2}}
-    \put(8.7,5.2){{\tiny Business Logic}}
-    
-    \put(12,4.5){\vector(0,-1){2}}
-    \put(12.1,3.5){{\tiny Fetch/Write}}
-\end{picture}
+    \draw[->] (routing) -- node[lbl,right] {Check Auth/Limit} (mwpipe);
+    \draw[->] (mwpipe.east) -- node[lbl,above] {Parse Payload} (validators.west);
+    \draw[->] (validators.north) -- ++(0,0.5) -| node[lbl, pos=0.25, above] {Invoke Action} (controller.south);
+    \draw[->] (controller.east) -- node[lbl,above] {Business Logic} (service.west);
+    \draw[->] (service) -- node[lbl,right] {Fetch/Write} (persistence);
+\end{tikzpicture}
 \caption{Layered MVC and middleware processing architecture of the NEST backend.}
 \label{fig:backend-layers}
 \end{figure}
@@ -297,61 +304,64 @@ The persistence layer of NEST consists of 10 distinct entities. Relationships ar
 
 \begin{figure}[h]
 \centering
-\setlength{\unitlength}{1cm}
-\begin{picture}(14,8)
-    \put(0.5,6.5){\framebox(2.2,1.2){User}}
-    \put(4.0,6.5){\framebox(2.2,1.2){Block}}
-    \put(8.0,6.5){\framebox(2.2,1.2){JoinRequest}}
-    \put(11.3,6.5){\framebox(2.2,1.2){Post}}
-    
-    \put(0.5,3.5){\framebox(2.2,1.2){Event}}
-    \put(4.0,3.5){\framebox(2.2,1.2){EventAttendee}}
-    \put(8.0,3.5){\framebox(2.2,1.2){Resource}}
-    \put(11.3,3.5){\framebox(2.2,1.2){Reservation}}
-    
-    \put(0.5,0.5){\framebox(2.2,1.2){ParkingSlot}}
-    \put(4.0,0.5){\framebox(2.2,1.2){Announcement}}
-    \put(8.0,0.5){\framebox(2.2,1.2){Application}}
-    
-    % Lines User
-    \put(2.7,7.1){\line(1,0){1.3}}
-    \put(2.8,7.3){{\tiny 1:N}}
-    \put(1.6,6.5){\line(0,-1){1.8}}
-    
-    \put(6.2,7.1){\line(1,0){1.8}}
-    \put(6.3,7.3){{\tiny 1:N}}
-    
-    \put(2.7,6.7){\line(4,-3){4.0}}
-    
-    % Event relations
-    \put(2.7,4.1){\line(1,0){1.3}}
-    
-    % Resource relations
-    \put(2.7,6.6){\line(3,-1){5.3}}
-    \put(10.2,4.1){\line(1,0){1.1}}
-    
-    % Parking relations
-    \put(1.6,6.5){\line(0,-1){4.8}}
-    \put(2.7,1.1){\line(1,0){1.3}}
-    \put(6.2,1.1){\line(1,0){1.8}}
-\end{picture}
+\begin{tikzpicture}[node distance=2.4cm and 1.8cm,
+    entity/.style={draw, rectangle, minimum height=0.9cm, minimum width=2.8cm,
+                   align=center, font=\small},
+    rel/.style={font=\tiny, fill=white, inner sep=1pt},
+    >=Stealth]
+    % Row 1
+    \node[entity] (user) {User};
+    \node[entity, right=of user] (block) {Block};
+    \node[entity, right=of block] (joinreq) {JoinRequest};
+    \node[entity, right=of joinreq] (post) {Post};
+    % Row 2
+    \node[entity, below=of user] (event) {Event};
+    \node[entity, right=of event] (attendee) {EventAttendee};
+    \node[entity, right=of attendee] (resource) {Resource};
+    \node[entity, right=of resource] (reservation) {Reservation};
+    % Row 3
+    \node[entity, below=of event] (parking) {ParkingSlot};
+    \node[entity, right=of parking] (announce) {Announcement};
+    \node[entity, right=of announce] (application) {Application};
+    % --- Relationships ---
+    % User -> Block (1:N)
+    \draw[-] (user.east) -- node[rel, above] {1:N} (block.west);
+    % Block -> JoinRequest (1:N)
+    \draw[-] (block.east) -- node[rel, above] {1:N} (joinreq.west);
+    % User -> Post (1:N) — route above row 1
+    \draw[-] (user.north) -- ++(0,0.5) -| node[rel, pos=0.25, above] {1:N} (post.north);
+    % User -> Event (1:N)
+    \draw[-] (user.south) -- node[rel, left] {1:N} (event.north);
+    % Event -> EventAttendee (1:N)
+    \draw[-] (event.east) -- node[rel, above] {1:N} (attendee.west);
+    % User -> Resource (1:N) — route below row 1, above row 2
+    \draw[-] ([xshift=8pt]user.south) -- ++(0,-0.6) -| node[rel, pos=0.5, above] {1:N} (resource.north);
+    % Resource -> Reservation (1:N)
+    \draw[-] (resource.east) -- node[rel, above] {1:N} (reservation.west);
+    % User -> ParkingSlot (1:N) — route down left side
+    \draw[-] ([xshift=-8pt]user.south) -- ++(0,-0.3) -- ++(-0.8,0) |- node[rel, pos=0.75, above] {1:N} (parking.west);
+    % ParkingSlot -> Announcement (1:N)
+    \draw[-] (parking.east) -- node[rel, above] {1:N} (announce.west);
+    % Announcement -> Application (1:N)
+    \draw[-] (announce.east) -- node[rel, above] {1:N} (application.west);
+\end{tikzpicture}
 \caption{Entity-Relationship (ER) topology mapping the relational database structure of the NEST application.}
 \label{fig:er-diagram}
 \end{figure}
 
 The database schema models the following entities:
 \begin{enumerate}
-    \item \textbf{\texttt{User}:} The primary entity, representing a resident. Contains profile info, hashed credentials, role assignment, and verification status. User preferences are stored as a JSON string under the \texttt{preferences} field, enabling dynamic settings extension.
-    \item \textbf{\texttt{Block}:} Represents a physical residential building block. Owned by an Admin user (\texttt{adminId} foreign key, referencing \texttt{User.id}).
-    \item \textbf{\texttt{JoinRequest}:} A join-table mapping a \texttt{User}'s request to join a \texttt{Block}. Enforces a unique composite constraint \texttt{@@unique([userId, blockId])} to prevent duplicate submissions.
-    \item \textbf{\texttt{Post}:} Represents a social announcement in the community feed. Linked to \texttt{User} through a many-to-one relationship (\texttt{authorId}).
-    \item \textbf{\texttt{Event}:} Represents a community gathering, linked to the creator (\texttt{creatorId}).
-    \item \textbf{\texttt{EventAttendee}:} An association table modeling the many-to-many relationship between users and events, with composite primary keys \texttt{@@id([userId, eventId])}.
-    \item \textbf{\texttt{Resource}:} Represents a tool or appliance shared in the Shared Shed. Linked to its owner (\texttt{ownerId}).
-    \item \textbf{\texttt{ResourceReservation}:} Models the booking lifecycle of a shared resource, tracking borrower (\texttt{borrowerId}), intervals, and status state transitions (\texttt{PENDING}, \texttt{APPROVED}, \texttt{REJECTED}, \texttt{RETURNED}).
-    \item \textbf{\texttt{ParkingSlot}:} Represents a registered physical parking space, bound to a \texttt{User.id} via owner mapping.
-    \item \textbf{\texttt{ParkingAnnouncement}:} A temporary availability offer for a parking slot during specified intervals.
-    \item \textbf{\texttt{ParkingApplication}:} An application submitted by a resident to utilize an announced parking space, tracking status (\texttt{PENDING}, \texttt{APPROVED}, \texttt{DENIED}).
+    \item \textbf{\texttt{User}:} The primary entity, representing a resident. Contains fields such as \texttt{id}, \texttt{email}, \texttt{passwordHash}, \texttt{firstName}, \texttt{lastName}, \texttt{apartmentNumber}, \texttt{role} (\texttt{RESIDENT} or \texttt{ADMIN}), and \texttt{isVerified}. User preferences are stored as a JSON string under the \texttt{preferences} field, enabling dynamic settings extension.
+    \item \textbf{\texttt{Block}:} Represents a physical residential building block. Contains \texttt{id}, \texttt{name}, \texttt{address}, and \texttt{joinCode}. Owned by an Admin user (\texttt{adminId} foreign key, referencing \texttt{User.id}).
+    \item \textbf{\texttt{JoinRequest}:} A join-table mapping a \texttt{User}'s request to join a \texttt{Block}. Contains \texttt{id}, \texttt{userId}, \texttt{blockId}, and \texttt{status} (\texttt{PENDING}, \texttt{APPROVED}, \texttt{REJECTED}). Enforces a unique composite constraint \texttt{@@unique([userId, blockId])} to prevent duplicate submissions.
+    \item \textbf{\texttt{Post}:} Represents a social announcement in the community feed. Contains \texttt{id}, \texttt{content}, \texttt{imageUrl}, \texttt{createdAt}, and \texttt{authorId} (many-to-one relationship with \texttt{User}).
+    \item \textbf{\texttt{Event}:} Represents a community gathering. Contains \texttt{id}, \texttt{title}, \texttt{description}, \texttt{date}, \texttt{location}, \texttt{maxParticipants}, and is linked to the creator (\texttt{creatorId}).
+    \item \textbf{\texttt{EventAttendee}:} An association table modeling the many-to-many relationship between users and events, with composite primary keys \texttt{@@id([userId, eventId])} and a \texttt{joinedAt} timestamp.
+    \item \textbf{\texttt{Resource}:} Represents a tool or appliance shared in the Shared Shed. Contains \texttt{id}, \texttt{name}, \texttt{description}, \texttt{category}, \texttt{imageUrl}, \texttt{isAvailable}, and \texttt{ownerId}.
+    \item \textbf{\texttt{Reservation}:} Models the booking lifecycle of a shared resource. Contains \texttt{id}, \texttt{resourceId}, \texttt{borrowerId}, \texttt{startDate}, \texttt{endDate}, and \texttt{status} (\texttt{PENDING}, \texttt{APPROVED}, \texttt{REJECTED}, \texttt{RETURNED}).
+    \item \textbf{\texttt{ParkingSlot}:} Represents a registered physical parking space. Contains \texttt{id}, \texttt{slotNumber}, \texttt{location}, and is bound to a \texttt{User.id} via \texttt{ownerId}.
+    \item \textbf{\texttt{Announcement}:} A temporary availability offer for a parking slot. Contains \texttt{id}, \texttt{slotId}, \texttt{startTime}, \texttt{endTime}, and \texttt{notes}.
+    \item \textbf{\texttt{Application}:} An application submitted by a resident to utilize an announced parking space. Contains \texttt{id}, \texttt{announcementId}, \texttt{applicantId}, and \texttt{status} (\texttt{PENDING}, \texttt{APPROVED}, \texttt{DENIED}).
 \end{enumerate}
 
 \section{API Contract Design}
@@ -363,30 +373,30 @@ Table \ref{tab:api-contracts} details the complete functional API contract of th
 \centering
 \scriptsize
 \setlength{\tabcolsep}{3pt}
-\begin{tabularx}{\textwidth}{|>{\ttfamily\raggedright\arraybackslash}p{0.8cm}|>{\ttfamily\raggedright\arraybackslash}p{3.4cm}|>{\raggedright\arraybackslash}p{2.6cm}|>{\raggedright\arraybackslash}X|p{1.4cm}|}
+\begin{tabularx}{\textwidth}{|>{\ttfamily\raggedright\arraybackslash}p{1.2cm}|>{\ttfamily\raggedright\arraybackslash}X|>{\raggedright\arraybackslash}p{3.0cm}|>{\raggedright\arraybackslash}X|>{\raggedright\arraybackslash}p{1.8cm}|}
 \hline
 \textbf{Verb} & \textbf{Endpoint Path} & \textbf{Request Payload} & \textbf{Response Payload Description} & \textbf{Auth Level} \\ \hline
-POST & /api/auth/register & firstName, lastName, email, password, apartmentNumber & Registered User details, access token (JWT) & Anonymous \\ \hline
-POST & /api/auth/login & email, password & User details and JWT & Anonymous \\ \hline
-POST & /api/auth/join & blockCode & Created JoinRequest record & JWT (Unverified) \\ \hline
-GET & /api/blocks/requests & -- & Array of pending JoinRequest entities & JWT (Admin Only) \\ \hline
-PUT & /api/blocks/requests/:id & status ("APPROVED" / "REJECTED") & Updated JoinRequest & JWT (Admin Only) \\ \hline
-GET & /api/feed & -- & Array of chronological Posts & JWT (Verified) \\ \hline
-POST & /api/feed & content, imageUrl (optional) & Created Post & JWT (Verified) \\ \hline
-DELETE & /api/feed/:id & -- & Confirmation message & JWT (Owner/Admin) \\ \hline
-GET & /api/shed & -- & Array of available resources & JWT (Verified) \\ \hline
-POST & /api/shed & name, description, type & Created Resource & JWT (Verified) \\ \hline
-POST & /api/shed/:id/borrow & startTime, endTime & ResourceReservation entity with status "PENDING" & JWT (Verified) \\ \hline
-PUT & /api/shed/reservations/:id & status ("APPROVED" / "RETURNED") & Updated ResourceReservation, resource availability updated & JWT (Verified) \\ \hline
-GET & /api/events & -- & Array of future community events & JWT (Verified) \\ \hline
-POST & /api/events & title, description, location, startTime, endTime, maxParticipants & Created Event details & JWT (Verified) \\ \hline
-POST & /api/events/:id/attend & -- & Created EventAttendee record & JWT (Verified) \\ \hline
-GET & /api/parking/announcements & -- & Active ParkingAnnouncements & JWT (Verified) \\ \hline
-POST & /api/parking/announcements & slotId, availableFrom, availableTo & Created ParkingAnnouncement & JWT (Verified) \\ \hline
-POST & /api/parking/apply/:id & -- & Created ParkingApplication details & JWT (Verified) \\ \hline
-PUT & /api/parking/applications/:id & status ("APPROVED" / "DENIED") & Updated ParkingApplication, auto-rejects overlapping requests & JWT (Verified) \\ \hline
-PUT & /api/users/profile & firstName, lastName, headline, about, phoneNumber & Updated User profile & JWT (Verified) \\ \hline
-PUT & /api/users/preferences & theme, isPhonePublic, notifyResourceAvailable, notifyNewPosts & Updated User preference configuration & JWT (Verified) \\ \hline
+POST & /api/\allowbreak auth/\allowbreak register & firstName, lastName, email, password, apartmentNumber & Registered User details, access token (JWT) & Anonymous \\ \hline
+POST & /api/\allowbreak auth/\allowbreak login & email, password & User details and JWT & Anonymous \\ \hline
+POST & /api/\allowbreak auth/\allowbreak join & blockCode & Created JoinRequest record & JWT (Unverified) \\ \hline
+GET & /api/\allowbreak blocks/\allowbreak requests & -- & Array of pending JoinRequest entities & JWT (Admin Only) \\ \hline
+PUT & /api/\allowbreak blocks/\allowbreak requests/\allowbreak :id & status ("APPROVED" / "REJECTED") & Updated JoinRequest & JWT (Admin Only) \\ \hline
+GET & /api/\allowbreak feed & -- & Array of chronological Posts & JWT (Verified) \\ \hline
+POST & /api/\allowbreak feed & content, imageUrl (optional) & Created Post & JWT (Verified) \\ \hline
+DELETE & /api/\allowbreak feed/\allowbreak :id & -- & Confirmation message & JWT (Owner/Admin) \\ \hline
+GET & /api/\allowbreak shed & -- & Array of available resources & JWT (Verified) \\ \hline
+POST & /api/\allowbreak shed & name, description, type & Created Resource & JWT (Verified) \\ \hline
+POST & /api/\allowbreak shed/\allowbreak :id/\allowbreak borrow & startTime, endTime & ResourceReservation entity with status "PENDING" & JWT (Verified) \\ \hline
+PUT & /api/\allowbreak shed/\allowbreak reservations/\allowbreak :id & status ("APPROVED" / "RETURNED") & Updated ResourceReservation, resource availability updated & JWT (Verified) \\ \hline
+GET & /api/\allowbreak events & -- & Array of future community events & JWT (Verified) \\ \hline
+POST & /api/\allowbreak events & title, description, location, startTime, endTime, maxParticipants & Created Event details & JWT (Verified) \\ \hline
+POST & /api/\allowbreak events/\allowbreak :id/\allowbreak attend & -- & Created EventAttendee record & JWT (Verified) \\ \hline
+GET & /api/\allowbreak parking/\allowbreak announcements & -- & Active ParkingAnnouncements & JWT (Verified) \\ \hline
+POST & /api/\allowbreak parking/\allowbreak announcements & slotId, availableFrom, availableTo & Created ParkingAnnouncement & JWT (Verified) \\ \hline
+POST & /api/\allowbreak parking/\allowbreak apply/\allowbreak :id & -- & Created ParkingApplication details & JWT (Verified) \\ \hline
+PUT & /api/\allowbreak parking/\allowbreak applications/\allowbreak :id & status ("APPROVED" / "DENIED") & Updated ParkingApplication, auto-rejects overlapping requests & JWT (Verified) \\ \hline
+PUT & /api/\allowbreak users/\allowbreak profile & firstName, lastName, headline, about, phoneNumber & Updated User profile & JWT (Verified) \\ \hline
+PUT & /api/\allowbreak users/\allowbreak preferences & theme, isPhonePublic, notifyResourceAvailable, notifyNewPosts & Updated User preference configuration & JWT (Verified) \\ \hline
 \end{tabularx}
 \caption{REST API endpoint specifications of the NEST client-server interface.}
 \label{tab:api-contracts}

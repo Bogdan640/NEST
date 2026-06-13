@@ -7,9 +7,9 @@ This chapter surveys the foundational concepts and existing body of knowledge up
 
 The way a web application is structured at the highest level determines its performance characteristics, maintainability, and user experience. Three dominant paradigms have emerged over the past two decades.
 
-\textbf{Multi-Page Applications (MPAs)} represent the earliest model, where each user interaction triggers a full page reload from the server. While simple to reason about, this approach results in noticeable latency and a disjointed user experience, because the entire HTML document must be re-fetched for every navigation action.
+\textbf{Multi-Page Applications (MPAs)} represent the earliest model, where each user interaction triggers a full page reload from the server. While simple to reason about, this approach results in noticeable latency and a disjointed user experience, because the entire HTML document must be re-fetched for every navigation action \cite{mdnMPA}.
 
-\textbf{Single-Page Applications (SPAs)} emerged as a response. In this model, the browser loads a single HTML shell and then dynamically rewrites the page content using JavaScript. Navigation occurs client-side through the History API, and data is fetched asynchronously from the server through API calls \cite{angularDocs}. The perceived responsiveness is substantially better, since only data payloads travel over the network rather than complete rendered pages.
+\textbf{Single-Page Applications (SPAs)} emerged as a response. In this model, the browser loads a single HTML shell and then dynamically rewrites the page content using JavaScript \cite{mdnSPA}. Navigation occurs client-side through the History API, and data is fetched asynchronously from the server through API calls \cite{angularDocs}. The perceived responsiveness is substantially better, since only data payloads travel over the network rather than complete rendered pages.
 
 \textbf{Server-Side Rendering (SSR)} and hybrid approaches attempt to combine the SEO advantages of MPAs with the interactivity of SPAs, pre-rendering the initial HTML on the server and then ``hydrating'' it with client-side JavaScript.
 
@@ -21,7 +21,7 @@ The client-server communication follows the Representational State Transfer (RES
 
 Modern frontend development has converged on the idea of decomposing user interfaces into independent, reusable \textit{components}. A component encapsulates its own template (structure), styles (appearance), and logic (behavior) in a single cohesive unit. This mirrors the broader software engineering principle of high cohesion and low coupling \cite{sommerville2016software}.
 
-Three frameworks dominate this space: React (maintained by Meta), Vue.js, and Angular (maintained by Google). Table~\ref{tab:framework-comparison} summarizes their key differences.
+Three frameworks dominate this space: React \cite{reactDocs} (maintained by Meta), Vue.js \cite{vueDocs}, and Angular \cite{angularDocs} (maintained by Google). Table~\ref{tab:framework-comparison} summarizes their key differences.
 
 \begin{table}[h]
 \centering
@@ -88,18 +88,6 @@ In the NEST application, both paradigms coexist. The global, cross-cutting state
 A recurring problem in NgRx applications is that components become tightly coupled to the store's internal structure. If a selector or action name changes, every component that references it must be updated. The \textit{Facade pattern} \cite{gamma1994design} solves this by introducing an intermediary service that encapsulates all store interactions behind a clean, domain-specific API.
 
 For example, rather than having a component dispatch \texttt{AuthActions.login(\{email, password\})} directly, it calls \texttt{authFacade.login(email, password)}. The Facade translates this into the appropriate dispatch, and also exposes selectors as signals. This decoupling means that the store's internal structure can be refactored without touching any component code.
-
-\section{Design Patterns in Web Engineering}
-
-Several classical design patterns from the ``Gang of Four'' catalog \cite{gamma1994design} find direct application in the architecture of modern web applications.
-
-\textbf{Singleton.} Angular's dependency injection system guarantees that services declared with \texttt{providedIn: 'root'} are instantiated exactly once and shared across the entire application. This is critical for services such as the authentication facade or the theme service, where multiple instances would produce conflicting state.
-
-\textbf{Observer.} The NgRx store is fundamentally an implementation of the Observer pattern. Components \textit{subscribe} to slices of the state, and the store \textit{notifies} them whenever the relevant state changes. In the reactive programming terminology used by Angular, this is expressed through RxJS Observables (or, equivalently, through signals).
-
-\textbf{Strategy.} The Express middleware pipeline on the backend exemplifies the Strategy pattern. Each middleware function (authentication, verification, rate limiting) encapsulates a specific policy, and they are composed in different combinations depending on the route's security requirements.
-
-\textbf{Dependency Injection.} Angular's DI container is perhaps the most pervasive pattern in the framework. Services, guards, interceptors, and resolvers are all instantiated and injected by the framework based on their provider configuration. This makes it straightforward to substitute implementations (e.g., a mock API service during testing) without modifying the consuming code \cite{fowler2002patterns}.
 
 \section{Backend Architecture: Layered Services}
 

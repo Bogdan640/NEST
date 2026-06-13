@@ -1,4 +1,5 @@
-import { Component, input, output, computed, signal, inject } from '@angular/core';
+import { Component, input, output, computed, signal, inject, TemplateRef } from '@angular/core';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { Resource } from '../../../core/models/resource.model';
 import { ConfirmDialogComponent } from '../../../shared/components/confirm-dialog/confirm-dialog.component';
 import { ResourceAvailabilityNotificationService } from '../../../shared/services/resource-availability-notification.service';
@@ -6,12 +7,13 @@ import { ResourceAvailabilityNotificationService } from '../../../shared/service
 @Component({
   selector: 'app-resource-card',
   standalone: true,
-  imports: [ConfirmDialogComponent],
+  imports: [ConfirmDialogComponent, MatDialogModule],
   templateUrl: './resource-card.component.html',
   styleUrl: './resource-card.component.scss',
 })
 export class ResourceCardComponent {
   private notificationService = inject(ResourceAvailabilityNotificationService);
+  private dialog = inject(MatDialog);
 
   /** The resource to display */
   resource = input.required<Resource>();
@@ -93,5 +95,20 @@ export class ResourceCardComponent {
     } else {
       this.notificationService.watchResource(id, name);
     }
+  }
+
+  openDetails(templateRef: TemplateRef<any>): void {
+    this.dialog.open(templateRef, {
+      panelClass: 'modal-dialog-panel',
+      backdropClass: 'blurred-backdrop',
+      maxWidth: '90vw',
+      maxHeight: '90vh'
+    });
+  }
+
+  getTruncatedDescription(desc: string, limit: number = 120): string {
+    if (desc.length <= limit) return desc;
+    const lastSpace = desc.lastIndexOf(' ', limit);
+    return desc.slice(0, lastSpace > 0 ? lastSpace : limit);
   }
 }

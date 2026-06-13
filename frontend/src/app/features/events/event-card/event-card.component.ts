@@ -1,12 +1,13 @@
-import { Component, input, output, computed, signal } from '@angular/core';
+import { Component, input, output, computed, signal, inject, TemplateRef } from '@angular/core';
 import { DatePipe } from '@angular/common';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { NestEvent } from '../../../core/models/event.model';
 import { ConfirmDialogComponent } from '../../../shared/components/confirm-dialog/confirm-dialog.component';
 
 @Component({
   selector: 'app-event-card',
   standalone: true,
-  imports: [DatePipe, ConfirmDialogComponent],
+  imports: [DatePipe, ConfirmDialogComponent, MatDialogModule],
   templateUrl: './event-card.component.html',
   styleUrl: './event-card.component.scss',
 })
@@ -20,6 +21,7 @@ export class EventCardComponent {
   readonly deleteClicked = output<string>();
 
   readonly showDeleteConfirm = signal(false);
+  private readonly dialog = inject(MatDialog);
 
   readonly isAttending = computed(() => {
     const userId = this.currentUserId();
@@ -61,5 +63,20 @@ export class EventCardComponent {
 
   cancelDelete(): void {
     this.showDeleteConfirm.set(false);
+  }
+
+  openDetails(templateRef: TemplateRef<any>): void {
+    this.dialog.open(templateRef, {
+      panelClass: 'modal-dialog-panel',
+      backdropClass: 'blurred-backdrop',
+      maxWidth: '90vw',
+      maxHeight: '90vh'
+    });
+  }
+
+  getTruncatedDescription(desc: string, limit: number = 120): string {
+    if (desc.length <= limit) return desc;
+    const lastSpace = desc.lastIndexOf(' ', limit);
+    return desc.slice(0, lastSpace > 0 ? lastSpace : limit);
   }
 }

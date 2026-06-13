@@ -57,3 +57,19 @@ body {
 .mat-datepicker-toggle-active {
   color: var(--mat-datepicker-toggle) !important;
 }
+
+/* Modal and Blur effect classes */
+.blurred-backdrop {
+  backdrop-filter: blur(5px) !important;
+  background: rgba(0, 0, 0, 0.4) !important;
+}
+
+.modal-dialog-panel {
+  max-width: 90vw !important;
+  
+  .mat-mdc-dialog-container .mdc-dialog__surface {
+    background: transparent;
+    box-shadow: none;
+    overflow: visible;
+  }
+}

@@ -13,7 +13,14 @@
 
   <h3 class="resource-name">{{ resource().name }}</h3>
   
-  <p class="resource-description">{{ resource().description }}</p>
+  @if (resource().description.length > 120) {
+    <p class="resource-description">
+      {{ getTruncatedDescription(resource().description, 120) }}... 
+      <a href="javascript:void(0)" class="see-more-link" (click)="openDetails(detailsDialog)">see more</a>
+    </p>
+  } @else {
+    <p class="resource-description">{{ resource().description }}</p>
+  }
 
   <div class="resource-status">
     <div class="status-indicator" [class.available]="isAvailable()" [class.borrowed]="!isAvailable()">
@@ -78,3 +85,46 @@
   (confirmed)="confirmDelete()"
   (cancelled)="cancelDelete()"
 ></app-confirm-dialog>
+
+<ng-template #detailsDialog let-dialogRef="dialogRef">
+  <div class="modal-card-container resource-card no-hover-effect">
+    <div class="modal-header-actions">
+      <button class="btn-icon close-btn" mat-dialog-close title="Close">✕</button>
+    </div>
+    
+    <div class="resource-header">
+      <div class="resource-type-badge" [class]="resource().type.toLowerCase()">
+        {{ resource().type }}
+      </div>
+    </div>
+
+    <h3 class="resource-name">{{ resource().name }}</h3>
+    
+    <p class="resource-description full-text">{{ resource().description }}</p>
+
+    <div class="resource-status">
+      <div class="status-indicator" [class.available]="isAvailable()" [class.borrowed]="!isAvailable()">
+        <span class="dot"></span>
+        {{ isAvailable() ? 'Available' : 'Currently Borrowed' }}
+      </div>
+      
+      @if (!isAvailable() && currentBorrower()) {
+        <div class="borrower-info">
+          Borrowed by {{ currentBorrower()!.firstName }} {{ currentBorrower()!.lastName }}
+        </div>
+      }
+    </div>
+
+    <div class="resource-footer">
+      <div class="owner-info">
+        @if (resource().owner) {
+          <span class="avatar-small">{{ resource().owner!.firstName.charAt(0) }}</span>
+          <span class="owner-name">Shared by {{ resource().owner!.firstName }}</span>
+        } @else {
+          <span class="avatar-small building-avatar">B</span>
+          <span class="owner-name">Building Resource</span>
+        }
+      </div>
+    </div>
+  </div>
+</ng-template>

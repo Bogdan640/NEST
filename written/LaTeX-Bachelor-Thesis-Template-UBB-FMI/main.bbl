@@ -11,6 +11,12 @@ Keith Hampton and Barry Wellman.
   social capital in a wired suburb.
 \newblock {\em City \& Community}, 2(4):277--311, 2003.
 
+\bibitem{nextdoor2024}
+{Nextdoor, Inc.}
+\newblock {Nextdoor -- The Neighborhood Network}.
+\newblock \url{https://nextdoor.com/}, 2024.
+\newblock Accessed: 2026-05-15.
+
 \bibitem{masden2014tensions}
 Christina~A. Masden, Catherine Grevet, Rebecca~E. Grinter, Eric Gilbert, and
   W.~Keith Edwards.
@@ -18,6 +24,18 @@ Christina~A. Masden, Catherine Grevet, Rebecca~E. Grinter, Eric Gilbert, and
   study of {Nextdoor}.
 \newblock In {\em Proceedings of the SIGCHI Conference on Human Factors in
   Computing Systems}, pages 3239--3248, 2014.
+
+\bibitem{mdnMPA}
+{MDN Web Docs}.
+\newblock {MPA (Multi-page application) vs SPA}.
+\newblock \url{https://developer.mozilla.org/en-US/docs/Glossary/SPA}, 2024.
+\newblock Accessed: 2026-06-13.
+
+\bibitem{mdnSPA}
+{MDN Web Docs}.
+\newblock {SPA (Single-page application) -- MDN Web Docs Glossary}.
+\newblock \url{https://developer.mozilla.org/en-US/docs/Glossary/SPA}, 2024.
+\newblock Accessed: 2026-06-13.
 
 \bibitem{angularDocs}
 {Google LLC}.
@@ -36,6 +54,18 @@ Roy~Thomas Fielding.
 Ian Sommerville.
 \newblock {\em Software Engineering}.
 \newblock Pearson Education, 10 edition, 2016.
+
+\bibitem{reactDocs}
+{Meta Platforms, Inc.}
+\newblock {React -- A JavaScript library for building user interfaces}.
+\newblock \url{https://react.dev/}, 2024.
+\newblock Accessed: 2026-06-13.
+
+\bibitem{vueDocs}
+{Evan You}.
+\newblock {Vue.js -- The Progressive JavaScript Framework}.
+\newblock \url{https://vuejs.org/}, 2024.
+\newblock Accessed: 2026-06-13.
 
 \bibitem{abramov2015redux}
 Dan Abramov and Andrew Clark.

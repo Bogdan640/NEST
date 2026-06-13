@@ -33,7 +33,14 @@
     </div>
   </div>
 
-  <p class="event-description">{{ event().description }}</p>
+  @if (event().description.length > 120) {
+    <p class="event-description">
+      {{ getTruncatedDescription(event().description, 120) }}... 
+      <a href="javascript:void(0)" class="see-more-link" (click)="openDetails(detailsDialog)">see more</a>
+    </p>
+  } @else {
+    <p class="event-description">{{ event().description }}</p>
+  }
 
   <div class="event-footer">
     <div class="creator-info">
@@ -69,3 +76,50 @@
   (confirmed)="confirmDelete()"
   (cancelled)="cancelDelete()"
 ></app-confirm-dialog>
+
+<ng-template #detailsDialog let-dialogRef="dialogRef">
+  <div class="modal-card-container event-card no-hover-effect">
+    <div class="modal-header-actions">
+      <button class="btn-icon close-btn" mat-dialog-close title="Close">✕</button>
+    </div>
+    
+    <div class="event-header">
+      <div class="event-type-badge" [class]="event().type.toLowerCase()">
+        {{ event().type }}
+      </div>
+    </div>
+
+    <h3 class="event-title">{{ event().title }}</h3>
+    
+    <div class="event-details">
+      <div class="detail-row">
+        <span class="icon">📅</span>
+        <span>{{ event().startTime | date:'medium' }}</span>
+      </div>
+      <div class="detail-row">
+        <span class="icon">📍</span>
+        <span>{{ event().location }}</span>
+      </div>
+      <div class="detail-row">
+        <span class="icon">👥</span>
+        <span>
+          {{ attendeeCount() }} attending
+          @if (event().maxParticipants) {
+            (max {{ event().maxParticipants }})
+          }
+        </span>
+      </div>
+    </div>
+
+    <p class="event-description full-text">{{ event().description }}</p>
+
+    <div class="event-footer">
+      <div class="creator-info">
+        @if (event().creator) {
+          <span class="avatar-small">{{ event().creator.firstName.charAt(0) }}</span>
+          <span class="creator-name">Organized by {{ event().creator.firstName }}</span>
+        }
+      </div>
+    </div>
+  </div>
+</ng-template>

@@ -3,9 +3,13 @@
   border-radius: 1rem;
   padding: 1.5rem;
   box-shadow: var(--shadow-card);
-  margin-bottom: 1.5rem;
   border: 1px solid var(--card-border);
   transition: transform 0.2s, box-shadow 0.2s, background 0.3s ease;
+  height: 420px;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  overflow: hidden;
 
   &:hover {
     transform: translateY(-2px);
@@ -42,7 +46,9 @@
 .resource-description {
   color: var(--color-text-secondary);
   line-height: 1.5;
-  margin: 0 0 1.5rem 0;
+  margin: 0 0 1rem 0;
+  flex-grow: 1;
+  overflow: hidden;
 }
 
 .resource-status {
@@ -90,6 +96,7 @@
   align-items: center;
   padding-top: 1rem;
   border-top: 1px solid var(--card-border);
+  margin-top: auto;
 }
 
 .owner-info {
@@ -215,5 +222,41 @@
     &:hover {
       background: var(--btn-secondary-hover-bg);
     }
+  }
+}
+
+.see-more-link {
+  color: var(--color-primary);
+  text-decoration: none;
+  font-weight: 500;
+  margin-left: 0.25rem;
+  
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+.modal-card-container {
+  height: auto;
+  min-width: 300px;
+  margin-bottom: 0;
+  border: none;
+  box-shadow: none;
+  
+  &.no-hover-effect:hover {
+    transform: none;
+    box-shadow: none;
+  }
+
+  .modal-header-actions {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: -1.5rem;
+    position: relative;
+    z-index: 10;
+  }
+
+  .full-text {
+    white-space: pre-wrap;
   }
 }

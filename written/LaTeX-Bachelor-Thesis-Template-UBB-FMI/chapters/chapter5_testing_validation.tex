@@ -5,12 +5,7 @@ To ensure that the NEST application operates reliably under varying conditions a
 
 \section{Testing Strategy Overview}
 The validation of NEST adopts a multi-tiered quality assurance strategy. Because the primary contribution of this thesis is a responsive, highly reactive frontend integrated with layered security middleware, the testing focuses heavily on ensuring interface correctness, state integrity, and API endpoint protection:
-\begin{enumerate}
-    \item \textbf{Build and Type Verification:} Validates that the TypeScript compiler (\texttt{tsc}) and Angular build engine compile the entire workspace with zero compilation errors under strict configuration rules.
-    \item \textbf{Functional Scenario Testing:} Validates core business flows through manual test scripts, ensuring that all 8 modules (from registration onboarding to parking applications) behave as specified under both normal and boundary conditions.
-    \item \textbf{Security and Authorization Validation:} Verifies that route guards and backend middleware chains successfully block unauthorized requests and resist malicious data injection.
-    \item \textbf{Cross-Device and Responsive Compatibility:} Assesses presentation layer performance across various web browsers, operating systems, and viewport dimensions.
-\end{enumerate}
+This validation strategy encompasses build and type verification, functional scenario testing across all modules, strict security and authorization checks, and thorough cross-device compatibility assessments to ensure a reliable and responsive user experience.
 
 \section{Build and Type Verification}
 A foundational step in the quality assurance pipeline is verifying that the codebase contains no type errors or syntax mistakes. The following verification scripts were executed locally:
@@ -35,17 +30,18 @@ Core functionalities are verified against systematic, reproducible manual test c
 \centering
 \scriptsize
 \setlength{\tabcolsep}{3pt}
-\begin{tabularx}{\textwidth}{|>{\raggedright\arraybackslash}p{1.2cm}|>{\raggedright\arraybackslash}p{2.6cm}|>{\raggedright\arraybackslash}p{2.6cm}|>{\raggedright\arraybackslash}X|p{1.2cm}|}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabularx}{\textwidth}{|>{\raggedright\arraybackslash}p{1.0cm}|>{\raggedright\arraybackslash}p{1.8cm}|>{\raggedright\arraybackslash}p{2.8cm}|>{\raggedright\arraybackslash}X|p{1.0cm}|}
 \hline
 \textbf{Test ID} & \textbf{Target Module} & \textbf{Test Scenario} & \textbf{Expected System Behavior} & \textbf{Status} \\ \hline
-\textbf{TC-01} & Authentication & User Registration \& Join Request & Guest registers, inputs valid details, and logs in. If they have no block associated, they are locked on the pending screen. Entering an admin block code submits a pending request. & **Passed** \\ \hline
-\textbf{TC-02} & Authentication & Admin Join Request Approval & Administrator opens the Admin Panel, views the pending join request, and clicks "Approve". The user's status updates immediately, and route guards grant app access. & **Passed** \\ \hline
-\textbf{TC-03} & Community Feed & Post Creation \& Image Attachment & User submits a text post with an optional JPEG image. The post is processed by backend upload controllers, saved to the database, and rendered reactively at the top of the feed. & **Passed** \\ \hline
-\textbf{TC-04} & Shared Shed & Double-Booking Prevention & User A requests to borrow a lawnmower for June 1st. User B attempts to borrow the same item for June 1st. The system must reject User B's request with an inline validation error. & **Passed** \\ \hline
-\textbf{TC-05} & Shared Shed & Reservation State Transitions & Item transitions from AVAILABLE $\to$ PENDING upon request, to APPROVED upon owner acceptance, and back to AVAILABLE upon return, preserving history. & **Passed** \\ \hline
-\textbf{TC-06} & Events & Participant RSVP Capacity Limits & Resident attempts to RSVP to a neighborhood gathering that has reached its 20-person capacity. The system must disable the "Join" button and return a 400 error. & **Passed** \\ \hline
-\textbf{TC-07} & Parking Sharing & Overlap Booking Conflict Resolution & Resident A announcement is active. Resident B and Resident C apply. Owner approves B. The system must approve B and automatically transition C's request to "DENIED". & **Passed** \\ \hline
-\textbf{TC-08} & Settings & Instant Theme Switch \& Persistence & User toggles between light and dark themes. The page background, borders, card cards, and text primary colors must transition instantly. Refreshing must preserve the selection. & **Passed** \\ \hline
+\textbf{TC-01} & Authentication & User Registration \& Join Request & Guest registers, inputs valid details, and logs in. If they have no block associated, they are locked on the pending screen. Entering an admin block code submits a pending request. & \textbf{Passed} \\ \hline
+\textbf{TC-02} & Authentication & Admin Join Request Approval & Administrator opens the Admin Panel, views the pending join request, and clicks ``Approve''. The user's status updates immediately, and route guards grant app access. & \textbf{Passed} \\ \hline
+\textbf{TC-03} & Community Feed & Post Creation \& Image Attachment & User submits a text post with an optional JPEG image. The post is processed by backend upload controllers, saved to the database, and rendered reactively at the top of the feed. & \textbf{Passed} \\ \hline
+\textbf{TC-04} & Shared Shed & Double-Booking Prevention & User A requests to borrow a lawnmower for June 1st. User B attempts to borrow the same item for June 1st. The system must reject User B's request with an inline validation error. & \textbf{Passed} \\ \hline
+\textbf{TC-05} & Shared Shed & Reservation State Transitions & Item transitions from AVAILABLE $\to$ PENDING upon request, to APPROVED upon owner acceptance, and back to AVAILABLE upon return, preserving history. & \textbf{Passed} \\ \hline
+\textbf{TC-06} & Events & Participant RSVP Capacity Limits & Resident attempts to RSVP to a neighborhood gathering that has reached its 20-person capacity. The system must disable the ``Join'' button and return a 400 error. & \textbf{Passed} \\ \hline
+\textbf{TC-07} & Parking Sharing & Overlap Booking Conflict Resolution & Resident A announcement is active. Resident B and Resident C apply. Owner approves B. The system must approve B and automatically transition C's request to ``DENIED''. & \textbf{Passed} \\ \hline
+\textbf{TC-08} & Settings & Instant Theme Switch \& Persistence & User toggles between light and dark themes. The page background, borders, cards, and text primary colors must transition instantly. Refreshing must preserve the selection. & \textbf{Passed} \\ \hline
 \end{tabularx}
 \caption{Systematic functional test cases and verification results for NEST.}
 \label{tab:test-cases}
@@ -70,7 +66,7 @@ curl -i http://localhost:3000/api/feed
     This request simulates an unauthenticated client attempting to read the community feed without a authorization header. The API successfully blocked the request, returning an \texttt{HTTP/1.1 401 Unauthorized} status and a JSON error payload: \texttt{\{"error": "Unauthorized credentials"\}}.
     
     \item \textbf{Unverified Onboarding Restriction:}
-    An authenticated user who has not been approved by an administrator attempts to perform a borrow request. The API successfully blocked the request, returning an \texttt{HTTP/1.1 403 Forbidden} status and the error: \texttt{\{"error": "Account not yet verified by block admin"\}}.
+    An authenticated user who has not been approved by an administrator attempts to perform a borrow request. The API successfully blocked the request, returning an \texttt{HTTP/1.1 403 Forbidden} status and the error payload: \texttt{\{"error":} \allowbreak \texttt{"Account not yet verified} \allowbreak \texttt{by block admin"\}}.
     
     \item \textbf{Rate Limiting Validation:}
     A scripted loop issued 120 rapid requests to the auth login endpoint. On the 101st request, the server successfully rate-limited the client, returning \texttt{HTTP/1.1 429 Too Many Requests} with the header \texttt{Retry-After}, protecting the application from automated brute force attacks.

@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.29 (MiKTeX 26.2) (preloaded format=pdflatex 2026.3.30)  31 MAY 2026 14:20
+This is pdfTeX, Version 3.141592653-2.6-1.40.29 (MiKTeX 26.2) (preloaded format=pdflatex 2026.3.30)  13 JUN 2026 15:31
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -378,10 +378,336 @@ Package: enumitem 2025/02/06 v3.11 Customized lists
 \enit@count@id=\count321
 \enitdp@description=\count322
 )
+(C:\Users\bogda\AppData\Local\Programs\MiKTeX\tex/latex/pgf/frontendlayer\tikz.
+sty
+(C:\Users\bogda\AppData\Local\Programs\MiKTeX\tex/latex/pgf/basiclayer\pgf.sty
+(C:\Users\bogda\AppData\Local\Programs\MiKTeX\tex/latex/pgf/utilities\pgfrcs.st
+y
+(C:\Users\bogda\AppData\Local\Programs\MiKTeX\tex/generic/pgf/utilities\pgfutil
+-common.tex
+\pgfutil@everybye=\toks31
+\pgfutil@tempdima=\dimen185
+\pgfutil@tempdimb=\dimen186
+)
+(C:\Users\bogda\AppData\Local\Programs\MiKTeX\tex/generic/pgf/utilities\pgfutil
+-latex.def
+\pgfutil@abb=\box60
+)
+(C:\Users\bogda\AppData\Local\Programs\MiKTeX\tex/generic/pgf/utilities\pgfrcs.
+code.tex
+(C:\Users\bogda\AppData\Local\Programs\MiKTeX\tex/generic/pgf\pgf.revision.tex)
+Package: pgfrcs 2025-08-29 v3.1.11a (3.1.11a)
+))
+Package: pgf 2025-08-29 v3.1.11a (3.1.11a)
+
+(C:\Users\bogda\AppData\Local\Programs\MiKTeX\tex/latex/pgf/basiclayer\pgfcore.
+sty
+(C:\Users\bogda\AppData\Local\Programs\MiKTeX\tex/latex/pgf/systemlayer\pgfsys.
+sty
+(C:\Users\bogda\AppData\Local\Programs\MiKTeX\tex/generic/pgf/systemlayer\pgfsy
+s.code.tex
+Package: pgfsys 2025-08-29 v3.1.11a (3.1.11a)
+
+(C:\Users\bogda\AppData\Local\Programs\MiKTeX\tex/generic/pgf/utilities\pgfkeys
+.code.tex
+\pgfkeys@pathtoks=\toks32
+\pgfkeys@temptoks=\toks33
+
+(C:\Users\bogda\AppData\Local\Programs\MiKTeX\tex/generic/pgf/utilities\pgfkeys
+libraryfiltered.code.tex
+\pgfkeys@tmptoks=\toks34
+))
+\pgf@x=\dimen187
+\pgf@y=\dimen188
+\pgf@xa=\dimen189
+\pgf@ya=\dimen190
+\pgf@xb=\dimen191
+\pgf@yb=\dimen192
+\pgf@xc=\dimen193
+\pgf@yc=\dimen194
+\pgf@xd=\dimen195
+\pgf@yd=\dimen196
+\w@pgf@writea=\write3
+\r@pgf@reada=\read2
+\c@pgf@counta=\count323
+\c@pgf@countb=\count324
+\c@pgf@countc=\count325
+\c@pgf@countd=\count326
+\t@pgf@toka=\toks35
+\t@pgf@tokb=\toks36
+\t@pgf@tokc=\toks37
+\pgf@sys@id@count=\count327
+
+(C:\Users\bogda\AppData\Local\Programs\MiKTeX\tex/generic/pgf/systemlayer\pgf.c
+fg
+File: pgf.cfg 2025-08-29 v3.1.11a (3.1.11a)
+)
+Driver file for pgf: pgfsys-pdftex.def
+
+(C:\Users\bogda\AppData\Local\Programs\MiKTeX\tex/generic/pgf/systemlayer\pgfsy
+s-pdftex.def
+File: pgfsys-pdftex.def 2025-08-29 v3.1.11a (3.1.11a)
+
+(C:\Users\bogda\AppData\Local\Programs\MiKTeX\tex/generic/pgf/systemlayer\pgfsy
+s-common-pdf.def
+File: pgfsys-common-pdf.def 2025-08-29 v3.1.11a (3.1.11a)
+)))
+(C:\Users\bogda\AppData\Local\Programs\MiKTeX\tex/generic/pgf/systemlayer\pgfsy
+ssoftpath.code.tex
+File: pgfsyssoftpath.code.tex 2025-08-29 v3.1.11a (3.1.11a)
+\pgfsyssoftpath@smallbuffer@items=\count328
+\pgfsyssoftpath@bigbuffer@items=\count329
+)
+(C:\Users\bogda\AppData\Local\Programs\MiKTeX\tex/generic/pgf/systemlayer\pgfsy
+sprotocol.code.tex
+File: pgfsysprotocol.code.tex 2025-08-29 v3.1.11a (3.1.11a)
+))
+(C:\Users\bogda\AppData\Local\Programs\MiKTeX\tex/generic/pgf/basiclayer\pgfcor
+e.code.tex
+Package: pgfcore 2025-08-29 v3.1.11a (3.1.11a)
+
+(C:\Users\bogda\AppData\Local\Programs\MiKTeX\tex/generic/pgf/math\pgfmath.code
+.tex
+(C:\Users\bogda\AppData\Local\Programs\MiKTeX\tex/generic/pgf/math\pgfmathutil.
+code.tex)
+(C:\Users\bogda\AppData\Local\Programs\MiKTeX\tex/generic/pgf/math\pgfmathparse
+r.code.tex
+\pgfmath@dimen=\dimen197
+\pgfmath@count=\count330
+\pgfmath@box=\box61
+\pgfmath@toks=\toks38
+\pgfmath@stack@operand=\toks39
+\pgfmath@stack@operation=\toks40
+)
+(C:\Users\bogda\AppData\Local\Programs\MiKTeX\tex/generic/pgf/math\pgfmathfunct
+ions.code.tex)
+(C:\Users\bogda\AppData\Local\Programs\MiKTeX\tex/generic/pgf/math\pgfmathfunct
+ions.basic.code.tex)
+(C:\Users\bogda\AppData\Local\Programs\MiKTeX\tex/generic/pgf/math\pgfmathfunct
+ions.trigonometric.code.tex)
+(C:\Users\bogda\AppData\Local\Programs\MiKTeX\tex/generic/pgf/math\pgfmathfunct
+ions.random.code.tex)
+(C:\Users\bogda\AppData\Local\Programs\MiKTeX\tex/generic/pgf/math\pgfmathfunct
+ions.comparison.code.tex)
+(C:\Users\bogda\AppData\Local\Programs\MiKTeX\tex/generic/pgf/math\pgfmathfunct
+ions.base.code.tex)
+(C:\Users\bogda\AppData\Local\Programs\MiKTeX\tex/generic/pgf/math\pgfmathfunct
+ions.round.code.tex)
+(C:\Users\bogda\AppData\Local\Programs\MiKTeX\tex/generic/pgf/math\pgfmathfunct
+ions.misc.code.tex)
+(C:\Users\bogda\AppData\Local\Programs\MiKTeX\tex/generic/pgf/math\pgfmathfunct
+ions.integerarithmetics.code.tex)
+(C:\Users\bogda\AppData\Local\Programs\MiKTeX\tex/generic/pgf/math\pgfmathcalc.
+code.tex)
+(C:\Users\bogda\AppData\Local\Programs\MiKTeX\tex/generic/pgf/math\pgfmathfloat
+.code.tex
+\c@pgfmathroundto@lastzeros=\count331
+))
+(C:\Users\bogda\AppData\Local\Programs\MiKTeX\tex/generic/pgf/math\pgfint.code.
+tex)
+(C:\Users\bogda\AppData\Local\Programs\MiKTeX\tex/generic/pgf/basiclayer\pgfcor
+epoints.code.tex
+File: pgfcorepoints.code.tex 2025-08-29 v3.1.11a (3.1.11a)
+\pgf@picminx=\dimen198
+\pgf@picmaxx=\dimen199
+\pgf@picminy=\dimen256
+\pgf@picmaxy=\dimen257
+\pgf@pathminx=\dimen258
+\pgf@pathmaxx=\dimen259
+\pgf@pathminy=\dimen260
+\pgf@pathmaxy=\dimen261
+\pgf@xx=\dimen262
+\pgf@xy=\dimen263
+\pgf@yx=\dimen264
+\pgf@yy=\dimen265
+\pgf@zx=\dimen266
+\pgf@zy=\dimen267
+)
+(C:\Users\bogda\AppData\Local\Programs\MiKTeX\tex/generic/pgf/basiclayer\pgfcor
+epathconstruct.code.tex
+File: pgfcorepathconstruct.code.tex 2025-08-29 v3.1.11a (3.1.11a)
+\pgf@path@lastx=\dimen268
+\pgf@path@lasty=\dimen269
+)
+(C:\Users\bogda\AppData\Local\Programs\MiKTeX\tex/generic/pgf/basiclayer\pgfcor
+epathusage.code.tex
+File: pgfcorepathusage.code.tex 2025-08-29 v3.1.11a (3.1.11a)
+\pgf@shorten@end@additional=\dimen270
+\pgf@shorten@start@additional=\dimen271
+)
+(C:\Users\bogda\AppData\Local\Programs\MiKTeX\tex/generic/pgf/basiclayer\pgfcor
+escopes.code.tex
+File: pgfcorescopes.code.tex 2025-08-29 v3.1.11a (3.1.11a)
+\pgfpic=\box62
+\pgf@hbox=\box63
+\pgf@layerbox@main=\box64
+\pgf@picture@serial@count=\count332
+)
+(C:\Users\bogda\AppData\Local\Programs\MiKTeX\tex/generic/pgf/basiclayer\pgfcor
+egraphicstate.code.tex
+File: pgfcoregraphicstate.code.tex 2025-08-29 v3.1.11a (3.1.11a)
+\pgflinewidth=\dimen272
+)
+(C:\Users\bogda\AppData\Local\Programs\MiKTeX\tex/generic/pgf/basiclayer\pgfcor
+etransformations.code.tex
+File: pgfcoretransformations.code.tex 2025-08-29 v3.1.11a (3.1.11a)
+\pgf@pt@x=\dimen273
+\pgf@pt@y=\dimen274
+\pgf@pt@temp=\dimen275
+)
+(C:\Users\bogda\AppData\Local\Programs\MiKTeX\tex/generic/pgf/basiclayer\pgfcor
+equick.code.tex
+File: pgfcorequick.code.tex 2025-08-29 v3.1.11a (3.1.11a)
+)
+(C:\Users\bogda\AppData\Local\Programs\MiKTeX\tex/generic/pgf/basiclayer\pgfcor
+eobjects.code.tex
+File: pgfcoreobjects.code.tex 2025-08-29 v3.1.11a (3.1.11a)
+)
+(C:\Users\bogda\AppData\Local\Programs\MiKTeX\tex/generic/pgf/basiclayer\pgfcor
+epathprocessing.code.tex
+File: pgfcorepathprocessing.code.tex 2025-08-29 v3.1.11a (3.1.11a)
+)
+(C:\Users\bogda\AppData\Local\Programs\MiKTeX\tex/generic/pgf/basiclayer\pgfcor
+earrows.code.tex
+File: pgfcorearrows.code.tex 2025-08-29 v3.1.11a (3.1.11a)
+\pgfarrowsep=\dimen276
+)
+(C:\Users\bogda\AppData\Local\Programs\MiKTeX\tex/generic/pgf/basiclayer\pgfcor
+eshade.code.tex
+File: pgfcoreshade.code.tex 2025-08-29 v3.1.11a (3.1.11a)
+\pgf@max=\dimen277
+\pgf@sys@shading@range@num=\count333
+\pgf@shadingcount=\count334
+)
+(C:\Users\bogda\AppData\Local\Programs\MiKTeX\tex/generic/pgf/basiclayer\pgfcor
+eimage.code.tex
+File: pgfcoreimage.code.tex 2025-08-29 v3.1.11a (3.1.11a)
+)
+(C:\Users\bogda\AppData\Local\Programs\MiKTeX\tex/generic/pgf/basiclayer\pgfcor
+eexternal.code.tex
+File: pgfcoreexternal.code.tex 2025-08-29 v3.1.11a (3.1.11a)
+\pgfexternal@startupbox=\box65
+)
+(C:\Users\bogda\AppData\Local\Programs\MiKTeX\tex/generic/pgf/basiclayer\pgfcor
+elayers.code.tex
+File: pgfcorelayers.code.tex 2025-08-29 v3.1.11a (3.1.11a)
+)
+(C:\Users\bogda\AppData\Local\Programs\MiKTeX\tex/generic/pgf/basiclayer\pgfcor
+etransparency.code.tex
+File: pgfcoretransparency.code.tex 2025-08-29 v3.1.11a (3.1.11a)
+)
+(C:\Users\bogda\AppData\Local\Programs\MiKTeX\tex/generic/pgf/basiclayer\pgfcor
+epatterns.code.tex
+File: pgfcorepatterns.code.tex 2025-08-29 v3.1.11a (3.1.11a)
+)
+(C:\Users\bogda\AppData\Local\Programs\MiKTeX\tex/generic/pgf/basiclayer\pgfcor
+erdf.code.tex
+File: pgfcorerdf.code.tex 2025-08-29 v3.1.11a (3.1.11a)
+)))
+(C:\Users\bogda\AppData\Local\Programs\MiKTeX\tex/generic/pgf/modules\pgfmodule
+shapes.code.tex
+File: pgfmoduleshapes.code.tex 2025-08-29 v3.1.11a (3.1.11a)
+\pgfnodeparttextbox=\box66
+)
+(C:\Users\bogda\AppData\Local\Programs\MiKTeX\tex/generic/pgf/modules\pgfmodule
+plot.code.tex
+File: pgfmoduleplot.code.tex 2025-08-29 v3.1.11a (3.1.11a)
+)
+(C:\Users\bogda\AppData\Local\Programs\MiKTeX\tex/latex/pgf/compatibility\pgfco
+mp-version-0-65.sty
+Package: pgfcomp-version-0-65 2025-08-29 v3.1.11a (3.1.11a)
+\pgf@nodesepstart=\dimen278
+\pgf@nodesepend=\dimen279
+)
+(C:\Users\bogda\AppData\Local\Programs\MiKTeX\tex/latex/pgf/compatibility\pgfco
+mp-version-1-18.sty
+Package: pgfcomp-version-1-18 2025-08-29 v3.1.11a (3.1.11a)
+))
+(C:\Users\bogda\AppData\Local\Programs\MiKTeX\tex/latex/pgf/utilities\pgffor.st
+y
+(C:\Users\bogda\AppData\Local\Programs\MiKTeX\tex/latex/pgf/utilities\pgfkeys.s
+ty
+(C:\Users\bogda\AppData\Local\Programs\MiKTeX\tex/generic/pgf/utilities\pgfkeys
+.code.tex))
+(C:\Users\bogda\AppData\Local\Programs\MiKTeX\tex/latex/pgf/math\pgfmath.sty
+(C:\Users\bogda\AppData\Local\Programs\MiKTeX\tex/generic/pgf/math\pgfmath.code
+.tex))
+(C:\Users\bogda\AppData\Local\Programs\MiKTeX\tex/generic/pgf/utilities\pgffor.
+code.tex
+Package: pgffor 2025-08-29 v3.1.11a (3.1.11a)
+\pgffor@iter=\dimen280
+\pgffor@skip=\dimen281
+\pgffor@stack=\toks41
+\pgffor@toks=\toks42
+))
+(C:\Users\bogda\AppData\Local\Programs\MiKTeX\tex/generic/pgf/frontendlayer/tik
+z\tikz.code.tex
+Package: tikz 2025-08-29 v3.1.11a (3.1.11a)
+
+(C:\Users\bogda\AppData\Local\Programs\MiKTeX\tex/generic/pgf/libraries\pgflibr
+aryplothandlers.code.tex
+File: pgflibraryplothandlers.code.tex 2025-08-29 v3.1.11a (3.1.11a)
+\pgf@plot@mark@count=\count335
+\pgfplotmarksize=\dimen282
+)
+\tikz@lastx=\dimen283
+\tikz@lasty=\dimen284
+\tikz@lastxsaved=\dimen285
+\tikz@lastysaved=\dimen286
+\tikz@lastmovetox=\dimen287
+\tikz@lastmovetoy=\dimen288
+\tikzleveldistance=\dimen289
+\tikzsiblingdistance=\dimen290
+\tikz@figbox=\box67
+\tikz@figbox@bg=\box68
+\tikz@tempbox=\box69
+\tikz@tempbox@bg=\box70
+\tikztreelevel=\count336
+\tikznumberofchildren=\count337
+\tikznumberofcurrentchild=\count338
+\tikz@fig@count=\count339
+
+(C:\Users\bogda\AppData\Local\Programs\MiKTeX\tex/generic/pgf/modules\pgfmodule
+matrix.code.tex
+File: pgfmodulematrix.code.tex 2025-08-29 v3.1.11a (3.1.11a)
+\pgfmatrixcurrentrow=\count340
+\pgfmatrixcurrentcolumn=\count341
+\pgf@matrix@numberofcolumns=\count342
+)
+\tikz@expandcount=\count343
+
+(C:\Users\bogda\AppData\Local\Programs\MiKTeX\tex/generic/pgf/frontendlayer/tik
+z/libraries\tikzlibrarytopaths.code.tex
+File: tikzlibrarytopaths.code.tex 2025-08-29 v3.1.11a (3.1.11a)
+)))
+(C:\Users\bogda\AppData\Local\Programs\MiKTeX\tex/generic/pgf/frontendlayer/tik
+z/libraries\tikzlibraryshapes.geometric.code.tex
+File: tikzlibraryshapes.geometric.code.tex 2025-08-29 v3.1.11a (3.1.11a)
+
+(C:\Users\bogda\AppData\Local\Programs\MiKTeX\tex/generic/pgf/libraries/shapes\
+pgflibraryshapes.geometric.code.tex
+File: pgflibraryshapes.geometric.code.tex 2025-08-29 v3.1.11a (3.1.11a)
+))
+(C:\Users\bogda\AppData\Local\Programs\MiKTeX\tex/generic/pgf/libraries\pgflibr
+aryarrows.meta.code.tex
+File: pgflibraryarrows.meta.code.tex 2025-08-29 v3.1.11a (3.1.11a)
+\pgfarrowinset=\dimen291
+\pgfarrowlength=\dimen292
+\pgfarrowwidth=\dimen293
+\pgfarrowlinewidth=\dimen294
+)
+(C:\Users\bogda\AppData\Local\Programs\MiKTeX\tex/generic/pgf/frontendlayer/tik
+z/libraries\tikzlibrarypositioning.code.tex
+File: tikzlibrarypositioning.code.tex 2025-08-29 v3.1.11a (3.1.11a)
+)
+(C:\Users\bogda\AppData\Local\Programs\MiKTeX\tex/generic/pgf/frontendlayer/tik
+z/libraries\tikzlibrarycalc.code.tex
+File: tikzlibrarycalc.code.tex 2025-08-29 v3.1.11a (3.1.11a)
+)
 (C:\Users\bogda\AppData\Local\Programs\MiKTeX\tex/generic/babel\babel.sty
 Package: babel 2026/03/24 v26.5 The multilingual framework for LuaLaTeX, pdfLaT
 eX and XeLaTeX
-\babel@savecnt=\count323
+\babel@savecnt=\count344
 LaTeX Encoding Info:    Redeclaring text command \ij (encoding OT1) on input li
 ne 2078.
 LaTeX Encoding Info:    Redeclaring text command \IJ (encoding OT1) on input li
@@ -396,12 +722,12 @@ LaTeX Encoding Info:    Ignoring declaration for text command \IJ (encoding ?)
 on input line 2086.
 LaTeX Encoding Info:    Ignoring declaration for text command \SS (encoding ?) 
 on input line 2111.
-\U@D=\dimen185
+\U@D=\dimen295
 \l@unhyphenated=\language79
 
 (C:\Users\bogda\AppData\Local\Programs\MiKTeX\tex/generic/babel\txtbabel.def)
-\bbl@readstream=\read2
-\bbl@dirlevel=\count324
+\bbl@readstream=\read3
+\bbl@dirlevel=\count345
 Package babel Info: Configuration files are deprecated, as
 (babel)             they can break document portability.
 (babel)             Reported on input line 4206.
@@ -445,7 +771,7 @@ Package: fancyhdr 2025/02/07 v5.2 Extensive control of page headers and footers
 \f@nch@widthL=\skip69
 \f@nch@widthC=\skip70
 \f@nch@widthR=\skip71
-\@temptokenb=\toks31
+\@temptokenb=\toks43
 )
 LaTeX Font Info:    Trying to load font information for OT1+ppl on input line 1
 8.
@@ -456,7 +782,7 @@ File: ot1ppl.fd 2001/06/04 font definitions for OT1/ppl.
 (C:\Users\bogda\AppData\Local\Programs\MiKTeX\tex/latex/l3backend\l3backend-pdf
 tex.def
 File: l3backend-pdftex.def 2025-10-09 L3 backend support: PDF output (pdfTeX)
-\l__color_backend_stack_int=\count325
+\l__color_backend_stack_int=\count346
 ) (main.aux)
 \openout1 = `main.aux'.
 
@@ -517,17 +843,17 @@ LaTeX Font Info:    ... okay on input line 18.
 (C:\Users\bogda\AppData\Local\Programs\MiKTeX\tex/context/base/mkii\supp-pdf.mk
 ii
 [Loading MPS to PDF converter (version 2006.09.02).]
-\scratchcounter=\count326
-\scratchdimen=\dimen186
-\scratchbox=\box60
-\nofMPsegments=\count327
-\nofMParguments=\count328
-\everyMPshowfont=\toks32
-\MPscratchCnt=\count329
-\MPscratchDim=\dimen187
-\MPnumerator=\count330
-\makeMPintoPDFobject=\count331
-\everyMPtoPDFconversion=\toks33
+\scratchcounter=\count347
+\scratchdimen=\dimen296
+\scratchbox=\box71
+\nofMPsegments=\count348
+\nofMParguments=\count349
+\everyMPshowfont=\toks44
+\MPscratchCnt=\count350
+\MPscratchDim=\dimen297
+\MPnumerator=\count351
+\makeMPintoPDFobject=\count352
+\everyMPtoPDFconversion=\toks45
 )
 (C:\Users\bogda\AppData\Local\Programs\MiKTeX\tex/latex/epstopdf-pkg\epstopdf-b
 ase.sty
@@ -541,10 +867,10 @@ File: epstopdf-sys.cfg 2021/03/18 v2.0 Configuration of epstopdf for MiKTeX
 ))
 Package hyperref Info: Link coloring OFF on input line 18.
  (main.out) (main.out)
-\@outlinefile=\write3
-\openout3 = `main.out'.
+\@outlinefile=\write4
+\openout4 = `main.out'.
 
-\c@lstlisting=\count332
+\c@lstlisting=\count353
  [1
 
 {C:/Users/bogda/AppData/Local/MiKTeX/fonts/map/pdftex/pdftex.map}{C:/Users/bogd
@@ -578,8 +904,8 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 ] (main.toc [2
 
 ])
-\tf@toc=\write4
-\openout4 = `main.toc'.
+\tf@toc=\write5
+\openout5 = `main.toc'.
 
 
 
@@ -596,6 +922,12 @@ LaTeX Font Info:    Trying to load font information for TS1+ppl on input line 1
 (C:\Users\bogda\AppData\Local\Programs\MiKTeX\tex/latex/psnfss\ts1ppl.fd
 File: ts1ppl.fd 2001/06/04 font definitions for TS1/ppl.
 )
+Overfull \hbox (14.61703pt too wide) in paragraph at lines 14--15
+[]\OT1/ppl/b/n/12 Commercial Noise and Ge-o-graphic Lim-i-ta-tions: \OT1/ppl/m/
+n/12 Global plat-forms like Nextdoor
+ []
+
+
 pdfTeX warning (ext4): destination with the same identifier (name{page.1}) has 
 been already used, duplicate ignored
 <to be read again> 
@@ -618,9 +950,9 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 (fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
 
 [2]
-Overfull \hbox (5.86913pt too wide) in paragraph at lines 47--48
-[]\OT1/ppl/b/n/12 Facade-Signals Re-ac-tive Ar-chi-tec-ture: \OT1/ppl/m/n/12 De
--vel-oped a state ar-chi-tec-ture that com-
+Overfull \hbox (6.22952pt too wide) in paragraph at lines 47--48
+[]\OT1/ppl/b/n/12 Adapted Facade-Signals Re-ac-tive Ar-chi-tec-ture: \OT1/ppl/m
+/n/12 Adapted the es-tab-lished NgRx
  []
 
 
@@ -636,18 +968,7 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 (fancyhdr)                You might also make \topmargin smaller:
 (fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
 
-[3]
-Overfull \hbox (6.3615pt too wide) in paragraph at lines 58--59
-[]\OT1/ppl/b/n/12 Chapter 4 (Im-ple-men-ta-tion De-tails): \OT1/ppl/m/n/12 Dis-
-cusses the code-base, com-po-nent struc-
- []
-
-LaTeX Font Info:    Trying to load font information for OT1+pcr on input line 6
-9.
-(C:\Users\bogda\AppData\Local\Programs\MiKTeX\tex/latex/psnfss\ot1pcr.fd
-File: ot1pcr.fd 2001/06/04 font definitions for OT1/pcr.
-))
-(chapters/chapter2.tex
+[3]) (chapters/chapter2.tex
 
 Package fancyhdr Warning: \headheight is too small (12.0pt): 
 (fancyhdr)                Make it at least 14.49998pt, for example:
@@ -666,6 +987,11 @@ i-ence. Three dom-i-nant paradigms
 [5
 
 ]
+LaTeX Font Info:    Trying to load font information for OT1+pcr on input line 1
+8.
+ (C:\Users\bogda\AppData\Local\Programs\MiKTeX\tex/latex/psnfss\ot1pcr.fd
+File: ot1pcr.fd 2001/06/04 font definitions for OT1/pcr.
+)
 Overfull \hbox (15.4538pt too wide) in paragraph at lines 18--19
 []\OT1/ppl/m/n/12 The client-server com-mu-ni-ca-tion fol-lows the Rep-re-sen-t
 a-tional State Trans-fer (REST)
@@ -730,6 +1056,12 @@ m/n/12 NgModules\OT1/ppl/m/n/12 , which served as com-
  []
 
 
+Overfull \hbox (0.14604pt too wide) in paragraph at lines 60--61
+\OT1/ppl/m/n/12 The Re-dux ar-chi-tec-ture, in-tro-duced by Abramov and Clark [
+[]], ad-dresses this prob-
+ []
+
+
 Package fancyhdr Warning: \headheight is too small (12.0pt): 
 (fancyhdr)                Make it at least 14.49998pt, for example:
 (fancyhdr)                \setlength{\headheight}{14.49998pt}.
@@ -737,12 +1069,6 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 (fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
 
 [7]
-Overfull \hbox (3.4947pt too wide) in paragraph at lines 80--81
-[]\OT1/pcr/m/n/12 input() \OT1/ppl/m/n/12 and \OT1/pcr/m/n/12 output() \OT1/ppl
-/m/n/12 ,  signal-based re-place-ments for the older \OT1/pcr/m/n/12 @Input()
- []
-
-
 Overfull \hbox (1.15443pt too wide) in paragraph at lines 84--85
 \OT1/ppl/m/n/12 pos-si-ble be-cause NgRx it-self ex-poses its store as a sig-na
 l through \OT1/pcr/m/n/12 selectSignal()\OT1/ppl/m/n/12 . 
@@ -770,20 +1096,7 @@ T1/pcr/m/n/12 AuthActions.login(\OMS/cmsy/m/n/12 f\OT1/pcr/m/n/12 email,
  []
 
 
-Overfull \hbox (2.7755pt too wide) in paragraph at lines 96--97
-\OT1/ppl/m/n/12 clared with \OT1/pcr/m/n/12 providedIn: 'root' \OT1/ppl/m/n/12 
-are in-stan-ti-ated ex-actly once and shared across
- []
-
-
-Package fancyhdr Warning: \headheight is too small (12.0pt): 
-(fancyhdr)                Make it at least 14.49998pt, for example:
-(fancyhdr)                \setlength{\headheight}{14.49998pt}.
-(fancyhdr)                You might also make \topmargin smaller:
-(fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
-
-[9]
-Overfull \hbox (74.00206pt too wide) in paragraph at lines 119--120
+Overfull \hbox (74.00206pt too wide) in paragraph at lines 107--108
 []\OT1/ppl/m/n/12 Node.js was cho-sen as the run-time be-cause it shares the sa
 me lan-guage (JavaScript/TypeScript)
  []
@@ -795,16 +1108,16 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 (fancyhdr)                You might also make \topmargin smaller:
 (fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
 
-[10]
-Overfull \hbox (2.97571pt too wide) in paragraph at lines 141--142
-\OT1/ppl/m/n/12 and se-cu-rity risks (SQL in-jec-tion). Object-Relational Map-p
-ing (ORM) li-braries bridge
+[9]
+Overfull \hbox (1.90913pt too wide) in paragraph at lines 121--122
+\OT1/ppl/m/n/12 well-known vul-ner-a-bil-ity. The bcrypt al-go-rithm, in-tro-du
+ced by Provos and Mazi[]eres
  []
 
 
-Overfull \hbox (17.60428pt too wide) in paragraph at lines 149--150
-\OT1/ppl/m/n/12 A com-mon over-sight in fron-tend de-vel-op-ment is treat-ing s
-tylesheets as an af-terthought.
+Overfull \hbox (2.97571pt too wide) in paragraph at lines 129--130
+\OT1/ppl/m/n/12 and se-cu-rity risks (SQL in-jec-tion). Object-Relational Map-p
+ing (ORM) li-braries bridge
  []
 
 
@@ -814,7 +1127,21 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 (fancyhdr)                You might also make \topmargin smaller:
 (fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
 
-[11]) (chapters/chapter3.tex
+[10]
+Overfull \hbox (17.60428pt too wide) in paragraph at lines 137--138
+\OT1/ppl/m/n/12 A com-mon over-sight in fron-tend de-vel-op-ment is treat-ing s
+tylesheets as an af-terthought.
+ []
+
+) (chapters/chapter3.tex
+
+Package fancyhdr Warning: \headheight is too small (12.0pt): 
+(fancyhdr)                Make it at least 14.49998pt, for example:
+(fancyhdr)                \setlength{\headheight}{14.49998pt}.
+(fancyhdr)                You might also make \topmargin smaller:
+(fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
+
+[11]
 
 Package fancyhdr Warning: \headheight is too small (12.0pt): 
 (fancyhdr)                Make it at least 14.49998pt, for example:
@@ -851,12 +1178,17 @@ ety for database
 [13
 
 ]
-Overfull \hbox (12.81607pt too wide) in paragraph at lines 79--79
-[]|\OT1/ppl/b/n/10.95 Authentication|  
+Overfull \hbox (17.85268pt too wide) in paragraph at lines 41--42
+ [][] 
  []
 
 
-Overfull \hbox (1.80109pt too wide) in paragraph at lines 85--86
+Overfull \hbox (3.31892pt too wide) in paragraph at lines 68--68
+[]|\OT1/ppl/b/n/10.95 Community 
+ []
+
+
+Overfull \hbox (1.80109pt too wide) in paragraph at lines 74--75
 \OT1/ppl/m/n/12 Non-functional re-quire-ments dic-tate the per-for-mance bound-
 aries, op-er-a-tional safety
  []
@@ -885,7 +1217,7 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 (fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
 
 [16]
-Overfull \hbox (1.86017pt too wide) in paragraph at lines 119--120
+Overfull \hbox (1.86017pt too wide) in paragraph at lines 104--105
 []\OT1/ppl/b/n/12 Resident (Ver-i-fied User): \OT1/ppl/m/n/12 A logged-in res-i
 -dent as-so-ci-ated with a ver-i-fied build-
  []
@@ -898,7 +1230,7 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 (fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
 
 [17]
-Overfull \hbox (2.65376pt too wide) in paragraph at lines 136--137
+Overfull \hbox (2.65376pt too wide) in paragraph at lines 161--162
 []\OT1/ppl/m/n/12 The user in-puts the al-phanu-meric block code cor-re-spond-i
 ng to their build-
  []
@@ -911,7 +1243,7 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 (fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
 
 [18]
-Overfull \hbox (5.95566pt too wide) in paragraph at lines 187--188
+Overfull \hbox (5.95566pt too wide) in paragraph at lines 212--213
 []\OT1/ppl/m/n/12 The sys-tem cre-ates a \OT1/pcr/m/n/12 ParkingAnnouncement \O
 T1/ppl/m/n/12 en-tity linked to the owner's
  []
@@ -924,38 +1256,29 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 (fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
 
 [19]
-Overfull \hbox (32.25768pt too wide) in paragraph at lines 198--199
+Overfull \hbox (32.25768pt too wide) in paragraph at lines 223--224
 []\OT1/ppl/b/n/12 Core Layer (\OT1/pcr/b/n/12 /core\OT1/ppl/b/n/12 ): \OT1/ppl/
 m/n/12 De-clares system-wide sin-gle-tons, se-cu-rity guards (\OT1/pcr/m/n/12 A
 uthGuard\OT1/ppl/m/n/12 ,
  []
 
 
-Overfull \hbox (73.67049pt too wide) in paragraph at lines 198--199
+Overfull \hbox (73.67049pt too wide) in paragraph at lines 223--224
 \OT1/pcr/m/n/12 PendingGuard\OT1/ppl/m/n/12 ), global in-ter-cep-tors (\OT1/pcr
 /m/n/12 AuthInterceptor\OT1/ppl/m/n/12 ), base ser-vices (\OT1/pcr/m/n/12 Theme
 Service\OT1/ppl/m/n/12 ),
  []
 
 
-Overfull \hbox (0.39734pt too wide) in paragraph at lines 202--203
+Overfull \hbox (0.39734pt too wide) in paragraph at lines 227--228
 []\OT1/ppl/b/n/12 Features Layer (\OT1/pcr/b/n/12 /features\OT1/ppl/b/n/12 ): \
 OT1/ppl/m/n/12 Con-tains the iso-lated func-tional mod-ules (Auth,
  []
 
 
-Overfull \hbox (13.05594pt too wide) in paragraph at lines 202--203
+Overfull \hbox (13.05594pt too wide) in paragraph at lines 227--228
 \OT1/ppl/m/n/12 loaded at run-time when the cor-re-spond-ing URL path is re-que
 sted by the browser,
- []
-
-
-LaTeX Warning: `h' float specifier changed to `ht'.
-
-
-Overfull \hbox (12.38565pt too wide) in paragraph at lines 254--255
-\OT1/ppl/m/n/12 The back-end ap-pli-ca-tion is struc-tured around a lay-ered Mo
-del-View-Controller (MVC)
  []
 
 
@@ -966,6 +1289,24 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 (fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
 
 [20]
+Overfull \hbox (7.00475pt too wide) in paragraph at lines 261--262
+ [][] 
+ []
+
+
+Overfull \hbox (12.38565pt too wide) in paragraph at lines 267--268
+\OT1/ppl/m/n/12 The back-end ap-pli-ca-tion is struc-tured around a lay-ered Mo
+del-View-Controller (MVC)
+ []
+
+
+Overfull \hbox (27.0683pt too wide) in paragraph at lines 290--291
+ [][] 
+ []
+
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
 
 Package fancyhdr Warning: \headheight is too small (12.0pt): 
 (fancyhdr)                Make it at least 14.49998pt, for example:
@@ -974,22 +1315,18 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 (fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
 
 [21]
-Overfull \hbox (1.26103pt too wide) in paragraph at lines 292--293
+Overfull \hbox (1.26103pt too wide) in paragraph at lines 299--300
 []\OT1/ppl/b/n/12 Persistence Layer (Prisma ORM): \OT1/ppl/m/n/12 Ab-stracts da
 tabase queries us-ing fully typed
  []
 
 
-Overfull \hbox (4.38072pt too wide) in paragraph at lines 344--345
-[]\OT1/pcr/b/n/12 User\OT1/ppl/b/n/12 : \OT1/ppl/m/n/12 The pri-mary en-tity, r
-ep-re-sent-ing a res-i-dent. Con-tains pro-file info, hashed
+Overfull \hbox (34.85773pt too wide) in paragraph at lines 347--348
+ [][] 
  []
 
 
-Overfull \hbox (4.71667pt too wide) in paragraph at lines 344--345
-\OT1/ppl/m/n/12 cre-den-tials, role as-sign-ment, and ver-i-fi-ca-tion sta-tus.
- User pref-er-ences are stored
- []
+LaTeX Warning: `h' float specifier changed to `ht'.
 
 
 Package fancyhdr Warning: \headheight is too small (12.0pt): 
@@ -999,195 +1336,61 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 (fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
 
 [22]
-Overfull \hbox (2.16144pt too wide) in paragraph at lines 348--349
+Overfull \hbox (13.9223pt too wide) in paragraph at lines 358--359
 []\OT1/pcr/b/n/12 Event\OT1/ppl/b/n/12 : \OT1/ppl/m/n/12 Rep-re-sents a com-mu-
-nity gath-er-ing, linked to the cre-ator (\OT1/pcr/m/n/12 creatorId\OT1/ppl/m/n
-/12 ). 
+nity gath-er-ing. Con-tains \OT1/pcr/m/n/12 id\OT1/ppl/m/n/12 , \OT1/pcr/m/n/12
+ title\OT1/ppl/m/n/12 , \OT1/pcr/m/n/12 description\OT1/ppl/m/n/12 ,
  []
 
 
-Overfull \hbox (2.16138pt too wide) in paragraph at lines 349--350
+Overfull \hbox (15.0274pt too wide) in paragraph at lines 358--359
+\OT1/pcr/m/n/12 date\OT1/ppl/m/n/12 , \OT1/pcr/m/n/12 location\OT1/ppl/m/n/12 ,
+ \OT1/pcr/m/n/12 maxParticipants\OT1/ppl/m/n/12 , and is linked to the cre-ator
+ (\OT1/pcr/m/n/12 creatorId\OT1/ppl/m/n/12 ). 
+ []
+
+
+Overfull \hbox (2.16138pt too wide) in paragraph at lines 359--360
 \OT1/ppl/m/n/12 ship be-tween users and events, with com-pos-ite pri-mary keys 
 \OT1/pcr/m/n/12 @@id([userId,
  []
 
 
-Overfull \hbox (22.26143pt too wide) in paragraph at lines 351--352
-\OT1/ppl/m/n/12 track-ing bor-rower (\OT1/pcr/m/n/12 borrowerId\OT1/ppl/m/n/12 
-), in-ter-vals, and sta-tus state tran-si-tions (\OT1/pcr/m/n/12 PENDING\OT1/pp
-l/m/n/12 ,
+Overfull \hbox (14.54887pt too wide) in paragraph at lines 361--362
+\OT1/pcr/m/n/12 id\OT1/ppl/m/n/12 , \OT1/pcr/m/n/12 resourceId\OT1/ppl/m/n/12 ,
+ \OT1/pcr/m/n/12 borrowerId\OT1/ppl/m/n/12 , \OT1/pcr/m/n/12 startDate\OT1/ppl/
+m/n/12 , \OT1/pcr/m/n/12 endDate\OT1/ppl/m/n/12 , and \OT1/pcr/m/n/12 status \O
+T1/ppl/m/n/12 (\OT1/pcr/m/n/12 PENDING\OT1/ppl/m/n/12 ,
  []
 
 
-Overfull \hbox (14.02998pt too wide) in paragraph at lines 358--359
+Package fancyhdr Warning: \headheight is too small (12.0pt): 
+(fancyhdr)                Make it at least 14.49998pt, for example:
+(fancyhdr)                \setlength{\headheight}{14.49998pt}.
+(fancyhdr)                You might also make \topmargin smaller:
+(fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
+
+[23]
+Overfull \hbox (2.48495pt too wide) in paragraph at lines 364--365
+[]\OT1/pcr/b/n/12 Application\OT1/ppl/b/n/12 : \OT1/ppl/m/n/12 An ap-pli-ca-tio
+n sub-mit-ted by a res-i-dent to uti-lize an an-nounced
+ []
+
+
+Overfull \hbox (14.02998pt too wide) in paragraph at lines 368--369
 \OT1/ppl/m/n/12 REST prin-ci-ples [[]]. Mod-i-fy-ing end-points con-sume and pr
 o-duce \OT1/pcr/m/n/12 application/json
  []
 
 
-Overfull \hbox (28.60864pt too wide) in paragraph at lines 358--359
+Overfull \hbox (28.60864pt too wide) in paragraph at lines 368--369
 \OT1/ppl/m/n/12 pay-loads, and re-turn mean-ing-ful HTTP Sta-tus Codes: \OT1/pc
 r/m/n/12 200 OK \OT1/ppl/m/n/12 for suc-cess-ful read/writes,
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 390--390
-[]|\OT1/ppl/b/n/8 Auth
- []
-
-
-Overfull \hbox (4.16591pt too wide) in paragraph at lines 390--390
-[]|\OT1/ppl/m/n/8 Anonymous| 
- []
-
-
-Overfull \hbox (4.16591pt too wide) in paragraph at lines 390--390
-[]|\OT1/ppl/m/n/8 Anonymous| 
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 390--390
-[]|\OT1/ppl/m/n/8 JWT (Un-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 390--390
-[]|\OT1/ppl/m/n/8 JWT (Ad-
- []
-
-
-Overfull \hbox (18.46089pt too wide) in paragraph at lines 390--390
-[]|\OT1/pcr/m/n/8 /api/blocks/requests/:id|  
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 390--390
-[]|\OT1/ppl/m/n/8 JWT (Ad-
- []
-
-
-Underfull \hbox (badness 1178) in paragraph at lines 390--390
-[]|\OT1/ppl/m/n/8 JWT (Ver-i-
- []
-
-
-Underfull \hbox (badness 1178) in paragraph at lines 390--390
-[]|\OT1/ppl/m/n/8 JWT (Ver-i-
- []
-
-
-Overfull \hbox (6.03773pt too wide) in paragraph at lines 390--390
-[]|\OT1/pcr/m/n/8 DELETE|  
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 390--390
-[]|\OT1/ppl/m/n/8 JWT
- []
-
-
-Overfull \hbox (20.10979pt too wide) in paragraph at lines 390--390
-\OT1/ppl/m/n/8 (Owner/Admin)| 
- []
-
-
-Underfull \hbox (badness 1178) in paragraph at lines 390--390
-[]|\OT1/ppl/m/n/8 JWT (Ver-i-
- []
-
-
-Underfull \hbox (badness 1178) in paragraph at lines 390--390
-[]|\OT1/ppl/m/n/8 JWT (Ver-i-
- []
-
-
-Underfull \hbox (badness 1178) in paragraph at lines 390--390
-[]|\OT1/ppl/m/n/8 JWT (Ver-i-
- []
-
-
-Overfull \hbox (28.0609pt too wide) in paragraph at lines 390--390
-[]|\OT1/pcr/m/n/8 /api/shed/reservations/:id|  
- []
-
-
-Underfull \hbox (badness 1178) in paragraph at lines 390--390
-[]|\OT1/ppl/m/n/8 JWT (Ver-i-
- []
-
-
-Underfull \hbox (badness 1178) in paragraph at lines 390--390
-[]|\OT1/ppl/m/n/8 JWT (Ver-i-
- []
-
-
-Underfull \hbox (badness 1178) in paragraph at lines 390--390
-[]|\OT1/ppl/m/n/8 JWT (Ver-i-
- []
-
-
-Overfull \hbox (8.86089pt too wide) in paragraph at lines 390--390
-[]|\OT1/pcr/m/n/8 /api/events/:id/attend|  
- []
-
-
-Underfull \hbox (badness 1178) in paragraph at lines 390--390
-[]|\OT1/ppl/m/n/8 JWT (Ver-i-
- []
-
-
-Overfull \hbox (28.0609pt too wide) in paragraph at lines 390--390
-[]|\OT1/pcr/m/n/8 /api/parking/announcements|  
- []
-
-
-Underfull \hbox (badness 1178) in paragraph at lines 390--390
-[]|\OT1/ppl/m/n/8 JWT (Ver-i-
- []
-
-
-Overfull \hbox (28.0609pt too wide) in paragraph at lines 390--390
-[]|\OT1/pcr/m/n/8 /api/parking/announcements|  
- []
-
-
-Underfull \hbox (badness 1178) in paragraph at lines 390--390
-[]|\OT1/ppl/m/n/8 JWT (Ver-i-
- []
-
-
-Overfull \hbox (8.86089pt too wide) in paragraph at lines 390--390
-[]|\OT1/pcr/m/n/8 /api/parking/apply/:id|  
- []
-
-
-Underfull \hbox (badness 1178) in paragraph at lines 390--390
-[]|\OT1/ppl/m/n/8 JWT (Ver-i-
- []
-
-
-Overfull \hbox (42.4609pt too wide) in paragraph at lines 390--390
-[]|\OT1/pcr/m/n/8 /api/parking/applications/:id|  
- []
-
-
-Underfull \hbox (badness 1178) in paragraph at lines 390--390
-[]|\OT1/ppl/m/n/8 JWT (Ver-i-
- []
-
-
-Underfull \hbox (badness 1178) in paragraph at lines 390--390
-[]|\OT1/ppl/m/n/8 JWT (Ver-i-
- []
-
-
-Overfull \hbox (8.86089pt too wide) in paragraph at lines 390--390
-[]|\OT1/pcr/m/n/8 /api/users/preferences|  
- []
-
-
-Underfull \hbox (badness 1178) in paragraph at lines 390--390
-[]|\OT1/ppl/m/n/8 JWT (Ver-i-
+Overfull \hbox (8.72842pt too wide) in paragraph at lines 400--400
+\OT1/ppl/m/n/8 (Owner/Admin)|  
  []
 
 ) (chapters/chapter4.tex
@@ -1198,7 +1401,7 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 (fancyhdr)                You might also make \topmargin smaller:
 (fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
 
-[23]
+[24]
 
 Package fancyhdr Warning: \headheight is too small (12.0pt): 
 (fancyhdr)                Make it at least 14.49998pt, for example:
@@ -1206,51 +1409,40 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 (fancyhdr)                You might also make \topmargin smaller:
 (fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
 
-[24]
+[25]
 Chapter 4.
 
-Overfull \hbox (6.15929pt too wide) in paragraph at lines 10--11
-\OT1/ppl/m/n/12 fron-tend and back-end projects (e.g., \OT1/pcr/m/n/12 "strict"
-: true\OT1/ppl/m/n/12 , \OT1/pcr/m/n/12 "noImplicitAny":
+Overfull \hbox (38.0081pt too wide) in paragraph at lines 7--9
+\OT1/ppl/m/n/12 across both fron-tend and back-end projects (e.g., \OT1/pcr/m/n
+/12 "strict": true\OT1/ppl/m/n/12 , \OT1/pcr/m/n/12 "noImplicitAny":
  []
 
-[25
+[26
 
 ]
-Overfull \hbox (6.24213pt too wide) in paragraph at lines 23--24
+Overfull \hbox (6.24213pt too wide) in paragraph at lines 17--18
 []\OT1/pcr/m/n/12 /guards\OT1/ppl/m/n/12 : Houses route-activation logic, pre-v
 ent-ing unau-then-ti-cated rout-
  []
 
 
-Overfull \hbox (1.83965pt too wide) in paragraph at lines 23--24
+Overfull \hbox (1.83965pt too wide) in paragraph at lines 17--18
 \OT1/ppl/m/n/12 ing (\OT1/pcr/m/n/12 AuthGuard\OT1/ppl/m/n/12 ) or block-pendin
 g rout-ing re-stric-tions (\OT1/pcr/m/n/12 PendingGuard\OT1/ppl/m/n/12 ). 
  []
 
 
-Overfull \hbox (5.40016pt too wide) in paragraph at lines 34--35
+Overfull \hbox (5.40016pt too wide) in paragraph at lines 28--29
 \OT1/ppl/m/n/12 tain-ing rout-ing def-i-ni-tions, vi-sual page com-po-nents, an
 d lo-cal sub-components. 
  []
 
 
-Overfull \hbox (220.25394pt too wide) in paragraph at lines 40--41
-\OT1/pcr/m/n/12 PageHeaderComponent \OT1/ppl/m/n/12 (\OT1/pcr/m/n/12 frontend/s
-rc/app/shared/components/page-header/page-header.component.ts\OT1/ppl/m/n/12 ),
-
+Overfull \hbox (239.17767pt too wide) in paragraph at lines 34--35
+\OT1/ppl/m/n/12 the \OT1/pcr/m/n/12 PageHeaderComponent \OT1/ppl/m/n/12 (\OT1/p
+cr/m/n/12 frontend/src/app/shared/components/page-header/page-header.component.
+ts\OT1/ppl/m/n/12 ),
  []
-
-
-Package fancyhdr Warning: \headheight is too small (12.0pt): 
-(fancyhdr)                Make it at least 14.49998pt, for example:
-(fancyhdr)                \setlength{\headheight}{14.49998pt}.
-(fancyhdr)                You might also make \topmargin smaller:
-(fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
-
-[26]
-Package hyperref Info: bookmark level for unknown lstlisting defaults to 0 on i
-nput line 42.
 
 
 Package fancyhdr Warning: \headheight is too small (12.0pt): 
@@ -1260,6 +1452,28 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 (fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
 
 [27]
+Package hyperref Info: bookmark level for unknown lstlisting defaults to 0 on i
+nput line 36.
+
+Overfull \hbox (157.93391pt too wide) in paragraph at lines 51--52
+\OT1/ppl/m/n/12 er-ties are ex-posed as read-only Sig-nals. Com-po-nent tem-pla
+tes (sep-a-rated into \OT1/pcr/m/n/12 page-header.component.html\OT1/ppl/m/n/12
+ )
+ []
+
+
+Overfull \hbox (65.40451pt too wide) in paragraph at lines 56--57
+\OT1/ppl/m/n/12 im-ple-men-ta-tion of the \OT1/pcr/m/n/12 AuthFacade \OT1/ppl/m
+/n/12 (\OT1/pcr/m/n/12 frontend/src/app/store/auth/auth.facade.ts\OT1/ppl/m/n/1
+2 ),
+ []
+
+
+Overfull \hbox (42.31369pt too wide) in paragraph at lines 56--57
+\OT1/ppl/m/n/12 il-lus-trat-ing how it ex-poses read-only re-ac-tive prop-er-ti
+es as Sig-nals us-ing \OT1/pcr/m/n/12 selectSignal()\OT1/ppl/m/n/12 . 
+ []
+
 
 Package fancyhdr Warning: \headheight is too small (12.0pt): 
 (fancyhdr)                Make it at least 14.49998pt, for example:
@@ -1276,7 +1490,7 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 (fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
 
 [29]
-Overfull \hbox (11.02994pt too wide) in paragraph at lines 165--166
+Overfull \hbox (11.02994pt too wide) in paragraph at lines 125--126
 []\OT1/ppl/b/n/12 Simplified Com-po-nent In-jec-tion: \OT1/ppl/m/n/12 Com-po-ne
 nts only need to in-ject \OT1/pcr/m/n/12 AuthFacade
  []
@@ -1289,13 +1503,24 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 (fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
 
 [30]
-Overfull \hbox (11.97717pt too wide) in paragraph at lines 180--181
-[]\OT1/ppl/b/n/12 Session Ac-ti-va-tion: \OT1/ppl/m/n/12 Upon ap-proval, the us
-er's sta-tus tran-si-tions to \OT1/pcr/m/n/12 isVerified
+Overfull \hbox (2.7755pt too wide) in paragraph at lines 134--135
+\OT1/ppl/m/n/12 clared with \OT1/pcr/m/n/12 providedIn: 'root' \OT1/ppl/m/n/12 
+are in-stan-ti-ated ex-actly once and shared across
  []
 
 
-LaTeX Warning: `h' float specifier changed to `ht'.
+Overfull \hbox (24.55385pt too wide) in paragraph at lines 134--135
+\OT1/ppl/m/n/12 the en-tire ap-pli-ca-tion. This is uti-lized in NEST for the \
+OT1/pcr/m/n/12 ThemeService \OT1/ppl/m/n/12 and \OT1/pcr/m/n/12 AuthFacade\OT1/
+ppl/m/n/12 ,
+ []
+
+
+Overfull \hbox (59.01994pt too wide) in paragraph at lines 138--139
+\OT1/ppl/m/n/12 egy pat-tern. Each mid-dle-ware func-tion (\OT1/pcr/m/n/12 auth
+enticateToken\OT1/ppl/m/n/12 , \OT1/pcr/m/n/12 verifyRole\OT1/ppl/m/n/12 , \OT1
+/pcr/m/n/12 rateLimiter\OT1/ppl/m/n/12 )
+ []
 
 
 Package fancyhdr Warning: \headheight is too small (12.0pt): 
@@ -1305,6 +1530,11 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 (fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
 
 [31]
+Overfull \hbox (1.38911pt too wide) in paragraph at lines 152--153
+\OT1/ppl/m/n/12 re-views the pend-ing \OT1/pcr/m/n/12 JoinRequest \OT1/ppl/m/n/
+12 list, ver-i-fies the res-i-dent's phys-i-cal iden-
+ []
+
 
 Package fancyhdr Warning: \headheight is too small (12.0pt): 
 (fancyhdr)                Make it at least 14.49998pt, for example:
@@ -1313,15 +1543,8 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 (fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
 
 [32]
-Overfull \hbox (10.45341pt too wide) in paragraph at lines 248--249
-[]\OT1/ppl/b/n/12 Application Ap-proval: \OT1/ppl/m/n/12 When an owner ap-prove
-s a spe-cific ap-pli-ca-tion (\OT1/pcr/m/n/12 status
- []
-
-
-Overfull \hbox (195.1582pt too wide) in paragraph at lines 253--254
-\OT1/ppl/m/n/12 are de-fined us-ing CSS Cus-tom Prop-er-ties (Vari-ables) in-si
-de the \OT1/pcr/m/n/12 frontend/src/app/shared/styles/[]colors.scss
+Overfull \hbox (32.49976pt too wide) in paragraph at lines 182--183
+ [][] 
  []
 
 
@@ -1332,16 +1555,9 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 (fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
 
 [33]
-Overfull \hbox (275.95207pt too wide) in paragraph at lines 279--280
-[]\OT1/ppl/m/n/12 Theme switch-ing is man-aged re-ac-tively via the \OT1/pcr/m/
-n/12 ThemeService \OT1/ppl/m/n/12 (\OT1/pcr/m/n/12 frontend/src/app/shared/serv
-ices/theme.service.ts\OT1/ppl/m/n/12 ).
- []
-
-
-Overfull \hbox (98.27118pt too wide) in paragraph at lines 303--304
-\OT1/ppl/m/n/12 hex col-ors. In-stead, they ref-er-ence se-man-tic to-kens (e.g
-., \OT1/pcr/m/n/12 color: var(--color-text-primary)\OT1/ppl/m/n/12 ).
+Overfull \hbox (10.45341pt too wide) in paragraph at lines 213--214
+[]\OT1/ppl/b/n/12 Application Ap-proval: \OT1/ppl/m/n/12 When an owner ap-prove
+s a spe-cific ap-pli-ca-tion (\OT1/pcr/m/n/12 status
  []
 
 
@@ -1352,6 +1568,12 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 (fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
 
 [34]
+Overfull \hbox (85.87119pt too wide) in paragraph at lines 268--269
+\OT1/ppl/m/n/12 hex col-ors. In-stead, they ref-er-ence se-man-tic to-kens (e.g
+., $\OT1/pcr/m/n/12 color : var(-[]-[]color-[]text-[]primary)$\OT1/ppl/m/n/12 )
+.
+ []
+
 
 Package fancyhdr Warning: \headheight is too small (12.0pt): 
 (fancyhdr)                Make it at least 14.49998pt, for example:
@@ -1360,21 +1582,17 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 (fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
 
 [35]
-Overfull \hbox (111.11218pt too wide) in paragraph at lines 360--361
-[]\OT1/ppl/b/n/12 General Se-cu-rity: \OT1/pcr/m/n/12 router.get('/feed', requi
-reAuthentication, requireVerified,
- []
 
+Package fancyhdr Warning: \headheight is too small (12.0pt): 
+(fancyhdr)                Make it at least 14.49998pt, for example:
+(fancyhdr)                \setlength{\headheight}{14.49998pt}.
+(fancyhdr)                You might also make \topmargin smaller:
+(fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
 
-Overfull \hbox (141.61539pt too wide) in paragraph at lines 361--362
+[36]
+Overfull \hbox (136.83942pt too wide) in paragraph at lines 326--327
 []\OT1/ppl/b/n/12 Administrative Re-stric-tions: \OT1/pcr/m/n/12 router.put('/a
 dmin/approve/:id', requireAuthentication,
- []
-
-
-Overfull \hbox (4.34793pt too wide) in paragraph at lines 361--362
-\OT1/pcr/m/n/12 requireAdminRole, adminController.approveUser) \OT1/ppl/m/n/12 
-re-stricts ad-min-
  []
 
 ) (chapters/chapter5_testing_validation.tex
@@ -1385,60 +1603,24 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 (fancyhdr)                You might also make \topmargin smaller:
 (fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
 
-[36]
+[37]
 Chapter 5.
 
-Overfull \hbox (2.90546pt too wide) in paragraph at lines 12--13
-[]\OT1/ppl/b/n/12 Cross-Device and Re-spon-sive Com-pat-i-bil-ity: \OT1/ppl/m/n
-/12 As-sesses pre-sen-ta-tion layer per-
- []
-
-[37
-
-]
-Overfull \hbox (2.20796pt too wide) in paragraph at lines 22--23
+Overfull \hbox (2.20796pt too wide) in paragraph at lines 17--18
 \OT1/ppl/m/n/12 pen-den-cies, pro-cesses SCSS vari-ables, and gen-er-ates op-ti
 -mized JavaScript bun-
  []
 
+[38
 
-Overfull \hbox (2.6403pt too wide) in paragraph at lines 49--49
-[]|\OT1/ppl/m/n/8 **Passed**| 
+]
+Overfull \hbox (2.03212pt too wide) in paragraph at lines 45--45
+[]|\OT1/ppl/m/n/8 Authentication|  
  []
 
 
-Overfull \hbox (2.6403pt too wide) in paragraph at lines 49--49
-[]|\OT1/ppl/m/n/8 **Passed**| 
- []
-
-
-Overfull \hbox (2.6403pt too wide) in paragraph at lines 49--49
-[]|\OT1/ppl/m/n/8 **Passed**| 
- []
-
-
-Overfull \hbox (2.6403pt too wide) in paragraph at lines 49--49
-[]|\OT1/ppl/m/n/8 **Passed**| 
- []
-
-
-Overfull \hbox (2.6403pt too wide) in paragraph at lines 49--49
-[]|\OT1/ppl/m/n/8 **Passed**| 
- []
-
-
-Overfull \hbox (2.6403pt too wide) in paragraph at lines 49--49
-[]|\OT1/ppl/m/n/8 **Passed**| 
- []
-
-
-Overfull \hbox (2.6403pt too wide) in paragraph at lines 49--49
-[]|\OT1/ppl/m/n/8 **Passed**| 
- []
-
-
-Overfull \hbox (2.6403pt too wide) in paragraph at lines 49--49
-[]|\OT1/ppl/m/n/8 **Passed**| 
+Overfull \hbox (2.03212pt too wide) in paragraph at lines 45--45
+[]|\OT1/ppl/m/n/8 Authentication|  
  []
 
 
@@ -1448,12 +1630,7 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 (fancyhdr)                You might also make \topmargin smaller:
 (fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
 
-[38]
-Overfull \hbox (18.85582pt too wide) in paragraph at lines 72--74
-\OT1/ppl/m/n/12 sta-tus and the er-ror: \OMS/cmsy/m/n/12 f\OT1/pcr/m/n/12 "erro
-r": "Account not yet verified by block
- []
-
+[39]
 
 Package fancyhdr Warning: \headheight is too small (12.0pt): 
 (fancyhdr)                Make it at least 14.49998pt, for example:
@@ -1461,7 +1638,7 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 (fancyhdr)                You might also make \topmargin smaller:
 (fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
 
-[39]) (chapters/chapter6_conclusions.tex
+[40]) (chapters/chapter6_conclusions.tex
 
 Package fancyhdr Warning: \headheight is too small (12.0pt): 
 (fancyhdr)                Make it at least 14.49998pt, for example:
@@ -1469,20 +1646,14 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 (fancyhdr)                You might also make \topmargin smaller:
 (fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
 
-[40]
+[41]
 Chapter 6.
-[41
+[42
 
 ]
-Overfull \hbox (0.63625pt too wide) in paragraph at lines 19--20
-\OT1/ppl/m/n/12 lar change de-tec-tion to re-ac-tive Sig-nal APIs sim-pli-fied 
-com-po-nent state. Mono-
- []
-
-
-Overfull \hbox (0.49178pt too wide) in paragraph at lines 21--22
-\OT1/ppl/m/n/12 struc-tured color to-ken sheet sim-pli-fied lay-out de-vel-op-m
-ent. Com-po-nent styles
+Overfull \hbox (4.22426pt too wide) in paragraph at lines 15--16
+\OT1/ppl/m/n/12 Observables---newly retrofitted to sup-port An-gu-lar's mod-ern
+ Sig-nal APIs. This
  []
 
 
@@ -1492,7 +1663,7 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 (fancyhdr)                You might also make \topmargin smaller:
 (fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
 
-[42]) (main.bbl
+[43]) (main.bbl
 
 Package fancyhdr Warning: \headheight is too small (12.0pt): 
 (fancyhdr)                Make it at least 14.49998pt, for example:
@@ -1500,16 +1671,28 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 (fancyhdr)                You might also make \topmargin smaller:
 (fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
 
-[43] [44
+[44]
+Underfull \hbox (badness 1874) in paragraph at lines 15--19
+[]\OT1/ppl/m/n/12 Nextdoor, Inc.  Nextdoor -- The Neigh-bor-hood Net-work.  []$
+\OT1/pcr/m/n/12 https : / /
+ []
+
+
+Underfull \hbox (badness 1708) in paragraph at lines 29--33
+[]\OT1/ppl/m/n/12 MDN Web Docs.  MPA (Multi-page ap-pli-ca-tion) vs SPA.  []$\O
+T1/pcr/m/n/12 https : / /
+ []
+
+[45
 
 ]
-Underfull \hbox (badness 1383) in paragraph at lines 99--105
+Underfull \hbox (badness 1383) in paragraph at lines 129--135
 []\OT1/ppl/m/n/12 MDN Web Docs.  Us-ing CSS Cus-tom Prop-er-ties (Vari-ables). 
  []$\OT1/pcr/m/n/12 https :
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 99--105
+Underfull \hbox (badness 10000) in paragraph at lines 129--135
 \OT1/pcr/m/n/12 / / developer . mozilla . org / en-[]US / docs / Web / CSS / Us
 ing _ CSS _
  []
@@ -1522,37 +1705,36 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 (fancyhdr)                You might also make \topmargin smaller:
 (fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
 
-[45] (main.aux)
+[46] (main.aux)
  ***********
 LaTeX2e <2025-11-01>
 L3 programming layer <2026-01-19>
  ***********
 Package rerunfilecheck Info: File `main.out' has not changed.
-(rerunfilecheck)             Checksum: B592AAEFEDF0E09B78159C17D2128C3F;13812.
+(rerunfilecheck)             Checksum: C60C6EE35530B887C61D54842C08694E;13823.
  ) 
 Here is how much of TeX's memory you used:
- 14843 strings out of 467867
- 231843 string characters out of 5418334
- 760292 words of memory out of 5000000
- 43026 multiletter control sequences out of 15000+600000
+ 26082 strings out of 467867
+ 482968 string characters out of 5418334
+ 982654 words of memory out of 5000000
+ 54084 multiletter control sequences out of 15000+600000
  651217 words of font info for 99 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 90i,12n,93p,727b,2036s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 99i,12n,108p,1021b,2036s stack positions out of 10000i,1000n,20000p,200000b,200000s
 <C:/Users/bogda/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/
 cmmi12.pfb><C:/Users/bogda/AppData/Local/Programs/MiKTeX/fonts/type1/public/ams
 fonts/cm/cmr12.pfb><C:/Users/bogda/AppData/Local/Programs/MiKTeX/fonts/type1/pu
 blic/amsfonts/cm/cmsy10.pfb><C:/Users/bogda/AppData/Local/Programs/MiKTeX/fonts
 /type1/public/amsfonts/cm/cmsy8.pfb><C:/Users/bogda/AppData/Local/Programs/MiKT
-eX/fonts/type1/public/amsfonts/latxfont/line10.pfb><C:/Users/bogda/AppData/Loca
-l/Programs/MiKTeX/fonts/type1/urw/courier/ucrb8a.pfb><C:/Users/bogda/AppData/Lo
-cal/Programs/MiKTeX/fonts/type1/urw/courier/ucrr8a.pfb><C:/Users/bogda/AppData/
-Local/Programs/MiKTeX/fonts/type1/urw/palatino/uplb8a.pfb><C:/Users/bogda/AppDa
-ta/Local/Programs/MiKTeX/fonts/type1/urw/palatino/uplr8a.pfb><C:/Users/bogda/Ap
-pData/Local/Programs/MiKTeX/fonts/type1/urw/palatino/uplr8a.pfb><C:/Users/bogda
-/AppData/Local/Programs/MiKTeX/fonts/type1/urw/palatino/uplri8a.pfb>
-Output written on main.pdf (50 pages, 389857 bytes).
+eX/fonts/type1/urw/courier/ucrb8a.pfb><C:/Users/bogda/AppData/Local/Programs/Mi
+KTeX/fonts/type1/urw/courier/ucrr8a.pfb><C:/Users/bogda/AppData/Local/Programs/
+MiKTeX/fonts/type1/urw/palatino/uplb8a.pfb><C:/Users/bogda/AppData/Local/Progra
+ms/MiKTeX/fonts/type1/urw/palatino/uplr8a.pfb><C:/Users/bogda/AppData/Local/Pro
+grams/MiKTeX/fonts/type1/urw/palatino/uplr8a.pfb><C:/Users/bogda/AppData/Local/
+Programs/MiKTeX/fonts/type1/urw/palatino/uplri8a.pfb>
+Output written on main.pdf (51 pages, 390864 bytes).
 PDF statistics:
- 1094 PDF objects out of 1200 (max. 8388607)
- 466 named destinations out of 1000 (max. 500000)
- 513 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 1057 PDF objects out of 1200 (max. 8388607)
+ 427 named destinations out of 1000 (max. 500000)
+ 517 words of extra memory for PDF output out of 10000 (max. 10000000)
 
