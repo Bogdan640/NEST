@@ -1,24 +1,29 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, inject, OnInit, signal, TemplateRef, ViewChild } from '@angular/core';
 import { AdminApiService, BlockResident } from '../../core/api/admin-api.service';
 import { JoinRequest } from '../../core/models/user.model';
 import { ToastService } from '../../shared/services/toast.service';
 import { DatePipe } from '@angular/common';
 import { AgGridAngular } from 'ag-grid-angular';
-import type { ColDef, GridReadyEvent, GridApi, ICellRendererParams } from 'ag-grid-community';
+import type { ColDef, GridReadyEvent, GridApi, ICellRendererParams, CellClickedEvent } from 'ag-grid-community';
 import { AllCommunityModule, ModuleRegistry, themeQuartz } from 'ag-grid-community';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { environment } from '../../../environments/environment';
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 
 @Component({
   selector: 'app-admin',
   standalone: true,
-  imports: [DatePipe, AgGridAngular],
+  imports: [DatePipe, AgGridAngular, MatDialogModule],
   templateUrl: './admin.component.html',
   styleUrl: './admin.component.scss',
 })
 export class AdminComponent implements OnInit {
   private adminApi = inject(AdminApiService);
   private toastService = inject(ToastService);
+  private dialog = inject(MatDialog);
+
+  @ViewChild('listDialog') listDialogTemplate!: TemplateRef<any>;
 
   pendingRequests = signal<JoinRequest[]>([]);
   residents = signal<BlockResident[]>([]);
@@ -27,7 +32,16 @@ export class AdminComponent implements OnInit {
   quickFilterText = signal('');
   activeTab = signal<'residents' | 'pending'>('residents');
 
+  dialogTitle = signal('');
+  dialogItems = signal<{ id: string, name: string, subtitle?: string }[]>([]);
+
   private gridApi!: GridApi;
+
+  getProfileImageUrl(path: string | null | undefined): string | null {
+    if (!path) return null;
+    if (path.startsWith('http')) return path;
+    return `${environment.apiBaseUrl}${path}`;
+  }
 
   // AG Grid theme
   theme = themeQuartz.withParams({
@@ -60,8 +74,9 @@ export class AdminComponent implements OnInit {
       cellRenderer: (params: ICellRendererParams) => {
         const data = params.data as BlockResident;
         if (data.profileImage) {
+          const imgUrl = data.profileImage.startsWith('http') ? data.profileImage : `${environment.apiBaseUrl}${data.profileImage}`;
           return `<div style="display:flex;align-items:center;justify-content:center;height:100%;">
-            <img src="${data.profileImage}" style="width:36px;height:36px;border-radius:50%;object-fit:cover;" />
+            <img src="${imgUrl}" style="width:36px;height:36px;border-radius:50%;object-fit:cover;" />
           </div>`;
         }
         const initials = `${data.firstName?.charAt(0) || ''}${data.lastName?.charAt(0) || ''}`.toUpperCase();
@@ -113,6 +128,7 @@ export class AdminComponent implements OnInit {
       minWidth: 140,
       sortable: true,
       comparator: (a: any[], b: any[]) => (a?.length || 0) - (b?.length || 0),
+      cellStyle: (params) => params.value && params.value.length > 0 ? { cursor: 'pointer' } : null,
       cellRenderer: (params: ICellRendererParams) => {
         const events = params.value as { id: string; title: string }[];
         if (!events || events.length === 0) {
@@ -131,6 +147,7 @@ export class AdminComponent implements OnInit {
       minWidth: 140,
       sortable: true,
       comparator: (a: any[], b: any[]) => (a?.length || 0) - (b?.length || 0),
+      cellStyle: (params) => params.value && params.value.length > 0 ? { cursor: 'pointer' } : null,
       cellRenderer: (params: ICellRendererParams) => {
         const events = params.value as { id: string; title: string }[];
         if (!events || events.length === 0) {
@@ -149,6 +166,7 @@ export class AdminComponent implements OnInit {
       minWidth: 140,
       sortable: true,
       comparator: (a: any[], b: any[]) => (a?.length || 0) - (b?.length || 0),
+      cellStyle: (params) => params.value && params.value.length > 0 ? { cursor: 'pointer' } : null,
       cellRenderer: (params: ICellRendererParams) => {
         const tools = params.value as { id: string; name: string; type: string }[];
         if (!tools || tools.length === 0) {
@@ -181,6 +199,36 @@ export class AdminComponent implements OnInit {
   onFilterChange(event: Event) {
     const input = event.target as HTMLInputElement;
     this.quickFilterText.set(input.value);
+  }
+
+  onCellClicked(event: CellClickedEvent) {
+    if (!event.value || event.value.length === 0) return;
+
+    if (['activeEventsCreated', 'eventsParticipating', 'borrowedTools'].includes(event.colDef.field!)) {
+      let title = '';
+      let items: any[] = [];
+      
+      if (event.colDef.field === 'activeEventsCreated') {
+        title = 'Active Events';
+        items = event.value.map((e: any) => ({ id: e.id, name: e.title }));
+      } else if (event.colDef.field === 'eventsParticipating') {
+        title = 'Participating In';
+        items = event.value.map((e: any) => ({ id: e.id, name: e.title }));
+      } else if (event.colDef.field === 'borrowedTools') {
+        title = 'Borrowed Tools';
+        items = event.value.map((t: any) => ({ id: t.id, name: t.name, subtitle: t.type }));
+      }
+      
+      this.dialogTitle.set(title);
+      this.dialogItems.set(items);
+      
+      this.dialog.open(this.listDialogTemplate, {
+        panelClass: 'modal-dialog-panel',
+        backdropClass: 'blurred-backdrop',
+        maxWidth: '400px',
+        width: '90vw'
+      });
+    }
   }
 
   setTab(tab: 'residents' | 'pending') {
