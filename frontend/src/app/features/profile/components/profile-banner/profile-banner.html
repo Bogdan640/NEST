@@ -1,0 +1,28 @@
+<!-- Profile Banner -->
+<div class="profile-banner" (click)="coverInput.click()" title="Change cover image">
+  @if (coverImageUrl()) {
+    <img [src]="coverImageUrl()" alt="Cover" class="banner-image" />
+  } @else {
+    <div class="banner-gradient"></div>
+  }
+  <div class="banner-overlay">
+    {{ isUploadingCover() ? '⏳' : '📷' }}
+  </div>
+  <input #coverInput type="file" accept="image/*" hidden (change)="onCoverImageSelected($event)" />
+</div>
+
+<!-- Profile Avatar (separate from banner to fix centering) -->
+<div class="profile-avatar-area">
+  <div class="profile-avatar-wrapper" (click)="avatarInput.click()" title="Change profile picture">
+    @if (profileImageUrl()) {
+      <img [src]="profileImageUrl()" alt="Profile" class="profile-avatar-img" />
+    } @else {
+      <div class="profile-avatar">{{ userInitials() }}</div>
+    }
+    <div class="avatar-overlay">
+      {{ isUploadingProfile() ? '⏳' : '📷' }}
+    </div>
+    <div class="online-dot"></div>
+  </div>
+  <input #avatarInput type="file" accept="image/*" hidden (change)="onProfileImageSelected($event)" />
+</div>

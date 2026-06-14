@@ -3,7 +3,7 @@ import { ThemeService, Theme } from '../../core/services/theme.service';
 import { AuthFacade } from '../../store/auth/auth.facade';
 import { UserApiService } from '../../core/api/user-api.service';
 import { ToastService } from '../../shared/services/toast.service';
-import { DEFAULT_PREFERENCES, UserPreferences, UpdatePreferencesRequest } from '../../core/models/user.model';
+import { DEFAULT_PREFERENCES, UserPreferences, UpdatePreferencesRequest, parseUserPreferences } from '../../core/models/user.model';
 
 @Component({
   selector: 'app-settings',
@@ -27,7 +27,7 @@ export class SettingsComponent implements OnInit {
   ngOnInit(): void {
     const user = this.authFacade.currentUser();
     if (user?.preferences) {
-      const prefs = this.parsePreferences(user.preferences);
+      const prefs = parseUserPreferences(user.preferences);
       this.preferences.set(prefs);
     }
   }
@@ -73,16 +73,5 @@ export class SettingsComponent implements OnInit {
         this.isSaving.set(false);
       },
     });
-  }
-
-  private parsePreferences(prefs: unknown): UserPreferences {
-    if (typeof prefs === 'string') {
-      try {
-        return { ...DEFAULT_PREFERENCES, ...JSON.parse(prefs) };
-      } catch {
-        return { ...DEFAULT_PREFERENCES };
-      }
-    }
-    return { ...DEFAULT_PREFERENCES, ...(prefs as Partial<UserPreferences>) };
   }
 }

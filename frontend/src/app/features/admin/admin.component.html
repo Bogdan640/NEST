@@ -52,24 +52,10 @@
           <p>Loading residents...</p>
         </div>
       } @else {
-        <div class="grid-container">
-          <ag-grid-angular
-            style="width: 100%; height: 680px;"
-            [theme]="theme"
-            [rowData]="residents()"
-            [columnDefs]="columnDefs"
-            [defaultColDef]="defaultColDef"
-            [quickFilterText]="quickFilterText()"
-            [rowHeight]="52"
-            [headerHeight]="44"
-            [animateRows]="true"
-            [pagination]="true"
-            [paginationPageSize]="10"
-            [paginationPageSizeSelector]="[10, 25, 50]"
-            (gridReady)="onGridReady($event)"
-            (cellClicked)="onCellClicked($event)"
-          />
-        </div>
+        <app-admin-residents-grid
+          [residents]="residents()"
+          [quickFilterText]="quickFilterText()"
+        ></app-admin-residents-grid>
       }
     </div>
   }
@@ -82,75 +68,15 @@
       @if (isLoading()) {
         <div class="loading-state">
           <span class="spinner"></span>
-        </div>
-      } @else if (pendingRequests().length === 0) {
-        <div class="empty-state">
-          <div class="empty-icon">✅</div>
-          <h3>All caught up!</h3>
-          <p>No pending requests at the moment.</p>
+          <p>Loading requests...</p>
         </div>
       } @else {
-        <div class="table-container">
-          <table class="requests-table">
-            <thead>
-              <tr>
-                <th>Name</th>
-                <th>Email</th>
-                <th>Apartment</th>
-                <th>Block</th>
-                <th>Date</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              @for (req of pendingRequests(); track req.id) {
-                <tr>
-                  <td>
-                    <div class="name-cell">
-                      @if (req.user?.profileImage) {
-                        <img [src]="getProfileImageUrl(req.user?.profileImage)" class="avatar-mini" style="object-fit: cover; border-radius: 50%;" />
-                      } @else {
-                        <div class="avatar-mini">{{ req.user?.firstName?.charAt(0) || 'U' }}</div>
-                      }
-                      <span>{{ req.user?.firstName }} {{ req.user?.lastName }}</span>
-                    </div>
-                  </td>
-                  <td>{{ req.user?.email }}</td>
-                  <td>{{ req.user?.apartmentNumber || '-' }}</td>
-                  <td>{{ req.blockId }}</td>
-                  <td>{{ req.createdAt | date:'shortDate' }}</td>
-                  <td class="actions">
-                    <button class="btn-approve" (click)="approve(req)">✓ Approve</button>
-                    <button class="btn-reject" (click)="reject(req)">✕ Reject</button>
-                  </td>
-                </tr>
-              }
-            </tbody>
-          </table>
-        </div>
+        <app-admin-pending-requests
+          [requests]="pendingRequests()"
+          (approve)="approveRequest($event)"
+          (reject)="rejectRequest($event)"
+        ></app-admin-pending-requests>
       }
     </div>
   }
 </div>
-
-<ng-template #listDialog>
-  <div class="modal-card-container no-hover-effect" style="padding: 1.5rem; background: var(--card-bg); border-radius: 1rem; color: var(--text-primary);">
-    <div class="modal-header-actions" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
-      <h3 style="margin: 0; font-size: 1.25rem; font-weight: 600;">{{ dialogTitle() }}</h3>
-      <button class="btn-icon close-btn" mat-dialog-close title="Close" style="background: none; border: none; font-size: 1.25rem; cursor: pointer; color: var(--text-secondary);">✕</button>
-    </div>
-    
-    <div class="list-container" style="max-height: 60vh; overflow-y: auto;">
-      <ul style="list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 0.75rem;">
-        @for (item of dialogItems(); track item.id) {
-          <li style="padding: 1rem; background: var(--bg-default); border: 1px solid var(--card-border); border-radius: 8px;">
-            <div style="font-weight: 500; font-size: 1rem;">{{ item.name }}</div>
-            @if (item.subtitle) {
-              <div style="font-size: 0.875rem; color: var(--text-secondary); margin-top: 0.25rem;">{{ item.subtitle }}</div>
-            }
-          </li>
-        }
-      </ul>
-    </div>
-  </div>
-</ng-template>

@@ -72,4 +72,9 @@ export class AuthFacade {
   hasPermission(permission: string): boolean {
     return this.permissions().includes(permission);
   }
+
+  canManageResource(resourceOwnerId?: string | null): boolean {
+    const user = this.currentUser();
+    return !!user && !!resourceOwnerId && (user.id === resourceOwnerId || user.role === 'ADMIN');
+  }
 }

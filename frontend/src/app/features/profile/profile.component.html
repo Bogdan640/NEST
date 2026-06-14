@@ -1,155 +1,38 @@
 <div class="profile-page">
   @if (currentUser()) {
-    <!-- Profile Banner -->
-    <div class="profile-banner" (click)="coverInput.click()" title="Change cover image">
-      @if (coverImageUrl()) {
-        <img [src]="coverImageUrl()" alt="Cover" class="banner-image" />
-      } @else {
-        <div class="banner-gradient"></div>
-      }
-      <div class="banner-overlay">
-        {{ isUploadingCover() ? '⏳' : '📷' }}
-      </div>
-      <input #coverInput type="file" accept="image/*" hidden (change)="onCoverImageSelected($event)" />
-    </div>
+    <app-profile-banner
+      [coverImageUrl]="coverImageUrl()"
+      [profileImageUrl]="profileImageUrl()"
+      [userInitials]="userInitials()"
+      [isUploadingCover]="isUploadingCover()"
+      [isUploadingProfile]="isUploadingProfile()"
+      (coverImageSelected)="onCoverImageSelected($event)"
+      (profileImageSelected)="onProfileImageSelected($event)"
+    ></app-profile-banner>
 
-    <!-- Profile Avatar (separate from banner to fix centering) -->
-    <div class="profile-avatar-area">
-      <div class="profile-avatar-wrapper" (click)="avatarInput.click()" title="Change profile picture">
-        @if (profileImageUrl()) {
-          <img [src]="profileImageUrl()" alt="Profile" class="profile-avatar-img" />
-        } @else {
-          <div class="profile-avatar">{{ userInitials() }}</div>
-        }
-        <div class="avatar-overlay">
-          {{ isUploadingProfile() ? '⏳' : '📷' }}
-        </div>
-        <div class="online-dot"></div>
-      </div>
-      <input #avatarInput type="file" accept="image/*" hidden (change)="onProfileImageSelected($event)" />
-    </div>
-
-    <!-- Profile Info Card -->
     <div class="profile-info-card">
       @if (!isEditing()) {
-        <!-- View Mode -->
-        <div class="profile-name-section">
-          <h1 class="profile-name">{{ currentUser()!.firstName }} {{ currentUser()!.lastName }}</h1>
-          @if (currentUser()!.headline) {
-            <p class="profile-headline">{{ currentUser()!.headline }}</p>
-          }
-          <p class="profile-email">
-            <span class="info-icon">✉️</span>
-            {{ currentUser()!.email }}
-          </p>
-        </div>
-
-        <div class="info-grid">
-          <div class="info-tile">
-            <span class="tile-icon">🏠</span>
-            <span class="tile-label">Apartment</span>
-            <span class="tile-value">{{ currentUser()!.apartmentNumber || '—' }}</span>
-          </div>
-          <div class="info-tile">
-            <span class="tile-icon">📞</span>
-            <span class="tile-label">Phone</span>
-            <span class="tile-value">{{ currentUser()!.phoneNumber || 'Not set' }}</span>
-          </div>
-          <div class="info-tile">
-            <span class="tile-icon">🏷️</span>
-            <span class="tile-label">Role</span>
-            <span class="tile-value role-badge" [class.admin]="currentUser()!.role === 'ADMIN'">
-              {{ currentUser()!.role }}
-            </span>
-          </div>
-          <div class="info-tile">
-            <span class="tile-icon">📅</span>
-            <span class="tile-label">Member Since</span>
-            <span class="tile-value">{{ memberSince() }}</span>
-          </div>
-        </div>
-
-        @if (currentUser()!.about) {
-          <div class="about-section">
-            <h3><span class="section-icon">💬</span> About Me</h3>
-            <p>{{ currentUser()!.about }}</p>
-          </div>
-        }
-
-        <div class="profile-actions">
-          <button class="btn-edit" (click)="startEditing()">
-            <span>✏️</span> Edit Profile
-          </button>
-          <button class="btn-danger" (click)="logout()">
-            <span>🚪</span> Sign Out
-          </button>
-        </div>
+        <app-profile-info
+          [user]="currentUser()!"
+          [memberSince]="memberSince()"
+          (editClicked)="startEditing()"
+          (logoutClicked)="logout()"
+        ></app-profile-info>
       } @else {
-        <!-- Edit Mode -->
-        <h2 class="edit-title">✏️ Edit Your Profile</h2>
-        <form [formGroup]="profileForm" (ngSubmit)="saveProfile()">
-          <div class="edit-grid">
-            <div class="form-group">
-              <label><span class="field-icon">👤</span> First Name</label>
-              <input type="text" formControlName="firstName" class="form-control" placeholder="Your first name" />
-            </div>
-            <div class="form-group">
-              <label><span class="field-icon">👤</span> Last Name</label>
-              <input type="text" formControlName="lastName" class="form-control" placeholder="Your last name" />
-            </div>
-            <div class="form-group full-width">
-              <label><span class="field-icon">📞</span> Phone Number</label>
-              <input type="tel" formControlName="phoneNumber" class="form-control" placeholder="0712 345 678" />
-            </div>
-            <div class="form-group full-width">
-              <label><span class="field-icon">📅</span> Registered Date</label>
-              <input type="text" [value]="exactMemberSince()" class="form-control" disabled style="background: var(--form-input-disabled-bg); cursor: not-allowed;" />
-            </div>
-            <div class="form-group full-width">
-              <label><span class="field-icon">💡</span> Headline</label>
-              <input type="text" formControlName="headline" class="form-control" placeholder="What describes you? (e.g., Coffee lover & plant parent)" maxlength="120" />
-              <span class="char-count">{{ profileForm.get('headline')?.value?.length || 0 }}/120</span>
-            </div>
-            <div class="form-group full-width">
-              <label><span class="field-icon">💬</span> About Me</label>
-              <textarea formControlName="about" class="form-control" rows="4" placeholder="Tell your neighbors about yourself: hobbies, interests, fun facts..." maxlength="1000"></textarea>
-              <span class="char-count">{{ profileForm.get('about')?.value?.length || 0 }}/1000</span>
-            </div>
-          </div>
-
-          <div class="edit-actions">
-            <button type="button" class="btn-cancel" (click)="cancelEditing()">Cancel</button>
-            <button type="submit" class="btn-save" [disabled]="profileForm.invalid || isSaving()">
-              {{ isSaving() ? 'Saving...' : '💾 Save Changes' }}
-            </button>
-          </div>
-        </form>
+        <app-profile-edit-form
+          [profileForm]="profileForm"
+          [exactMemberSince]="exactMemberSince()"
+          [isSaving]="isSaving()"
+          (cancel)="cancelEditing()"
+          (save)="saveProfile()"
+        ></app-profile-edit-form>
       }
     </div>
 
-    <!-- Borrowed Tools Section -->
     <div class="section-card">
-      <h2 class="section-title"><span class="section-icon">🔧</span> My Borrowed Tools</h2>
-      @if (borrowedTools().length === 0) {
-        <div class="empty-mini">
-          <span class="empty-mini-icon">📦</span>
-          <p>You haven't borrowed any tools yet. Visit the <strong>Shared Shed</strong> to find items!</p>
-        </div>
-      } @else {
-        <div class="tools-grid">
-          @for (item of borrowedTools(); track item.resource.id) {
-            <div class="tool-card">
-              <div class="tool-type" [class]="item.resource.type.toLowerCase()">{{ item.resource.type }}</div>
-              <h4>{{ item.resource.name }}</h4>
-              <p class="tool-desc">{{ item.resource.description }}</p>
-              <div class="tool-meta">
-                <span class="tool-status approved">Borrowed</span>
-                <span class="tool-date">{{ item.reservation?.startTime | date:'shortDate' }}</span>
-              </div>
-            </div>
-          }
-        </div>
-      }
+      <app-profile-borrowed-tools
+        [borrowedTools]="borrowedTools()"
+      ></app-profile-borrowed-tools>
     </div>
 
     <!-- Quick Tips Section -->

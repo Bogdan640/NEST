@@ -158,7 +158,6 @@ export class ParkingComponent implements OnInit {
   }
 
   canDelete(publisherId: string): boolean {
-    const user = this.currentUser();
-    return !!user && (user.id === publisherId || user.role === 'ADMIN');
+    return this.authFacade.canManageResource(publisherId);
   }
 }

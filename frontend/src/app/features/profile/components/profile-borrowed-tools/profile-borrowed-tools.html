@@ -1,0 +1,21 @@
+<h2 class="section-title"><span class="section-icon">🔧</span> My Borrowed Tools</h2>
+@if (borrowedTools().length === 0) {
+  <div class="empty-mini">
+    <span class="empty-mini-icon">📦</span>
+    <p>You haven't borrowed any tools yet. Visit the <strong>Shared Shed</strong> to find items!</p>
+  </div>
+} @else {
+  <div class="tools-grid">
+    @for (item of borrowedTools(); track item.resource.id) {
+      <div class="tool-card">
+        <div class="tool-type" [class]="item.resource.type.toLowerCase()">{{ item.resource.type }}</div>
+        <h4>{{ item.resource.name }}</h4>
+        <p class="tool-desc">{{ item.resource.description }}</p>
+        <div class="tool-meta">
+          <span class="tool-status approved">Borrowed</span>
+          <span class="tool-date">{{ item.reservation?.startTime | date:'shortDate' }}</span>
+        </div>
+      </div>
+    }
+  </div>
+}

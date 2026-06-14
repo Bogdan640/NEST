@@ -1,0 +1,57 @@
+<div class="table-container custom-scrollbar">
+  @if (requests().length === 0) {
+    <div class="empty-state">
+      <div class="empty-icon">✓</div>
+      <h3>All Caught Up!</h3>
+      <p>There are no pending join requests for this block.</p>
+    </div>
+  } @else {
+    <table class="requests-table">
+      <thead>
+        <tr>
+          <th>Resident</th>
+          <th>Contact</th>
+          <th>Apartment</th>
+          <th>Date Applied</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (req of requests(); track req.id) {
+          <tr>
+            <td>
+              <div class="name-cell">
+                @if (req.user?.profileImage) {
+                  <img [src]="getProfileImageUrl(req.user?.profileImage)" class="avatar-mini" style="object-fit: cover; border-radius: 50%;" />
+                } @else {
+                  <div class="avatar-mini">{{ req.user?.firstName?.charAt(0) || 'U' }}</div>
+                }
+                <span>{{ req.user?.firstName }} {{ req.user?.lastName }}</span>
+              </div>
+            </td>
+            <td>
+              <div class="contact-cell">
+                <span>✉️ {{ req.user?.email }}</span>
+                @if (req.user?.phoneNumber) {
+                  <span>📞 {{ req.user?.phoneNumber }}</span>
+                }
+              </div>
+            </td>
+            <td><span class="apt-badge">Apt {{ req.user?.apartmentNumber }}</span></td>
+            <td>{{ req.createdAt | date:'mediumDate' }}</td>
+            <td>
+              <div class="action-buttons">
+                <button class="btn-approve" (click)="onApprove(req.user!.id)" title="Approve Request">
+                  ✓
+                </button>
+                <button class="btn-reject" (click)="onReject(req.user!.id)" title="Reject Request">
+                  ✕
+                </button>
+              </div>
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  }
+</div>

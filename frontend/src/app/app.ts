@@ -3,7 +3,7 @@ import { RouterOutlet } from '@angular/router';
 import { AuthFacade } from './store/auth/auth.facade';
 import { ThemeService } from './core/services/theme.service';
 import { ToastComponent } from './shared/components/toast/toast.component';
-import { DEFAULT_PREFERENCES, UserPreferences } from './core/models/user.model';
+import { DEFAULT_PREFERENCES, UserPreferences, parseUserPreferences } from './core/models/user.model';
 
 @Component({
   selector: 'app-root',
@@ -22,19 +22,8 @@ export class App implements OnInit {
     // Initialize theme from user preferences if available
     const user = this.authFacade.currentUser();
     if (user?.preferences) {
-      const prefs = this.parsePreferences(user.preferences);
+      const prefs = parseUserPreferences(user.preferences);
       this.themeService.initializeFromPreferences(prefs.theme);
     }
-  }
-
-  private parsePreferences(prefs: unknown): UserPreferences {
-    if (typeof prefs === 'string') {
-      try {
-        return { ...DEFAULT_PREFERENCES, ...JSON.parse(prefs) };
-      } catch {
-        return DEFAULT_PREFERENCES;
-      }
-    }
-    return { ...DEFAULT_PREFERENCES, ...(prefs as Partial<UserPreferences>) };
   }
 }

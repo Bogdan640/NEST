@@ -1,6 +1,15 @@
 /* Angular Material Theme */
 @use '@angular/material' as mat;
 
+/* Shared Design System — Color Tokens (light + dark themes) */
+@use 'app/shared/styles/colors';
+
+/* Global Styles */
+@use 'styles/variables' as *;
+@use 'styles/mixins' as *;
+@use 'styles/typography';
+@use 'styles/animations';
+
 /* Apply a custom emerald-green Material theme */
 html {
   @include mat.theme((
@@ -12,15 +21,6 @@ html {
     density: 0,
   ));
 }
-
-/* Shared Design System — Color Tokens (light + dark themes) */
-@import 'app/shared/styles/colors';
-
-/* Global Styles */
-@import 'styles/variables';
-@import 'styles/mixins';
-@import 'styles/typography';
-@import 'styles/animations';
 
 body {
   margin: 0;

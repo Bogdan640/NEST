@@ -1,0 +1,113 @@
+/* === Edit Mode === */
+.edit-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--color-text-primary);
+  margin: 0 0 1.5rem;
+  text-align: center;
+}
+
+.edit-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.full-width {
+  grid-column: 1 / -1;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+
+  label {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--form-label-color);
+  }
+}
+
+.field-icon {
+  margin-right: 0.25rem;
+}
+
+.form-control {
+  padding: 0.75rem 1rem;
+  border: 2px solid var(--form-input-border);
+  border-radius: 0.75rem;
+  background: var(--form-input-bg);
+  color: var(--color-text-primary);
+  font-family: inherit;
+  font-size: 0.95rem;
+  outline: none;
+  transition: all 0.2s;
+  box-sizing: border-box;
+
+  &:focus {
+    border-color: var(--form-input-focus-border);
+    background: var(--form-input-focus-bg);
+    box-shadow: 0 0 0 3px var(--color-primary-light);
+  }
+}
+
+textarea.form-control {
+  resize: vertical;
+}
+
+.char-count {
+  font-size: 0.7rem;
+  color: var(--char-count-color);
+  text-align: right;
+}
+
+.edit-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--form-divider);
+}
+
+.btn-cancel {
+  padding: 0.625rem 1.25rem;
+  border-radius: 0.625rem;
+  border: none;
+  background: var(--btn-secondary-bg);
+  color: var(--btn-secondary-color);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+
+  &:hover {
+    background: var(--btn-secondary-hover-bg);
+  }
+}
+
+.btn-save {
+  padding: 0.625rem 1.5rem;
+  border-radius: 0.625rem;
+  border: none;
+  background: var(--btn-primary-bg);
+  color: var(--color-text-inverted);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+
+  &:hover:not(:disabled) {
+    background: var(--btn-primary-hover);
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+@media (max-width: 640px) {
+  .edit-grid {
+    grid-template-columns: 1fr;
+  }
+}

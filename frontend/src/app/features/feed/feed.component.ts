@@ -76,7 +76,6 @@ export class FeedComponent implements OnInit {
   }
 
   canDelete(authorId: string): boolean {
-    const user = this.currentUser();
-    return !!user && (user.id === authorId || user.role === 'ADMIN');
+    return this.authFacade.canManageResource(authorId);
   }
 }

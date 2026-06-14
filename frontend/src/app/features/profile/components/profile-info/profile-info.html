@@ -1,0 +1,52 @@
+<!-- View Mode -->
+<div class="profile-name-section">
+  <h1 class="profile-name">{{ user().firstName }} {{ user().lastName }}</h1>
+  @if (user().headline) {
+    <p class="profile-headline">{{ user().headline }}</p>
+  }
+  <p class="profile-email">
+    <span class="info-icon">✉️</span>
+    {{ user().email }}
+  </p>
+</div>
+
+<div class="info-grid">
+  <div class="info-tile">
+    <span class="tile-icon">🏠</span>
+    <span class="tile-label">Apartment</span>
+    <span class="tile-value">{{ user().apartmentNumber || '—' }}</span>
+  </div>
+  <div class="info-tile">
+    <span class="tile-icon">📞</span>
+    <span class="tile-label">Phone</span>
+    <span class="tile-value">{{ user().phoneNumber || 'Not set' }}</span>
+  </div>
+  <div class="info-tile">
+    <span class="tile-icon">🏷️</span>
+    <span class="tile-label">Role</span>
+    <span class="tile-value role-badge" [class.admin]="user().role === 'ADMIN'">
+      {{ user().role }}
+    </span>
+  </div>
+  <div class="info-tile">
+    <span class="tile-icon">📅</span>
+    <span class="tile-label">Member Since</span>
+    <span class="tile-value">{{ memberSince() }}</span>
+  </div>
+</div>
+
+@if (user().about) {
+  <div class="about-section">
+    <h3><span class="section-icon">💬</span> About Me</h3>
+    <p>{{ user().about }}</p>
+  </div>
+}
+
+<div class="profile-actions">
+  <button class="btn-edit" (click)="onEdit()">
+    <span>✏️</span> Edit Profile
+  </button>
+  <button class="btn-danger" (click)="onLogout()">
+    <span>🚪</span> Sign Out
+  </button>
+</div>

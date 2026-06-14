@@ -189,7 +189,6 @@ export class EventsComponent {
   }
 
   canDelete(creatorId: string): boolean {
-    const user = this.currentUser();
-    return !!user && (user.id === creatorId || user.role === 'ADMIN');
+    return this.authFacade.canManageResource(creatorId);
   }
 }

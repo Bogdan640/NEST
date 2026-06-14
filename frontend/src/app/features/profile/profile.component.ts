@@ -2,15 +2,19 @@ import { Component, inject, OnInit, signal, computed } from '@angular/core';
 import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { AuthFacade } from '../../store/auth/auth.facade';
 import { ShedFacade } from '../../store/shed/shed.facade';
-import { DatePipe } from '@angular/common';
+
 import { ToastService } from '../../shared/services/toast.service';
 import { UserApiService } from '../../core/api/user-api.service';
 import { environment } from '../../../environments/environment';
+import { ProfileBanner } from './components/profile-banner/profile-banner';
+import { ProfileInfo } from './components/profile-info/profile-info';
+import { ProfileEditForm } from './components/profile-edit-form/profile-edit-form';
+import { ProfileBorrowedTools } from './components/profile-borrowed-tools/profile-borrowed-tools';
 
 @Component({
   selector: 'app-profile',
   standalone: true,
-  imports: [DatePipe, ReactiveFormsModule],
+  imports: [ReactiveFormsModule, ProfileBanner, ProfileInfo, ProfileEditForm, ProfileBorrowedTools],
   templateUrl: './profile.component.html',
   styleUrl: './profile.component.scss',
 })
@@ -20,7 +24,7 @@ export class ProfileComponent implements OnInit {
   private toastService = inject(ToastService);
   private fb = inject(FormBuilder);
   private userApi = inject(UserApiService);
-  
+
   readonly currentUser = this.authFacade.currentUser;
   readonly isEditing = signal(false);
   readonly isSaving = signal(false);
@@ -39,9 +43,9 @@ export class ProfileComponent implements OnInit {
     const user = this.currentUser();
     const resources = this.shedFacade.resources();
     if (!user || !resources) return [];
-    
-    return resources.filter(r => 
-      r.reservations?.some(res => 
+
+    return resources.filter(r =>
+      r.reservations?.some(res =>
         res.borrowerId === user.id && res.status === 'APPROVED'
       )
     ).map(r => {

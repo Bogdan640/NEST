@@ -1,0 +1,38 @@
+<h2 class="edit-title">✏️ Edit Your Profile</h2>
+<form [formGroup]="profileForm()" (ngSubmit)="onSave()">
+  <div class="edit-grid">
+    <div class="form-group">
+      <label><span class="field-icon">👤</span> First Name</label>
+      <input type="text" formControlName="firstName" class="form-control" placeholder="Your first name" />
+    </div>
+    <div class="form-group">
+      <label><span class="field-icon">👤</span> Last Name</label>
+      <input type="text" formControlName="lastName" class="form-control" placeholder="Your last name" />
+    </div>
+    <div class="form-group full-width">
+      <label><span class="field-icon">📞</span> Phone Number</label>
+      <input type="tel" formControlName="phoneNumber" class="form-control" placeholder="0712 345 678" />
+    </div>
+    <div class="form-group full-width">
+      <label><span class="field-icon">📅</span> Registered Date</label>
+      <input type="text" [value]="exactMemberSince()" class="form-control" disabled style="background: var(--form-input-disabled-bg); cursor: not-allowed;" />
+    </div>
+    <div class="form-group full-width">
+      <label><span class="field-icon">💡</span> Headline</label>
+      <input type="text" formControlName="headline" class="form-control" placeholder="What describes you? (e.g., Coffee lover & plant parent)" maxlength="120" />
+      <span class="char-count">{{ profileForm().get('headline')?.value?.length || 0 }}/120</span>
+    </div>
+    <div class="form-group full-width">
+      <label><span class="field-icon">💬</span> About Me</label>
+      <textarea formControlName="about" class="form-control" rows="4" placeholder="Tell your neighbors about yourself: hobbies, interests, fun facts..." maxlength="1000"></textarea>
+      <span class="char-count">{{ profileForm().get('about')?.value?.length || 0 }}/1000</span>
+    </div>
+  </div>
+
+  <div class="edit-actions">
+    <button type="button" class="btn-cancel" (click)="onCancel()">Cancel</button>
+    <button type="submit" class="btn-save" [disabled]="profileForm().invalid || isSaving()">
+      {{ isSaving() ? 'Saving...' : '💾 Save Changes' }}
+    </button>
+  </div>
+</form>

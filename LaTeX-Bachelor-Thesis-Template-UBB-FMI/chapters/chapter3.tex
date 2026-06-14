@@ -1,0 +1,415 @@
+\chapter{Software Analysis and Design}
+\label{chap:app-design-architecture}
+
+To transform the theoretical objective of fostering hyper-local resident engagement and mutual aid into a robust, scalable, and secure software solution, a rigorous software analysis and design phase is required. This chapter details the architectural patterns, structural design decisions, data models, and interface contracts that govern the NEST application, mapping the software lifecycle from specifications to architectural blue-prints.
+
+\section{System Architecture Overview}
+The NEST platform is built upon a modern Client-Server architectural style, employing a decoupled Single Page Application (SPA) frontend and a RESTful stateless backend API server. This separation of concerns guarantees that the presentation logic, business core, and data persistence layers remain highly modular, enhancing horizontal scalability and maintainability \cite{fowler2002patterns}.
+
+The complete data and control flow is organized into three distinct tiers:
+\begin{enumerate}
+    \item \textbf{Presentation Tier (Frontend Client):} Built using the Angular framework (v21), this layer is compiled into static assets and executed entirely within the client's web browser. It is responsible for rendering user interfaces, managing client-side view state via reactive signals, and routing. It communicates asynchronously with the backend server via HTTP requests using JSON payloads.
+    \item \textbf{Application and Services Tier (Backend Server):} Built upon Node.js and the Express.js framework using TypeScript, this layer acts as the API Gateway and the central orchestrator of business logic. It handles client routing, evaluates security policies through a chain of modular middleware (including JWT validation, rate limiting, and Role-Based Access Control), validates request schemas, delegates core logic to specialized service objects, and communicates with the persistence layer.
+    \item \textbf{Persistence and Data Tier (Database and ORM):} Relational data storage is handled by an SQLite database, abstracted through the Prisma Object-Relational Mapping (ORM) engine. Prisma delivers compile-time type safety for database operations, acts as the query builder, and handles schema migrations.
+\end{enumerate}
+
+The global client-server interaction model is depicted in Figure \ref{fig:system-architecture-overview}. When a client issues a request (e.g., submitting a post or requesting an item from the Shared Shed), the HTTP message traverses the network, is processed by the Express.js router, passes through authentication and authorization middleware chains, and triggers the target controller. The controller invokes the appropriate service layer, which issues type-safe Prisma queries to update the database, returning a JSON response that the Angular frontend consumes to reactively update the client-side state.
+
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[node distance=2.8cm and 2.2cm,
+    box/.style={draw, rectangle, minimum height=1cm, minimum width=3.8cm,
+                align=center, font=\small},
+    >=Stealth]
+    % Top row
+    \node[box] (client) {Angular SPA Client};
+    \node[box, right=of client] (server) {Express API Server};
+    \node[box, right=of server] (db) {SQLite Database};
+    % Bottom row
+    \node[box, below=of client] (theme) {Theme \& Signal Store};
+    \node[box, below=of server] (mw) {Middleware Chain};
+    \node[box, below=of db] (prisma) {Prisma ORM Client};
+    % Horizontal arrows
+    \draw[->] ([yshift=2pt]client.east) -- node[above,font=\scriptsize] {HTTP Request} ([yshift=2pt]server.west);
+    \draw[<-] ([yshift=-2pt]client.east) -- node[below,font=\scriptsize] {JSON Response} ([yshift=-2pt]server.west);
+    \draw[->] ([yshift=2pt]server.east) -- node[above,font=\scriptsize] {SQL Query} ([yshift=2pt]db.west);
+    \draw[<-] ([yshift=-2pt]server.east) -- node[below,font=\scriptsize] {Result Set} ([yshift=-2pt]db.west);
+    % Vertical arrows
+    \draw[->] (client) -- node[right,font=\scriptsize] {UI State Bind} (theme);
+    \draw[->] (server) -- node[right,font=\scriptsize] {Security Filters} (mw);
+    \draw[->] (db) -- node[right,font=\scriptsize] {Type Mapping} (prisma);
+\end{tikzpicture}
+\caption{System architecture overview and multi-tier data flow of the NEST application.}
+\label{fig:system-architecture-overview}
+\end{figure}
+
+\section{Requirements Specification}
+The analysis phase of the software lifecycle requires defining functional and non-functional requirements to align implementation with resident needs and operational safety.
+
+\subsection{Functional Requirements}
+NEST is designed to consolidate isolated neighborhood interactions into 8 distinct functional modules. Table \ref{tab:functional-requirements-full} maps these core modules to their detailed system capabilities and actor permissions.
+
+\begin{table}[htbp]
+\centering
+\small
+\setlength{\tabcolsep}{4pt}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabularx}{\textwidth}{|>{\raggedright\arraybackslash}p{2.0cm}|>{\raggedright\arraybackslash}p{2.8cm}|>{\raggedright\arraybackslash}X|}
+\hline
+\textbf{Module} & \textbf{Feature Requirement} & \textbf{Functional Description and Permissions} \\ \hline
+\textbf{Authen\-tication} & User Registration, Login \& Building Join Request & Captures user profile fields and hashes passwords. Restricts standard application access until user joins a physical building block via unique block code, subject to Admin approval. \\ \hline
+\textbf{Community Feed} & Chronological Post Feed \& Media Attachment & Verified building residents can publish text announcements, attach images, and scroll through building updates. Supports real-time rendering. \\ \hline
+\textbf{Shared Shed} & Peer-to-Peer Tool Sharing \& Borrowing & Residents can list household appliances or tools. Other verified neighbors can request to borrow items, transitioning item states from available to pending and borrowed. \\ \hline
+\textbf{Events} & Local Activity Planning \& RSVP Tracking & Residents can schedule neighborhood meetings, clean-up activities, or parties. Limits participant count and tracks attendee lists reactively. \\ \hline
+\textbf{Parking Sharing} & Parking Space Listing \& Short-Term Booking & Slot owners register slots and announce temporary availability. Neighbors browse available parking intervals and apply to reserve the spot. \\ \hline
+\textbf{Profile} & Resident Details \& Activity Summaries & Displays contact info (with visibility settings), profile/cover images, biography, and history of active listings and events. \\ \hline
+\textbf{Settings} & Reactive Preference \& Theme Customization & Allows instant light/dark theme switching, individual toggle controls for notification channels, and phone number privacy settings. \\ \hline
+\textbf{Admin Panel} & Block Moderation \& Access Approval & Enables building block administrators to approve or deny resident join requests, moderate posts, and manage block metadata. \\ \hline
+\end{tabularx}
+\caption{Core Functional Requirements of NEST by Feature Module}
+\label{tab:functional-requirements-full}
+\end{table}
+
+\subsection{Non-Functional Requirements}
+Non-functional requirements dictate the performance boundaries, operational safety parameters, and software quality characteristics of the platform \cite{sommerville2016software}.
+
+\begin{itemize}
+    \item \textbf{Security and Privacy:}
+    Confidentiality is a primary concern. All HTTP client-server communication must use secure protocols. Sensitive fields such as passwords must be hashed using the bcrypt algorithm with a workload factor of 10 prior to persistence. To ensure data integrity, state-modifying endpoints must be protected by JSON Web Token (JWT) authorization headers \cite{jones2015jwt}. Access is strictly restricted through middleware that enforces roles (\texttt{RESIDENT}, \texttt{ADMIN}). Furthermore, to prevent brute force and denial of service (DoS) attacks, API endpoints must enforce request rate limits, allowing a maximum of 100 requests per 15 minutes per IP address.
+    
+    \item \textbf{Usability and Accessibility:}
+    \begin{itemize}
+        \item \emph{Consistency:} The interface must adhere to Jakob Nielsen's usability heuristics \cite{nielsen1994usability}, maintaining uniform typography, interactive cues, and form styling.
+        \item \emph{Theme Adaptation:} The interface must support instantaneous light and dark visual themes without requiring a page reload or losing active form states.
+        \item \emph{Mobile Responsiveness:} The interface layout must adapt fluidly between desktop monitors (widths $\ge 1200px$), tablets, and smartphone screens (widths down to $320px$).
+    \end{itemize}
+    
+    \item \textbf{Performance and Efficiency:}
+    \begin{itemize}
+        \item \emph{Load Optimization:} The application must optimize loading times. The initial web page must render within 1.5 seconds over standard broadband, achieved through lazy loading and pre-fetching guards.
+        \item \emph{Resource Usage:} Client-side state transitions should minimize memory footprint and CPU utilization by utilizing Angular signals to selectively trigger component rendering instead of dirty-checking the entire DOM tree.
+    \end{itemize}
+
+    \item \textbf{Maintainability and Reliability:}
+    \begin{itemize}
+        \item \emph{Type Safety:} The entire system must use TypeScript on both frontend and backend to catch schema and interface errors at compile-time.
+        \item \emph{Exception Resilience:} The backend must handle errors gracefully without process crashes. Unexpected failures must log diagnostic traces while returning clean HTTP error envelopes (500 Internal Server Error) to the client.
+    \end{itemize}
+\end{itemize}
+
+\section{User Roles and Use Cases}
+The application model governs interactions through three distinct roles:
+\begin{enumerate}
+    \item \textbf{Guest:} An unauthenticated visitor. Can only view landing details, register a new account, or log in.
+    \item \textbf{Resident (Verified User):} A logged-in resident associated with a verified building block. Can access the Feed, Shed, Events, Parking, Settings, and Profile modules.
+    \item \textbf{Administrator:} A verified user with administrative privileges over a specific building block. Can perform all Resident actions and has exclusive rights to approve join requests and manage building configurations.
+\end{enumerate}
+
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[
+    usecase/.style={draw, ellipse, minimum width=3.8cm, minimum height=1.2cm, align=center, font=\small},
+    actor/.style={draw=none, align=center, font=\small\bfseries},
+    >=Stealth, node distance=1.8cm and 4.5cm]
+    
+    % Use Cases (Right Column)
+    \node[usecase] (uc_register) {Register / Log In};
+    
+    \node[usecase, below=1cm of uc_register] (uc_feed) {View / Post in Feed};
+    \node[usecase, below=0.4cm of uc_feed] (uc_join) {Request to Join Block};
+    \node[usecase, below=0.4cm of uc_join] (uc_shed) {Borrow / Lend Tools};
+    \node[usecase, below=0.4cm of uc_shed] (uc_event) {RSVP to Events};
+    
+    \node[usecase, below=1cm of uc_event] (uc_approve) {Approve Join Requests};
+    \node[usecase, below=0.4cm of uc_approve] (uc_manage) {Manage Building};
+    
+    % Actors (Left Column)
+    \node[actor, left=5cm of uc_register] (guest) {\textbf{Guest}};
+    
+    % Center the Resident actor between uc_join and uc_shed
+    \path (uc_join.west) -- (uc_shed.west) coordinate[midway] (res_mid);
+    \node[actor, left=5cm of res_mid] (resident) {\textbf{Resident}};
+    
+    % Center the Admin actor between uc_approve and uc_manage
+    \path (uc_approve.west) -- (uc_manage.west) coordinate[midway] (admin_mid);
+    \node[actor, left=5cm of admin_mid] (admin) {\textbf{Administrator}};
+    
+    % Connections — Guest
+    \draw[-] (guest.east) -- (uc_register.west);
+    
+    % Connections — Resident
+    \draw[-] (resident.east) -- (uc_feed.west);
+    \draw[-] (resident.east) -- (uc_join.west);
+    \draw[-] (resident.east) -- (uc_shed.west);
+    \draw[-] (resident.east) -- (uc_event.west);
+    
+    % Connections — Admin
+    \draw[-] (admin.east) -- (uc_approve.west);
+    \draw[-] (admin.east) -- (uc_manage.west);
+    
+    % Admin inherits from Resident
+    \draw[->, dashed, thick] (admin.north) -- node[left, font=\footnotesize] {$\ll$inherits$\gg$} (resident.south);
+    
+\end{tikzpicture}
+\caption{UML Use Case Diagram mapping system actors to primary functionalities.}
+\label{fig:use-case-diagram}
+\end{figure}
+
+\subsection{Use Case Scenarios}
+To map out user interactions and verify requirements, four critical use cases representing complex multi-party workflows are modeled below.
+
+\subsubsection{UC1: Account Creation and Building Block Registration}
+This usecase governs a guest joining their physical residential community.
+\begin{enumerate}
+    \item \textbf{Actor:} Guest.
+    \item \textbf{Preconditions:} The guest has an active email address and knows the block registration code provided by their building administrator.
+    \item \textbf{Flow of Events:}
+    \begin{enumerate}
+        \item The Guest navigates to the Registration page and submits their name, email, password, and apartment number.
+        \item The system validates fields, hashes the password, creates a pending \texttt{User} record, generates a JWT, and logs the user in.
+        \item The frontend directs the user to a "Join Block" interface, blocking standard routing.
+        \item The user inputs the alphanumeric block code corresponding to their building.
+        \item The system validates the code, creates a \texttt{JoinRequest} entity with a status of \texttt{PENDING}, and alerts the block administrator.
+        \item The block administrator opens the Admin Panel, reviews the name and apartment number, and clicks "Approve".
+        \item The system updates the User's \texttt{isVerified} status to \texttt{true}, connects their record to the \texttt{Block} entity, and clears the routing restriction.
+    \end{enumerate}
+    \item \textbf{Postconditions:} The Guest becomes a Verified Resident and gains full access to all building modules.
+\end{enumerate}
+
+\subsubsection{UC2: Item Borrowing in the Shared Shed}
+This usecase governs resource sharing and peer-to-peer trust.
+\begin{enumerate}
+    \item \textbf{Actors:} Resident A (Lender), Resident B (Borrower).
+    \item \textbf{Preconditions:} Resident A has listed a tool (e.g., a hammer drills) as available. Both belong to the same building block.
+    \item \textbf{Flow of Events:}
+    \begin{enumerate}
+        \item Resident B navigates to the Shared Shed, searches for the tool, and selects the item details.
+        \item Resident B clicks "Request to Borrow", inputting the requested timeline.
+        \item The system creates a \texttt{ResourceReservation} record with a status of \texttt{PENDING}.
+        \item The system generates a notification alert for Resident A.
+        \item Resident A logs in, views the pending request in their dashboard, and clicks "Approve".
+        \item The system updates the \texttt{ResourceReservation} status to \texttt{APPROVED} and locks the tool from other search queries.
+        \item Residents physically meet to hand over the item.
+        \item Upon return, Resident A marks the reservation as \texttt{RETURNED}, and the item is unlocked.
+    \end{enumerate}
+    \item \textbf{Postconditions:} The item becomes available for lending again, and the reservation history is preserved.
+\end{enumerate}
+
+\subsubsection{UC3: RSVP Tracking for Community Events}
+This usecase represents collective physical gatherings.
+\begin{enumerate}
+    \item \textbf{Actors:} Event Creator (Resident or Admin), Resident (Attendee).
+    \item \textbf{Preconditions:} The Creator is verified.
+    \item \textbf{Flow of Events:}
+    \begin{enumerate}
+        \item The Creator navigates to the Events tab, clicks "Create Event", enters the title, time, capacity limit, and details, and saves.
+        \item The system persists the \texttt{Event} record.
+        \item Other Residents view the event card. A resident clicks "Join Event".
+        \item The system validates that the active attendee count is below the capacity limit.
+        \item The system persists a new \texttt{EventAttendee} association record with the status \texttt{JOINED}.
+        \item The UI reactively updates the available slots counter.
+    \end{enumerate}
+\end{enumerate}
+
+\subsubsection{UC4: Parking Spot Announcement and Rental Booking}
+This usecase addresses localized resource constraints.
+\begin{enumerate}
+    \item \textbf{Actors:} Spot Owner (Resident A), Spot Applicant (Resident B).
+    \item \textbf{Preconditions:} Resident A has registered their slot ID (e.g., "Parking Space 12A").
+    \item \textbf{Flow of Events:}
+    \begin{enumerate}
+        \item Resident A publishes an announcement: "Available from Friday 18:00 to Sunday 22:00".
+        \item The system creates a \texttt{ParkingAnnouncement} entity linked to the owner's \texttt{ParkingSlot}.
+        \item Resident B browses the Parking module, filters by availability, and applies for the announcement slot.
+        \item The system registers a \texttt{ParkingApplication} with status \texttt{PENDING}.
+        \item Resident A reviews the application and selects "Accept".
+        \item The system transitions the application status to \texttt{APPROVED} and automatically marks all other applications for this announcement as \texttt{DENIED}.
+    \end{enumerate}
+\end{enumerate}
+
+\section{Frontend Architectural Design}
+The frontend application uses Domain-Driven Design (DDD) principles to compartmentalize complex operations. The source tree is divided into five specialized layers, avoiding monolithic component growth:
+\begin{enumerate}
+    \item \textbf{Core Layer (\texttt{/core}):} Declares system-wide singletons, security guards (\texttt{authGuard}, \texttt{verifiedGuard}), global interceptors (\texttt{authInterceptor}), base services (\texttt{ThemeService}), and data models.
+    \item \textbf{Store Layer (\texttt{/store}):} Manages central client application state using the NgRx Redux framework. The store is modularized into feature state slices (Auth, Feed, Shed, Events, Parking, Admin) containing actions, reducers, effects, and selectors.
+    \item \textbf{Shared Layer (\texttt{/shared}):} Houses lightweight, highly reusable presentational components (buttons, custom forms, confirm dialogs, cards), custom styling tokens, utility functions, and validators.
+    \item \textbf{Layout Layer (\texttt{/layout}):} Coordinates the persistent shell of the application, rendering navigation bars, responsive sidebar drawers, breadcrumbs, and active user notification banners.
+    \item \textbf{Features Layer (\texttt{/features}):} Contains the isolated functional modules (Auth, Feed, Shed, Events, Parking, Profile, Settings, Admin). Each module is lazy-loaded at runtime when the corresponding URL path is requested by the browser, reducing the initial JavaScript payload size.
+\end{enumerate}
+
+\subsection{Reactive Architecture and the Facade Pattern}
+To prevent individual Angular components from coupling with the complex state management mechanisms of NgRx, the architecture implements the **Facade Design Pattern** \cite{gamma1994design}. 
+
+Components do not directly inject the NgRx \texttt{Store} or dispatch raw actions. Instead, they interact exclusively with specialized, module-specific Facade services (e.g., \texttt{AuthFacade}, \texttt{ShedFacade}). The Facade exposes read-only reactive values (as Angular Signals or RxJS Observables) and clean methods for dispatching operations. This abstraction decouples component templates from store implementation details, enabling clean migration to Signal-based store APIs in the future without modifying visual markup.
+
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[node distance=2.2cm and 2.0cm,
+    box/.style={draw, rectangle, minimum height=0.9cm, minimum width=3.6cm,
+                align=center, font=\small},
+    lbl/.style={font=\scriptsize, fill=white, inner sep=1pt},
+    >=Stealth]
+    % Left column
+    \node[box] (template) {Component Template};
+    \node[box, below=of template] (facade) {Facade Service};
+    % Center column
+    \node[box, right=of template] (actions) {NgRx Actions};
+    \node[box, below=of actions] (store) {NgRx Store State};
+    \node[box, below=of store] (effects) {NgRx Effects};
+    % Right column
+    \node[box, right=of actions] (api) {Backend API};
+    \node[box, right=of store] (reducers) {Reducers / Selectors};
+    % Flows
+    \draw[->] ([xshift=-3pt]template.south) -- node[lbl,left] {1. User Action} ([xshift=-3pt]facade.north);
+    \draw[->] ([yshift=2pt]facade.east) -- node[lbl,above] {2. Dispatch Action} ([yshift=2pt]store.west);
+    \draw[->] (store.south) -- node[lbl,right] {3. Intercept} (effects.north);
+    \draw[->] (effects.east) -- ++(1,0) |- node[lbl, pos=0.25, right] {4. HTTP request} (reducers.south);
+    \draw[->] (api.south) -- node[lbl,right] {5. HTTP response} (reducers.north);
+    \draw[->] ([yshift=2pt]reducers.west) -- node[lbl,above] {6. Update State} ([yshift=2pt]store.east);
+    \draw[<-] ([yshift=-2pt]facade.east) -- node[lbl,below] {7. Select State} ([yshift=-2pt]store.west);
+    \draw[->] ([xshift=3pt]facade.north) -- node[lbl,right] {8. Push Signal Update} ([xshift=3pt]template.south);
+\end{tikzpicture}
+\caption{Reactive state data flow in the frontend utilizing the NgRx Facade and Signal paradigms.}
+\label{fig:reactive-state-flow}
+\end{figure}
+
+\section{Backend Architectural Design}
+The backend application is structured around a layered Model-View-Controller (MVC) pattern, adapted for RESTful services by replacing traditional "views" with serialized JSON responses \cite{fielding2000rest}. It uses a robust layered model:
+
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[node distance=2.8cm and 2.2cm,
+    box/.style={draw, rectangle, minimum height=1cm, minimum width=4cm,
+                align=center, font=\small},
+    lbl/.style={font=\scriptsize, fill=white, inner sep=1pt},
+    >=Stealth]
+    % Top row
+    \node[box] (routing) {Routing Layer};
+    \node[box, right=of routing] (controller) {Controller Layer};
+    \node[box, right=of controller] (service) {Service Layer};
+    % Bottom row
+    \node[box, below=of routing] (mwpipe) {Middleware Pipelines};
+    \node[box, below=of controller] (validators) {Request Validators};
+    \node[box, below=of service] (persistence) {Persistence Layer\\(Prisma)};
+    % Connections
+    \draw[->] (routing) -- node[lbl,right] {Check Auth/Limit} (mwpipe);
+    \draw[->] (mwpipe.east) -- node[lbl,above] {Parse Payload} (validators.west);
+    \draw[->] (validators.north) -- ++(0,0.5) -| node[lbl, pos=0.25, above] {Invoke Action} (controller.south);
+    \draw[->] (controller.east) -- node[lbl,above] {Business Logic} (service.west);
+    \draw[->] (service) -- node[lbl,right] {Fetch/Write} (persistence);
+\end{tikzpicture}
+\caption{Layered MVC and middleware processing architecture of the NEST backend.}
+\label{fig:backend-layers}
+\end{figure}
+
+\begin{enumerate}
+    \item \textbf{Routing and Middleware Layer:} Maps active endpoints to HTTP request channels. Intercepts incoming requests with customizable middleware chains to enforce security.
+    \item \textbf{Controller Layer:} Decouples HTTP concerns from business logic. It handles request payload reading, extracts parameters, validates formatting, parses query options, and converts service exceptions into standardized HTTP error responses.
+    \item \textbf{Service Layer:} Core of the backend application where building domain logic is executed. Services are completely agnostic of Express-specific objects (like \texttt{req} and \texttt{res}), making them highly testable.
+    \item \textbf{Persistence Layer (Prisma ORM):} Abstracts database queries using fully typed methods generated from the database schema.
+\end{enumerate}
+
+\section{Data Modeling and Relational Database Schema}
+The persistence layer of NEST consists of 10 distinct entities. Relationships are modeled explicitly using a relational approach to ensure integrity and enforce referential constraints.
+
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[node distance=2.4cm and 1.8cm,
+    entity/.style={draw, rectangle, minimum height=0.9cm, minimum width=2.8cm,
+                   align=center, font=\small},
+    rel/.style={font=\tiny, fill=white, inner sep=1pt},
+    >=Stealth]
+    % Row 1
+    \node[entity] (user) {User};
+    \node[entity, right=of user] (block) {Block};
+    \node[entity, right=of block] (joinreq) {JoinRequest};
+    \node[entity, right=of joinreq] (post) {Post};
+    % Row 2
+    \node[entity, below=of user] (event) {Event};
+    \node[entity, right=of event] (attendee) {EventAttendee};
+    \node[entity, right=of attendee] (resource) {Resource};
+    \node[entity, right=of resource] (reservation) {Reservation};
+    % Row 3
+    \node[entity, below=of event] (parking) {ParkingSlot};
+    \node[entity, right=of parking] (announce) {Announcement};
+    \node[entity, right=of announce] (application) {Application};
+    % --- Relationships ---
+    % User -> Block (1:N)
+    \draw[-] (user.east) -- node[rel, above] {1:N} (block.west);
+    % Block -> JoinRequest (1:N)
+    \draw[-] (block.east) -- node[rel, above] {1:N} (joinreq.west);
+    % User -> Post (1:N) — route above row 1
+    \draw[-] (user.north) -- ++(0,0.5) -| node[rel, pos=0.25, above] {1:N} (post.north);
+    % User -> Event (1:N)
+    \draw[-] (user.south) -- node[rel, left] {1:N} (event.north);
+    % Event -> EventAttendee (1:N)
+    \draw[-] (event.east) -- node[rel, above] {1:N} (attendee.west);
+    % User -> Resource (1:N) — route below row 1, above row 2
+    \draw[-] ([xshift=8pt]user.south) -- ++(0,-0.6) -| node[rel, pos=0.5, above] {1:N} (resource.north);
+    % Resource -> Reservation (1:N)
+    \draw[-] (resource.east) -- node[rel, above] {1:N} (reservation.west);
+    % User -> ParkingSlot (1:N) — route down left side
+    \draw[-] ([xshift=-8pt]user.south) -- ++(0,-0.3) -- ++(-0.8,0) |- node[rel, pos=0.75, above] {1:N} (parking.west);
+    % ParkingSlot -> Announcement (1:N)
+    \draw[-] (parking.east) -- node[rel, above] {1:N} (announce.west);
+    % Announcement -> Application (1:N)
+    \draw[-] (announce.east) -- node[rel, above] {1:N} (application.west);
+\end{tikzpicture}
+\caption{Entity-Relationship (ER) topology mapping the relational database structure of the NEST application.}
+\label{fig:er-diagram}
+\end{figure}
+
+The database schema models the following entities:
+\begin{enumerate}
+    \item \textbf{\texttt{User}:} The primary entity, representing a resident. Contains fields such as \texttt{id}, \texttt{email}, \texttt{passwordHash}, \texttt{firstName}, \texttt{lastName}, \texttt{apartmentNumber}, \texttt{role} (\texttt{RESIDENT} or \texttt{ADMIN}), and \texttt{isVerified}. User preferences are stored as a JSON string under the \texttt{preferences} field, enabling dynamic settings extension.
+    \item \textbf{\texttt{Block}:} Represents a physical residential building block. Contains \texttt{id}, \texttt{name}, \texttt{address}, and \texttt{joinCode}. Owned by an Admin user (\texttt{adminId} foreign key, referencing \texttt{User.id}).
+    \item \textbf{\texttt{JoinRequest}:} A join-table mapping a \texttt{User}'s request to join a \texttt{Block}. Contains \texttt{id}, \texttt{userId}, \texttt{blockId}, and \texttt{status} (\texttt{PENDING}, \texttt{APPROVED}, \texttt{REJECTED}). Enforces a unique composite constraint \texttt{@@unique([userId, blockId])} to prevent duplicate submissions.
+    \item \textbf{\texttt{Post}:} Represents a social announcement in the community feed. Contains \texttt{id}, \texttt{content}, \texttt{imageUrl}, \texttt{createdAt}, and \texttt{authorId} (many-to-one relationship with \texttt{User}).
+    \item \textbf{\texttt{Event}:} Represents a community gathering. Contains \texttt{id}, \texttt{title}, \texttt{description}, \texttt{date}, \texttt{location}, \texttt{maxParticipants}, and is linked to the creator (\texttt{creatorId}).
+    \item \textbf{\texttt{EventAttendee}:} An association table modeling the many-to-many relationship between users and events, with composite primary keys \texttt{@@id([userId, eventId])} and a \texttt{joinedAt} timestamp.
+    \item \textbf{\texttt{Resource}:} Represents a tool or appliance shared in the Shared Shed. Contains \texttt{id}, \texttt{name}, \texttt{description}, \texttt{category}, \texttt{imageUrl}, \texttt{isAvailable}, and \texttt{ownerId}.
+    \item \textbf{\texttt{Reservation}:} Models the booking lifecycle of a shared resource. Contains \texttt{id}, \texttt{resourceId}, \texttt{borrowerId}, \texttt{startDate}, \texttt{endDate}, and \texttt{status} (\texttt{PENDING}, \texttt{APPROVED}, \texttt{REJECTED}, \texttt{RETURNED}).
+    \item \textbf{\texttt{ParkingSlot}:} Represents a registered physical parking space. Contains \texttt{id}, \texttt{slotNumber}, \texttt{location}, and is bound to a \texttt{User.id} via \texttt{ownerId}.
+    \item \textbf{\texttt{Announcement}:} A temporary availability offer for a parking slot. Contains \texttt{id}, \texttt{slotId}, \texttt{startTime}, \texttt{endTime}, and \texttt{notes}.
+    \item \textbf{\texttt{Application}:} An application submitted by a resident to utilize an announced parking space. Contains \texttt{id}, \texttt{announcementId}, \texttt{applicantId}, and \texttt{status} (\texttt{PENDING}, \texttt{APPROVED}, \texttt{DENIED}).
+\end{enumerate}
+
+\section{API Contract Design}
+To achieve high integration efficiency and strict protocol conformity, the API uses REST principles \cite{fielding2000rest}. Modifying endpoints consume and produce \texttt{application/json} payloads, and return meaningful HTTP Status Codes: \texttt{200 OK} for successful read/writes, \texttt{201 Created} for resource instantiations, \texttt{400 Bad Request} for schema validation errors, \texttt{401 Unauthorized} for invalid tokens, \texttt{403 Forbidden} for role mismatch, and \texttt{404 Not Found} for missing entities.
+
+Table \ref{tab:api-contracts} details the complete functional API contract of the NEST application.
+
+\begin{table}[htbp]
+\centering
+\scriptsize
+\setlength{\tabcolsep}{3pt}
+\begin{tabularx}{\textwidth}{|>{\ttfamily\raggedright\arraybackslash}p{1.2cm}|>{\ttfamily\raggedright\arraybackslash}X|>{\raggedright\arraybackslash}p{3.0cm}|>{\raggedright\arraybackslash}X|>{\raggedright\arraybackslash}p{1.8cm}|}
+\hline
+\textbf{Verb} & \textbf{Endpoint Path} & \textbf{Request Payload} & \textbf{Response Payload Description} & \textbf{Auth Level} \\ \hline
+POST & /api/\allowbreak auth/\allowbreak register & firstName, lastName, email, password, apartmentNumber & Registered User details, access token (JWT) & Anonymous \\ \hline
+POST & /api/\allowbreak auth/\allowbreak login & email, password & User details and JWT & Anonymous \\ \hline
+POST & /api/\allowbreak auth/\allowbreak join & blockCode & Created JoinRequest record & JWT (Unverified) \\ \hline
+GET & /api/\allowbreak blocks/\allowbreak requests & -- & Array of pending JoinRequest entities & JWT (Admin Only) \\ \hline
+PUT & /api/\allowbreak blocks/\allowbreak requests/\allowbreak :id & status ("APPROVED" / "REJECTED") & Updated JoinRequest & JWT (Admin Only) \\ \hline
+GET & /api/\allowbreak feed & -- & Array of chronological Posts & JWT (Verified) \\ \hline
+POST & /api/\allowbreak feed & content, imageUrl (optional) & Created Post & JWT (Verified) \\ \hline
+DELETE & /api/\allowbreak feed/\allowbreak :id & -- & Confirmation message & JWT (Owner/Admin) \\ \hline
+GET & /api/\allowbreak shed & -- & Array of available resources & JWT (Verified) \\ \hline
+POST & /api/\allowbreak shed & name, description, type & Created Resource & JWT (Verified) \\ \hline
+POST & /api/\allowbreak shed/\allowbreak :id/\allowbreak borrow & startTime, endTime & ResourceReservation entity with status "PENDING" & JWT (Verified) \\ \hline
+PUT & /api/\allowbreak shed/\allowbreak reservations/\allowbreak :id & status ("APPROVED" / "RETURNED") & Updated ResourceReservation, resource availability updated & JWT (Verified) \\ \hline
+GET & /api/\allowbreak events & -- & Array of future community events & JWT (Verified) \\ \hline
+POST & /api/\allowbreak events & title, description, location, startTime, endTime, maxParticipants & Created Event details & JWT (Verified) \\ \hline
+POST & /api/\allowbreak events/\allowbreak :id/\allowbreak attend & -- & Created EventAttendee record & JWT (Verified) \\ \hline
+GET & /api/\allowbreak parking/\allowbreak announcements & -- & Active ParkingAnnouncements & JWT (Verified) \\ \hline
+POST & /api/\allowbreak parking/\allowbreak announcements & slotId, availableFrom, availableTo & Created ParkingAnnouncement & JWT (Verified) \\ \hline
+POST & /api/\allowbreak parking/\allowbreak apply/\allowbreak :id & -- & Created ParkingApplication details & JWT (Verified) \\ \hline
+PUT & /api/\allowbreak parking/\allowbreak applications/\allowbreak :id & status ("APPROVED" / "DENIED") & Updated ParkingApplication, auto-rejects overlapping requests & JWT (Verified) \\ \hline
+PUT & /api/\allowbreak users/\allowbreak profile & firstName, lastName, headline, about, phoneNumber & Updated User profile & JWT (Verified) \\ \hline
+PUT & /api/\allowbreak users/\allowbreak preferences & theme, isPhonePublic, notifyResourceAvailable, notifyNewPosts & Updated User preference configuration & JWT (Verified) \\ \hline
+\end{tabularx}
+\caption{REST API endpoint specifications of the NEST client-server interface.}
+\label{tab:api-contracts}
+\end{table}
+
+This design guarantees that the development phase (detailed in Chapter 4) has a stable contract model, isolating frontend components from database structural changes.

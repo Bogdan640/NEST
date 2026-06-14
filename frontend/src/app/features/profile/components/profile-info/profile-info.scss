@@ -1,0 +1,176 @@
+/* === Info Card Content === */
+.profile-name-section {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.profile-name {
+  font-size: 1.75rem;
+  font-weight: 800;
+  color: var(--profile-name-color);
+  margin: 0 0 0.25rem;
+}
+
+.profile-headline {
+  font-size: 1rem;
+  color: var(--profile-headline-color);
+  margin: 0 0 0.5rem;
+  font-style: italic;
+}
+
+.profile-email {
+  font-size: 0.9rem;
+  color: var(--color-text-tertiary);
+  margin: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.375rem;
+}
+
+.info-icon {
+  font-size: 0.85rem;
+}
+
+/* === Info Grid === */
+.info-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.info-tile {
+  background: var(--info-tile-bg);
+  border: 1px solid var(--info-tile-border);
+  border-radius: 1rem;
+  padding: 1rem;
+  text-align: center;
+  transition: transform 0.2s, box-shadow 0.2s;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.12);
+  }
+}
+
+.tile-icon {
+  font-size: 1.5rem;
+  display: block;
+  margin-bottom: 0.25rem;
+}
+
+.tile-label {
+  display: block;
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-text-tertiary);
+  margin-bottom: 0.25rem;
+}
+
+.tile-value {
+  display: block;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--color-text-primary);
+}
+
+.role-badge {
+  display: inline-block;
+  padding: 0.125rem 0.625rem;
+  border-radius: 9999px;
+  font-size: 0.8rem;
+  background: var(--owner-badge-bg);
+  color: var(--owner-badge-color);
+  border: 1px solid var(--owner-badge-border);
+
+  &.admin {
+    background: var(--color-warning-bg);
+    color: var(--color-amber-600);
+    border-color: var(--color-amber-500);
+  }
+}
+
+/* === About === */
+.about-section {
+  background: var(--about-bg);
+  border-radius: 0.75rem;
+  padding: 1.25rem;
+  margin-bottom: 1.5rem;
+
+  h3 {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--color-text-primary);
+    margin: 0 0 0.5rem;
+  }
+
+  p {
+    margin: 0;
+    color: var(--color-text-secondary);
+    font-size: 0.95rem;
+    line-height: 1.6;
+    white-space: pre-wrap;
+  }
+}
+
+.section-icon {
+  margin-right: 0.375rem;
+}
+
+/* === Profile Actions === */
+.profile-actions {
+  display: flex;
+  gap: 0.75rem;
+  justify-content: center;
+}
+
+.btn-edit {
+  padding: 0.625rem 1.5rem;
+  border-radius: 0.75rem;
+  border: 2px solid var(--color-primary);
+  background: var(--color-surface);
+  color: var(--color-primary);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+
+  &:hover {
+    background: var(--color-primary);
+    color: var(--color-text-inverted);
+  }
+}
+
+.btn-danger {
+  padding: 0.625rem 1.5rem;
+  border-radius: 0.75rem;
+  border: 2px solid var(--color-danger);
+  background: var(--color-surface);
+  color: var(--color-danger);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+
+  &:hover {
+    background: var(--color-danger);
+    color: var(--color-text-inverted);
+  }
+}
+
+@media (max-width: 640px) {
+  .info-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .profile-actions {
+    flex-direction: column;
+  }
+}

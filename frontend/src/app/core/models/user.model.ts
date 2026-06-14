@@ -35,6 +35,17 @@ export const DEFAULT_PREFERENCES: UserPreferences = {
   browserNotifications: false,
 };
 
+export function parseUserPreferences(prefs: unknown): UserPreferences {
+  if (typeof prefs === 'string') {
+    try {
+      return { ...DEFAULT_PREFERENCES, ...JSON.parse(prefs) };
+    } catch {
+      return { ...DEFAULT_PREFERENCES };
+    }
+  }
+  return { ...DEFAULT_PREFERENCES, ...(prefs as Partial<UserPreferences>) };
+}
+
 export type UserRole = 'ADMIN' | 'RESIDENT';
 
 export interface LoginRequest {

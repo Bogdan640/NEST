@@ -80,7 +80,6 @@ export class ShedComponent {
   }
 
   canDelete(ownerId: string | null): boolean {
-    const user = this.currentUser();
-    return !!user && (user.id === ownerId || user.role === 'ADMIN');
+    return this.authFacade.canManageResource(ownerId);
   }
 }
