@@ -116,4 +116,14 @@ export class EventsEffects {
       )
     )
   );
+
+  reloadOnChange$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(
+        EventsActions.createEventSuccess,
+        EventsActions.deleteEventSuccess
+      ),
+      map(() => EventsActions.loadEvents({ params: { page: 1, limit: 20 } }))
+    )
+  );
 }

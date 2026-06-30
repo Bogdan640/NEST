@@ -1,9 +1,10 @@
-import { Component, inject, signal, computed } from '@angular/core';
+import { Component, inject, signal, computed, OnInit, OnDestroy } from '@angular/core';
 import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { ShedFacade } from '../../store/shed/shed.facade';
 import { AuthFacade } from '../../store/auth/auth.facade';
 import { ResourceCardComponent } from './resource-card/resource-card.component';
 import { ResourceType } from '../../core/models/resource.model';
+import { DEFAULT_SHED_PAGE_SIZE, FIRST_PAGE } from '../../core/constants/ui';
 
 @Component({
   selector: 'app-shed',
@@ -12,7 +13,7 @@ import { ResourceType } from '../../core/models/resource.model';
   templateUrl: './shed.component.html',
   styleUrl: './shed.component.scss',
 })
-export class ShedComponent {
+export class ShedComponent implements OnInit, OnDestroy {
   private fb = inject(FormBuilder);
   private shedFacade = inject(ShedFacade);
   private authFacade = inject(AuthFacade);
@@ -25,6 +26,22 @@ export class ShedComponent {
 
   showCreateForm = signal(false);
   activeTab = signal<'browse' | 'borrowed'>('browse');
+
+  private pollingInterval: any;
+
+  ngOnInit(): void {
+    // Poll the shed API every 20 seconds to keep item availability in sync
+    // This handles scenarios where another user borrows or returns an item
+    this.pollingInterval = setInterval(() => {
+      this.shedFacade.loadResources({ page: FIRST_PAGE, limit: DEFAULT_SHED_PAGE_SIZE });
+    }, 20000);
+  }
+
+  ngOnDestroy(): void {
+    if (this.pollingInterval) {
+      clearInterval(this.pollingInterval);
+    }
+  }
 
   resourceTypes: ResourceType[] = ['TOOL', 'BOOK', 'OTHER'];
 

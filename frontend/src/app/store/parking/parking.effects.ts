@@ -128,9 +128,18 @@ export class ParkingEffects {
     this.actions$.pipe(
       ofType(
         ParkingActions.applyToAnnouncementSuccess,
-        ParkingActions.approveApplicationSuccess
+        ParkingActions.approveApplicationSuccess,
+        ParkingActions.createAnnouncementSuccess,
+        ParkingActions.deleteAnnouncementSuccess
       ),
       map(() => ParkingActions.loadAnnouncements({ params: { page: FIRST_PAGE, limit: DEFAULT_PARKING_PAGE_SIZE } }))
+    )
+  );
+
+  refreshSlots$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(ParkingActions.createSlotSuccess),
+      map(() => ParkingActions.loadSlots())
     )
   );
 }

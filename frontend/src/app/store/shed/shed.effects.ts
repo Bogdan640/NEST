@@ -108,9 +108,13 @@ export class ShedEffects {
     )
   );
 
-  reloadOnSuccess$ = createEffect(() =>
+  reloadOnChange$ = createEffect(() =>
     this.actions$.pipe(
-      ofType(ShedActions.reserveResourceSuccess, ShedActions.returnResourceSuccess),
+      ofType(
+        ShedActions.reserveResourceSuccess, 
+        ShedActions.returnResourceSuccess,
+        ShedActions.reserveResourceFailure // Reload if they try to borrow an already borrowed item
+      ),
       map(() => ShedActions.loadResources({ params: { page: FIRST_PAGE, limit: DEFAULT_SHED_PAGE_SIZE } }))
     )
   );

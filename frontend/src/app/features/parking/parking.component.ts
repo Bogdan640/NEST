@@ -1,4 +1,4 @@
-import { Component, inject, signal, OnInit } from '@angular/core';
+import { Component, inject, signal, OnInit, OnDestroy } from '@angular/core';
 import { ReactiveFormsModule, FormBuilder, Validators, AbstractControl, ValidationErrors } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -23,7 +23,7 @@ import { ToastService } from '../../shared/services/toast.service';
   templateUrl: './parking.component.html',
   styleUrl: './parking.component.scss',
 })
-export class ParkingComponent implements OnInit {
+export class ParkingComponent implements OnInit, OnDestroy {
   private fb = inject(FormBuilder);
   private parkingFacade = inject(ParkingFacade);
   private authFacade = inject(AuthFacade);
@@ -82,8 +82,20 @@ export class ParkingComponent implements OnInit {
     return null;
   }
 
+  private pollingInterval: any;
+
   ngOnInit(): void {
     this.parkingFacade.loadSlots();
+    // Poll the parking API every 20 seconds to keep announcements in sync
+    this.pollingInterval = setInterval(() => {
+      this.parkingFacade.loadAnnouncements({ page: 1, limit: 10 });
+    }, 20000);
+  }
+
+  ngOnDestroy(): void {
+    if (this.pollingInterval) {
+      clearInterval(this.pollingInterval);
+    }
   }
 
   get mySlots() {

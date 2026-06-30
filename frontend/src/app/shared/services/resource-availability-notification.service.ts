@@ -1,5 +1,7 @@
 import { Injectable, inject, signal, computed } from '@angular/core';
+import { Store } from '@ngrx/store';
 import { ShedApiService } from '../../core/api/shed-api.service';
+import { ShedActions } from '../../store/shed/shed.actions';
 import { ToastService } from './toast.service';
 import { firstValueFrom } from 'rxjs';
 
@@ -11,11 +13,12 @@ interface WatchedResource {
 
 @Injectable({ providedIn: 'root' })
 export class ResourceAvailabilityNotificationService {
+  private store = inject(Store);
   private shedApi = inject(ShedApiService);
   private toastService = inject(ToastService);
 
   private watchedResourcesMap = new Map<string, WatchedResource>();
-  
+
   // Expose a signal of watched IDs so components can reactively check status
   private watchedIds = signal<string[]>([]);
   public watchedResourceIds = computed(() => this.watchedIds());
@@ -45,7 +48,7 @@ export class ResourceAvailabilityNotificationService {
     this.watchedIds.update(ids => [...ids, id]);
 
     this.toastService.show(`Subscribed to availability alerts for "${name}"`, 'success');
-    
+
     // Do an immediate check in case it became available right after subscription
     this.checkAvailability(id);
   }
@@ -70,11 +73,14 @@ export class ResourceAvailabilityNotificationService {
   private async checkAvailability(id: string): Promise<void> {
     try {
       const resource = await firstValueFrom(this.shedApi.getResourceById(id));
-      
+
       // Determine if available: no reservations with status 'APPROVED'
       const isAvailable = !resource.reservations || !resource.reservations.some(r => r.status === 'APPROVED');
-      
+
       if (isAvailable) {
+        // Dispatch to store so the UI updates the "Borrow" button instantly
+        this.store.dispatch(ShedActions.updateResourceSuccess({ resource }));
+
         this.triggerNotification(resource.id, resource.name);
       }
     } catch (error) {
