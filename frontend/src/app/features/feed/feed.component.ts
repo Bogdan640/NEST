@@ -1,4 +1,4 @@
-import { Component, inject, signal, OnInit } from '@angular/core';
+import { Component, inject, signal, OnInit, OnDestroy } from '@angular/core';
 import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { FeedFacade } from '../../store/feed/feed.facade';
 import { AuthFacade } from '../../store/auth/auth.facade';
@@ -13,7 +13,7 @@ import { ToastService } from '../../shared/services/toast.service';
   templateUrl: './feed.component.html',
   styleUrl: './feed.component.scss',
 })
-export class FeedComponent implements OnInit {
+export class FeedComponent implements OnInit, OnDestroy {
   private fb = inject(FormBuilder);
   private feedFacade = inject(FeedFacade);
   private authFacade = inject(AuthFacade);
@@ -34,6 +34,8 @@ export class FeedComponent implements OnInit {
   isSubmitting = signal(false);
   remainingPosts = signal(2);
   nextRefreshTime = signal('');
+  
+  private pollingInterval: any;
 
   ngOnInit(): void {
     this.feedApi.getFeedStatus().subscribe({
@@ -56,6 +58,17 @@ export class FeedComponent implements OnInit {
         }
       }
     });
+
+    // Poll the feed API every 20 seconds to keep the list in sync
+    this.pollingInterval = setInterval(() => {
+      this.feedFacade.loadPosts({ page: 1, limit: 20 });
+    }, 20000);
+  }
+
+  ngOnDestroy(): void {
+    if (this.pollingInterval) {
+      clearInterval(this.pollingInterval);
+    }
   }
 
   onSubmit(): void {

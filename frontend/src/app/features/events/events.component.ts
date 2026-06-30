@@ -1,4 +1,4 @@
-import { Component, inject, signal, computed, OnDestroy } from '@angular/core';
+import { Component, inject, signal, computed, OnInit, OnDestroy } from '@angular/core';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators, AbstractControl, ValidationErrors } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -24,7 +24,7 @@ import { ToastService } from '../../shared/services/toast.service';
   templateUrl: './events.component.html',
   styleUrl: './events.component.scss',
 })
-export class EventsComponent {
+export class EventsComponent implements OnInit, OnDestroy {
   private fb = inject(FormBuilder);
   private eventsFacade = inject(EventsFacade);
   private authFacade = inject(AuthFacade);
@@ -44,14 +44,21 @@ export class EventsComponent {
 
   now = signal(new Date());
   private intervalId: any;
+  private pollingInterval: any;
 
-  constructor() {
+  ngOnInit() {
     // Update 'now' every minute to dynamically trigger expiration
     this.intervalId = setInterval(() => this.now.set(new Date()), 60000);
+    
+    // Poll the events API every 20 seconds to keep the list in sync
+    this.pollingInterval = setInterval(() => {
+      this.eventsFacade.loadEvents({ page: 1, limit: 20 });
+    }, 20000);
   }
 
   ngOnDestroy() {
     if (this.intervalId) clearInterval(this.intervalId);
+    if (this.pollingInterval) clearInterval(this.pollingInterval);
   }
 
   activeEvents = computed(() => {
